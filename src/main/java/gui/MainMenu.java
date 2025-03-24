@@ -26,21 +26,194 @@ public class MainMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnExit = new javax.swing.JButton();
+        btnClientViewer = new javax.swing.JButton();
+        btnTransactionViewer = new javax.swing.JButton();
+        btnInvoiceEditor = new javax.swing.JButton();
+        btnProductViewer = new javax.swing.JButton();
+        btnClientEditor = new javax.swing.JButton();
+        btnTransactionEditor = new javax.swing.JButton();
+        btnInvoiceViewer = new javax.swing.JButton();
+        btnProductEditor = new javax.swing.JButton();
+        btnUserInformationEditor = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        btnExit.setLabel("Exit");
+        btnExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExitActionPerformed(evt);
+            }
+        });
+
+        btnClientViewer.setText("Client");
+        btnClientViewer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClientViewerActionPerformed(evt);
+            }
+        });
+
+        btnTransactionViewer.setText("Transaction");
+        btnTransactionViewer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTransactionViewerActionPerformed(evt);
+            }
+        });
+
+        btnInvoiceEditor.setText("Invoice");
+        btnInvoiceEditor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInvoiceEditorActionPerformed(evt);
+            }
+        });
+
+        btnProductViewer.setText("Product");
+        btnProductViewer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProductViewerActionPerformed(evt);
+            }
+        });
+
+        btnClientEditor.setText("Client");
+        btnClientEditor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClientEditorActionPerformed(evt);
+            }
+        });
+
+        btnTransactionEditor.setText("Transaction");
+        btnTransactionEditor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTransactionEditorActionPerformed(evt);
+            }
+        });
+
+        btnInvoiceViewer.setText("Invoice");
+        btnInvoiceViewer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInvoiceViewerActionPerformed(evt);
+            }
+        });
+
+        btnProductEditor.setText("Product");
+        btnProductEditor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProductEditorActionPerformed(evt);
+            }
+        });
+
+        btnUserInformationEditor.setText("User Information");
+        btnUserInformationEditor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserInformationEditorActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("ZERO tester");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(100, 100, 100)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnTransactionViewer, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnClientViewer, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnProductViewer, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnInvoiceViewer, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnTransactionEditor, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnClientEditor, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnProductEditor, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUserInformationEditor, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnInvoiceEditor, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(100, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnUserInformationEditor)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnClientEditor)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnProductEditor)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnInvoiceEditor)
+                            .addComponent(btnInvoiceViewer))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnTransactionEditor))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnExit)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnClientViewer)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnProductViewer)
+                        .addGap(59, 59, 59)
+                        .addComponent(btnTransactionViewer)))
+                .addContainerGap(101, Short.MAX_VALUE))
         );
+
+        btnExit.getAccessibleContext().setAccessibleName("Exit");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_btnExitActionPerformed
+
+    private void btnClientViewerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientViewerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnClientViewerActionPerformed
+
+    private void btnTransactionViewerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransactionViewerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnTransactionViewerActionPerformed
+
+    private void btnInvoiceEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvoiceEditorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnInvoiceEditorActionPerformed
+
+    private void btnProductViewerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductViewerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnProductViewerActionPerformed
+
+    private void btnClientEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientEditorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnClientEditorActionPerformed
+
+    private void btnTransactionEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransactionEditorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnTransactionEditorActionPerformed
+
+    private void btnInvoiceViewerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvoiceViewerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnInvoiceViewerActionPerformed
+
+    private void btnProductEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductEditorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnProductEditorActionPerformed
+
+    private void btnUserInformationEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserInformationEditorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnUserInformationEditorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +251,16 @@ public class MainMenu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnClientEditor;
+    private javax.swing.JButton btnClientViewer;
+    private javax.swing.JButton btnExit;
+    private javax.swing.JButton btnInvoiceEditor;
+    private javax.swing.JButton btnInvoiceViewer;
+    private javax.swing.JButton btnProductEditor;
+    private javax.swing.JButton btnProductViewer;
+    private javax.swing.JButton btnTransactionEditor;
+    private javax.swing.JButton btnTransactionViewer;
+    private javax.swing.JButton btnUserInformationEditor;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
