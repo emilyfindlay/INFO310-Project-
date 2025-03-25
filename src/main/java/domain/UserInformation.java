@@ -16,13 +16,16 @@ public class UserInformation {
     private String bankAccountNum;
     private String GstNumber;
     private String shippingAddress;
+    private String mailingAddress;
     private String email;
     private String phoneNum;
 
-    public UserInformation(String businessName, String bankAccountNum, String GstNumber, String email, String phoneNum) {
+    public UserInformation(String businessName, String bankAccountNum, String GstNumber, String shippingAddress, String mailingAddress, String email, String phoneNum) {
         this.businessName = businessName;
         this.bankAccountNum = bankAccountNum;
         this.GstNumber = GstNumber;
+        this.shippingAddress = shippingAddress;
+        this.mailingAddress = mailingAddress;
         this.email = email;
         this.phoneNum = phoneNum;
     }
@@ -73,6 +76,14 @@ public class UserInformation {
     
     public void setShippingAddress(String shippingAddress) {
         this.shippingAddress = shippingAddress;
+    }
+    
+    public String getMailingAddress(){
+        return mailingAddress;
+    }
+    
+    public void setMailingAddress(String mailingAddress){ 
+        this.mailingAddress = mailingAddress;
     }
 
     @Override
