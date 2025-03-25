@@ -16,6 +16,8 @@ import java.util.Objects;
 public class Client {
     
     private Integer clientId;
+    private Integer physicalAddressID;
+    private Integer mailingAddressID;
     private String name;
     private String email;
     private String phoneNum;
@@ -71,6 +73,14 @@ public class Client {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+    
+    public Integer getphysicalAddressID(){
+        return physicalAddressID;
+    }
+    
+    public Integer getmailingAddressID(){
+        return physicalAddressID; 
+    }
 
 
     @Override
@@ -100,6 +110,8 @@ public class Client {
     public String toString() {
         return "Client(" +
                "clientId=" + clientId +
+               "physicalAddressID=" + physicalAddressID +
+               "mailingAddressID=" + mailingAddressID + 
                ", name='" + name + '\'' +
                ", email='" + email + '\'' +
                ", phoneNum='" + phoneNum + '\'' +
