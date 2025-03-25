@@ -15,7 +15,7 @@ public class UserInformation {
     private String businessName;
     private String bankAccountNum;
     private String GstNumber;
-    //Address
+    private String shippingAddress;
     private String email;
     private String phoneNum;
 
@@ -66,6 +66,14 @@ public class UserInformation {
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
     }
+    
+    public String getShippingAddress(){
+        return shippingAddress;
+    }
+    
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
 
     @Override
     public String toString() {
@@ -73,6 +81,7 @@ public class UserInformation {
                "businessName='" + businessName + '\'' +
                ", bankAccountNum='" + bankAccountNum + '\'' +
                ", GstNumber='" + GstNumber + '\'' +
+               ", shippingAddress='" + shippingAddress + '\'' +
                ", email='" + email + '\'' +
                ", phoneNum='" + phoneNum + '\'' +
                ')';
