@@ -18,8 +18,8 @@ public class Invoice {
     private LocalDate creationDate;
     private LocalDate dueDate;
     private LocalDate datePaid;
-    //client ID??
-    //transaction ID??
+    private Integer clientID;
+    private Integer transactionID;
     private String status;
     private boolean isPaid;
     private BigDecimal totalGst;
@@ -32,12 +32,14 @@ public class Invoice {
     }
     
     
-    public Invoice(Integer invoiceId, LocalDate date, LocalDate creationDate, LocalDate dueDate, LocalDate datePaid, String status, boolean isPaid, BigDecimal totalGst, BigDecimal invoiceTotal) {
+    public Invoice(Integer invoiceId, LocalDate date, LocalDate creationDate, LocalDate dueDate, LocalDate datePaid, Integer clientID, Integer transactionID, String status, boolean isPaid, BigDecimal totalGst, BigDecimal invoiceTotal) {
         this.invoiceId = invoiceId;
         this.date = date;
         this.creationDate = creationDate;
         this.dueDate = dueDate;
         this.datePaid = datePaid;
+        this.clientID = clientID;
+        this.transactionID = transactionID;
         this.status = status;
         this.isPaid = isPaid;
         this.totalGst = totalGst;
@@ -115,6 +117,15 @@ public class Invoice {
     public void setInvoiceTotal(BigDecimal invoiceTotal) {
         this.invoiceTotal = invoiceTotal;
     }
+    
+    public Integer clientID() {
+        return clientID;
+    }
+    
+    public Integer transactionID(){
+        return transactionID;
+    }
+    
 
     @Override
     public int hashCode() {
