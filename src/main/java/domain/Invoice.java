@@ -14,16 +14,37 @@ import java.util.Objects;
  */
 public class Invoice {
     private Integer invoiceId;
+    @NotNull(message = "ID must be provided.")
+    @NotBlank(message = "ID must be provided.")
+    @Length(min = 2, message = "ID must contain at least two characters.")
     private LocalDate date;
+    @NotNull(message = "date must be provided.")
+    @NotBlank(message = "date must be provided.")
     private LocalDate creationDate;
+    @NotNull(message = "creation date must be provided")
+    @NotBlank(message = "creation date must be provided")
     private LocalDate dueDate;
+    @NotNull(message = "due date must be provided")
+    @NotBlank(message = "due date must be provided")
     private LocalDate datePaid;
+    @NotNull(message = "date paid must be provided") 
+    @NotBlank(message = "date paid must be provided") 
     private Integer clientID;
+    @NotNull(message = "client ID must be provided") 
+    @NotBlank(message = "client ID must be provided")
     private Integer transactionID;
+    @NotNull(message = "transaction ID must be provided") 
+    @NotBlank(message = "transaction ID must be provided") 
     private String status;
+    @NotNull(message = "status must be provided") 
+    @NotBlank(message = "status must be provided")
     private boolean isPaid;
     private BigDecimal totalGst;
+    @NotNull(message = "total gst must be provided") 
+    @NotBlank(message = "total gst must be provided")
     private BigDecimal invoiceTotal;
+    @NotNull(message = "invoice total must be provided")
+    @NotBlank(message = "invoice total must be provided")
 
     
     public Invoice(){
