@@ -170,6 +170,8 @@ public class Invoice {
                ", creationDate=" + creationDate +
                ", dueDate=" + dueDate +
                ", datePaid=" + datePaid +
+               ", clientID=" + clientID +
+               ", transactionID=" + transactionID +
                ", status='" + status + '\'' +
                ", isPaid=" + isPaid +
                ", totalGst=" + totalGst +
