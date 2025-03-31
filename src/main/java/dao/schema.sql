@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS business;
 DROP TABLE IF EXISTS address;
 
 CREATE TABLE address (
-    address_id INT AUTO_INCREMENT,
+    address_id SERIAL,
     street_address1 VARCHAR(50) NOT NULL,
     street_address2 VARCHAR(50),
     city VARCHAR(50) NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE address (
 );
 
 CREATE TABLE business (
-    business_id INT AUTO_INCREMENT,
+    business_id SERIAL,
     address_id INT NOT NULL,
     business_name VARCHAR(50) NOT NULL,
     bank_account_name VARCHAR(50) NOT NULL,
@@ -29,13 +29,13 @@ CREATE TABLE business (
     email VARCHAR(50) NOT NULL,
     phone VARCHAR(10) NOT NULL,
     website_link VARCHAR(255),
-    logo BLOB,
+    logo BYTEA,
     CONSTRAINT business_pk PRIMARY KEY (business_id),
     CONSTRAINT business_fk_address FOREIGN KEY (address_id) REFERENCES address(address_id)
 );
 
 CREATE TABLE client (
-    client_id INT AUTO_INCREMENT,
+    client_id SERIAL,
     address_id INT NOT NULL,
     name VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL,
@@ -46,13 +46,13 @@ CREATE TABLE client (
 );
 
 CREATE TABLE product_type (
-    product_type_id INT AUTO_INCREMENT,
+    product_type_id SERIAL,
     product_type_name VARCHAR(50) NOT NULL,
     CONSTRAINT product_type_pk PRIMARY KEY (product_type_id)
 );
 
 CREATE TABLE discount (
-    discount_code INT AUTO_INCREMENT,
+    discount_code SERIAL,
     discount_percentage DECIMAL(5, 2) NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE discount (
 );
 
 CREATE TABLE product (
-    product_code INT AUTO_INCREMENT,
+    product_code SERIAL,
     product_type_id INT NOT NULL,
     discount_code INT,
     product_name VARCHAR(50) NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE product (
 );
 
 CREATE TABLE invoice (
-    invoice_id INT AUTO_INCREMENT,
+    invoice_id SERIAL,
     client_id INT NOT NULL,
     business_id INT NOT NULL,
     product_code INT,
