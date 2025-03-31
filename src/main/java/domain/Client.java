@@ -5,6 +5,10 @@
 package domain;
 
 import java.util.Objects;
+import net.sf.oval.constraint.Email;
+import net.sf.oval.constraint.Length;
+import net.sf.oval.constraint.NotBlank;
+import net.sf.oval.constraint.NotNull;
 
 /**
  *
@@ -19,22 +23,27 @@ public class Client {
     @NotNull(message = "ID must be provided.")
     @NotBlank(message = "ID must be provided.")
     @Length(min = 2, message = "ID must contain at least two characters.")
+    
     private Integer physicalAddressID;
     @NotNull(message = "Physical address ID must be provided")
     @NotBlank(message = "Physical address ID must be provided")
+    
     private Integer mailingAddressID;
-    @Notnull(message = "Mailing address ID must be provided")
-    @NotBlank(message = "Mailing address ID must be provided")
+    
     private String name;
     @NotNull(message = "name must be provided")
     @NotBlank(message = "name must be provided")
     @Length(message = "name must contain at least two characters.")
+    
     private String email;
     @NotNull(message = "email must be provided")
     @NotBlank(message = "email must be provided")
+    @Email(message = "Email address must be a valid email format.")
+    
     private String phoneNum;
     @NotNull(message = "phone number must be provided")
     @NotBlank(message = "phone number must be provided")
+    
     private String notes;
     
     public Client(){
