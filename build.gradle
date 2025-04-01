@@ -23,7 +23,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-        implementation group: "net.sf.oval", name: "oval", version: "3.2.1";
+        implementation group: "net.sf.oval", name: "oval", version: "3.2.1"
+
+        // https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
+        implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '3.0.4'
 }
 
 tasks.named('test') {

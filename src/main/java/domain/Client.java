@@ -15,7 +15,7 @@ import net.sf.oval.constraint.NotNull;
  * @author kevin
  * 
  * 
- * TODO: Add address fields
+ * TODO: Add address fields 
  */
 public class Client {
     
