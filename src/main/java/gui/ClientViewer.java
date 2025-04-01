@@ -4,18 +4,36 @@
  */
 package gui;
 
+import helpers.SimpleListModel;
+import java.util.Collection;
+
 /**
  *
  * @author kevin
  */
-public class ClientViewer extends javax.swing.JFrame {
+public class ClientViewer extends javax.swing.JDialog {
 
-    /**
-     * Creates new form MainMenu
-     */
-    public ClientViewer() {
-        initComponents();
-    }
+    //private final ClientDAO dao;
+
+	public ClientViewer(java.awt.Frame parent, boolean modal){      //, ClientDAO dao) {
+		super(parent, modal);
+
+		//this.dao = dao;
+
+		initComponents();
+
+		//cmbCategory.setEditable(true);
+
+		// load categories into combo
+//		SimpleListModel categoriesModel = new SimpleListModel();
+//		Collection<String> categories = dao.getCategories();
+//		categoriesModel.updateItems(categories);
+//		cmbCategory.setModel(categoriesModel);
+//              
+
+                System.out.println("ClientViewer opened");
+                
+	}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,7 +44,7 @@ public class ClientViewer extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -42,41 +60,6 @@ public class ClientViewer extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ClientViewer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ClientViewer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ClientViewer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ClientViewer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ClientViewer().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

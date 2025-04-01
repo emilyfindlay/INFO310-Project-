@@ -4,21 +4,19 @@
  */
 package gui;
 
-import domain.Product;
 import helpers.SimpleListModel;
-import java.util.Collection;
 
 /**
  *
  * @author kevin
  */
-public class TransactionViewer extends javax.swing.JDialog {
+public class InvoiceViewer extends javax.swing.JDialog {
 
     //private final ProductDAO dao;
 
 	private final SimpleListModel productsModel = new SimpleListModel();
 
-	public TransactionViewer(java.awt.Frame parent, boolean modal){         //, ProductDAO dao) {
+	public InvoiceViewer(java.awt.Frame parent, boolean modal){         //, ProductDAO dao) {
 		super(parent, modal);
 
 //		this.dao = dao;
@@ -36,7 +34,7 @@ public class TransactionViewer extends javax.swing.JDialog {
 //		categoriesModel.updateItems(categories);
 //		cmbCategories.setModel(categoriesModel);
                 
-                System.out.println("Transaction Viewer opened");
+                System.out.println("Invoice Viewer opened");
 	}
 
     /**

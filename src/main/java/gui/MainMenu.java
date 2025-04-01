@@ -37,6 +37,8 @@ public class MainMenu extends javax.swing.JFrame {
         btnProductEditor = new javax.swing.JButton();
         btnUserInformationEditor = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -112,7 +114,15 @@ public class MainMenu extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("ZERO tester");
+        jLabel1.setText("View");
+
+        jLabel2.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("ZERO tester");
+
+        jLabel3.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Edit");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -120,32 +130,36 @@ public class MainMenu extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(100, 100, 100)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btnTransactionViewer, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnClientViewer, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnProductViewer, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnInvoiceViewer, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(btnTransactionViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                    .addComponent(btnClientViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                    .addComponent(btnProductViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                    .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                    .addComponent(btnInvoiceViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnTransactionEditor, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnClientEditor, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnProductEditor, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnUserInformationEditor, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnInvoiceEditor, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnTransactionEditor, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                    .addComponent(btnClientEditor, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                    .addComponent(btnProductEditor, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                    .addComponent(btnUserInformationEditor, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                    .addComponent(btnInvoiceEditor, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(100, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(75, 75, 75)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnUserInformationEditor)
@@ -167,10 +181,13 @@ public class MainMenu extends javax.swing.JFrame {
                         .addComponent(btnProductViewer)
                         .addGap(59, 59, 59)
                         .addComponent(btnTransactionViewer)))
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addContainerGap(208, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(16, 16, 16)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(415, Short.MAX_VALUE)))
         );
-
-        btnExit.getAccessibleContext().setAccessibleName("Exit");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -180,39 +197,57 @@ public class MainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnClientViewerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientViewerActionPerformed
-        // TODO add your handling code here:
+        ClientViewer viewer = new ClientViewer(this, true); //add dao
+        viewer.setLocationRelativeTo(null);
+        viewer.setVisible(true);
     }//GEN-LAST:event_btnClientViewerActionPerformed
 
     private void btnTransactionViewerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransactionViewerActionPerformed
-        // TODO add your handling code here:
+        TransactionViewer viewer = new TransactionViewer(this, true); //add dao
+        viewer.setLocationRelativeTo(null);
+        viewer.setVisible(true);
     }//GEN-LAST:event_btnTransactionViewerActionPerformed
 
     private void btnInvoiceEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvoiceEditorActionPerformed
-        // TODO add your handling code here:
+        InvoiceEditor editor = new InvoiceEditor(this, true); //add dao
+        editor.setLocationRelativeTo(null);
+        editor.setVisible(true);
     }//GEN-LAST:event_btnInvoiceEditorActionPerformed
 
     private void btnProductViewerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductViewerActionPerformed
-        // TODO add your handling code here:
+        ProductViewer viewer = new ProductViewer(this, true); //add dao
+        viewer.setLocationRelativeTo(null);
+        viewer.setVisible(true);
     }//GEN-LAST:event_btnProductViewerActionPerformed
 
     private void btnClientEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientEditorActionPerformed
-        // TODO add your handling code here:
+        ClientEditor editor = new ClientEditor(this, true); //add dao
+        editor.setLocationRelativeTo(null);
+        editor.setVisible(true);
     }//GEN-LAST:event_btnClientEditorActionPerformed
 
     private void btnTransactionEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransactionEditorActionPerformed
-        // TODO add your handling code here:
+        UserInformationEditor editor = new UserInformationEditor(this, true); //add dao
+        editor.setLocationRelativeTo(null);
+        editor.setVisible(true);
     }//GEN-LAST:event_btnTransactionEditorActionPerformed
 
     private void btnInvoiceViewerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvoiceViewerActionPerformed
-        // TODO add your handling code here:
+        InvoiceViewer viewer = new InvoiceViewer(this, true); //add dao
+        viewer.setLocationRelativeTo(null);
+        viewer.setVisible(true);
     }//GEN-LAST:event_btnInvoiceViewerActionPerformed
 
     private void btnProductEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductEditorActionPerformed
-        // TODO add your handling code here:
+        ProductEditor editor = new ProductEditor(this, true); //add dao
+        editor.setLocationRelativeTo(null);
+        editor.setVisible(true);
     }//GEN-LAST:event_btnProductEditorActionPerformed
 
     private void btnUserInformationEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserInformationEditorActionPerformed
-        // TODO add your handling code here:
+        UserInformationEditor editor = new UserInformationEditor(this, true); //add dao
+        editor.setLocationRelativeTo(null);
+        editor.setVisible(true);
     }//GEN-LAST:event_btnUserInformationEditorActionPerformed
 
     /**
@@ -262,5 +297,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JButton btnTransactionViewer;
     private javax.swing.JButton btnUserInformationEditor;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
 }
