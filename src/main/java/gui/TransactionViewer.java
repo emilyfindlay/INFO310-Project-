@@ -147,13 +147,13 @@ public class TransactionViewer extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        String id = txtSearchId.getText();
-        //Product product = dao.searchById(id);     //TODO
+        //String id = txtSearchId.getText();
+        //Transaction transaction = dao.searchById(id);     //TODO
         //transactionsModel.updateItems(transaction);
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void cmbCategoriesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCategoriesActionPerformed
-        String category = (String) cmbCategories.getSelectedItem();
+        //String category = (String) cmbCategories.getSelectedItem();
         //Collection<Transaction> transactions = dao.filterByCategory(transaction);
         //transactionsModel.updateItems(transactions);
     }//GEN-LAST:event_cmbCategoriesActionPerformed
@@ -163,22 +163,22 @@ public class TransactionViewer extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        if (!lstTransaction.isSelectionEmpty()) {
-            Product selected = lstTransaction.getSelectedValue();
-
-            int result = JOptionPane.showConfirmDialog(this, "Delete transcation " + selected.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
-
-            // did the user click the yes button?
-            if (result == JOptionPane.YES_OPTION) {
-                //dao.removeProduct(selected);      //TODO
-
-                // update JList
-                //transactionsModel.updateItems(dao.getTransactions());
-
-                // selected item was deleted, so clear selection
-                //lstTransactions.clearSelection();
-            }
-        }
+//        if (!lstTransaction.isSelectionEmpty()) {
+//            Transaction selected = lstTransaction.getSelectedValue();
+//
+//            int result = JOptionPane.showConfirmDialog(this, "Delete transcation " + selected.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+//
+//            // did the user click the yes button?
+//            if (result == JOptionPane.YES_OPTION) {
+//                //dao.removeTransaction(selected);      //TODO
+//
+//                // update JList
+//                //transactionsModel.updateItems(dao.getTransactions());
+//
+//                // selected item was deleted, so clear selection
+//                //lstTransactions.clearSelection();
+//            }
+//        }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
 

@@ -4,6 +4,7 @@
  */
 package gui;
 
+import domain.Invoice;
 import helpers.SimpleListModel;
 import javax.swing.JOptionPane;
 
@@ -144,15 +145,15 @@ public class InvoiceViewer extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        String id = txtSearchId.getText();
-        Invoice invoice = dao.searchById(id);
-        invoicesModel.updateItems(invoice);
+//        String id = txtSearchId.getText();
+//        Invoice invoice = dao.searchById(id);
+//        invoicesModel.updateItems(invoice);
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void cmbCategoriesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCategoriesActionPerformed
-        String category = (String) cmbCategories.getSelectedItem();
-        Collection<Invoice> products = dao.filterByCategory(category);
-        invoicesModel.updateItems(invoices);
+//        String category = (String) cmbCategories.getSelectedItem();
+//        Collection<Invoice> products = dao.filterByCategory(category);
+//        invoicesModel.updateItems(invoices);
     }//GEN-LAST:event_cmbCategoriesActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
@@ -160,22 +161,22 @@ public class InvoiceViewer extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        if (!lstInvoice.isSelectionEmpty()) {
-            Invoice selected = lstInvoice.getSelectedValue();
-
-            int result = JOptionPane.showConfirmDialog(this, "Delete invoice " + selected.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
-
-            // did the user click the yes button?
-            if (result == JOptionPane.YES_OPTION) {
-                dao.removeInvoice(selected);
-
-                // update JList
-                productsModel.updateItems(dao.getInvoices());
-
-                // selected item was deleted, so clear selection
-                lstInvoice.clearSelection();
-            }
-        }
+//        if (!lstInvoice.isSelectionEmpty()) {
+//            Invoice selected = lstInvoice.getSelectedValue();
+//
+//            int result = JOptionPane.showConfirmDialog(this, "Delete invoice " + selected.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+//
+//            // did the user click the yes button?
+//            if (result == JOptionPane.YES_OPTION) {
+//                dao.removeInvoice(selected);
+//
+//                // update JList
+//                productsModel.updateItems(dao.getInvoices());
+//
+//                // selected item was deleted, so clear selection
+//                lstInvoice.clearSelection();
+//            }
+//        }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
 

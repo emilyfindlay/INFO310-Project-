@@ -6,6 +6,7 @@ package gui;
 
 import domain.Product;
 import helpers.SimpleListModel;
+import java.util.Collection;
 import javax.swing.JOptionPane;
 
 /**
@@ -145,15 +146,15 @@ public class ProductViewer extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        String id = txtSearchId.getText();
-        Product product = dao.searchById(id);
-        productsModel.updateItems(product);
+//        String id = txtSearchId.getText();
+//        Product product = dao.searchById(id);
+//        productsModel.updateItems(product);
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void cmbCategoriesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCategoriesActionPerformed
-        String category = (String) cmbCategories.getSelectedItem();
-        Collection<Product> products = dao.filterByCategory(category);
-        productsModel.updateItems(products);
+//        String category = (String) cmbCategories.getSelectedItem();
+//        Collection<Product> products = dao.filterByCategory(category);
+//        productsModel.updateItems(products);
     }//GEN-LAST:event_cmbCategoriesActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
