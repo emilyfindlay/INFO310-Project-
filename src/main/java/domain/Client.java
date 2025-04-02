@@ -18,51 +18,38 @@ import net.sf.oval.constraint.NotNull;
  * TODO: Add address fields 
  */
 public class Client {
-    
-    private Integer clientId;
-    @NotNull(message = "ID must be provided.")
-    @NotBlank(message = "ID must be provided.")
-    @Length(min = 2, message = "ID must contain at least two characters.")
-    
-    private Integer physicalAddressID;
-    @NotNull(message = "Physical address ID must be provided")
-    @NotBlank(message = "Physical address ID must be provided")
-    
-    private Integer mailingAddressID;
-    
+    private Integer clientID;
+    private Integer addressID; 
     private String name;
-    @NotNull(message = "name must be provided")
-    @NotBlank(message = "name must be provided")
-    @Length(message = "name must contain at least two characters.")
-    
     private String email;
-    @NotNull(message = "email must be provided")
-    @NotBlank(message = "email must be provided")
-    @Email(message = "Email address must be a valid email format.")
-    
-    private String phoneNum;
-    @NotNull(message = "phone number must be provided")
-    @NotBlank(message = "phone number must be provided")
-    
-    private String notes;
+    private String phone;
     
     public Client(){
         
     }
     
-    public Client(String name, String email, String phoneNum, String notes){
+    public Client(Integer clientID, Integer addressID, String name, String email, String phone){
+        this.clientID = clientID;
+        this.addressID = addressID;
         this.name = name;
         this.email = email;
-        this.phoneNum = phoneNum;
-        this.notes = notes;
+        this.phone = phone;
     }
 
-    public Integer getClientId() {
-        return clientId;
+    public Integer getClientID() {
+        return clientID;
     }
 
-    public void setClientId(Integer clientId) {
-        this.clientId = clientId;
+    public void setClientID(Integer clientID) {
+        this.clientID = clientID;
+    }
+    
+    public Integer getAddressID() {
+        return addressID;
+    }
+    
+    public void setAddressID(Integer addressID) {
+        this.addressID = addressID;
     }
 
     public String getName() {
@@ -80,36 +67,20 @@ public class Client {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public String getPhoneNum() {
-        return phoneNum;
-    }
-
-    public void setPhoneNum(String phoneNum) {
-        this.phoneNum = phoneNum;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
+    
+    public String getPhone() {
+        return phone;
     }
     
-    public Integer getphysicalAddressID(){
-        return physicalAddressID;
-    }
-    
-    public Integer getmailingAddressID(){
-        return physicalAddressID; 
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 31 * hash + Objects.hashCode(this.clientId);
+        hash = 31 * hash + Objects.hashCode(this.clientID);
         return hash;
     }
 
@@ -125,20 +96,18 @@ public class Client {
             return false;
         }
         final Client other = (Client) obj;
-        return Objects.equals(this.clientId, other.clientId);
+        return Objects.equals(this.clientID, other.clientID);
     }
 
     
     @Override
     public String toString() {
         return "Client(" +
-               "clientId=" + clientId +
-               "physicalAddressID=" + physicalAddressID +
-               "mailingAddressID=" + mailingAddressID + 
+               "clientID=" + clientID +
+               "addressID=" + addressID + '\'' +
                ", name='" + name + '\'' +
                ", email='" + email + '\'' +
-               ", phoneNum='" + phoneNum + '\'' +
-               ", notes='" + notes + '\'' +
+               ", phone='" + phone + '\'' +
                ')';
     }
     
