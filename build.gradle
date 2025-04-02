@@ -32,3 +32,28 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.named("processResources") {
+    dependsOn copyFrontendBuild
+}
+
+task installFrontend(type: Exec) {
+    workingDir "$projectDir/frontend"
+    commandLine 'cmd', '/c', 'npm install' // For Windows
+}
+
+task buildFrontend(type: Exec) {
+    dependsOn installFrontend
+    workingDir "$projectDir/frontend"
+    commandLine 'cmd', '/c', 'npm run build'
+}
+
+task copyFrontendBuild(type: Copy) {
+    dependsOn buildFrontend
+    from "$projectDir/frontend/build"
+    into "$projectDir/src/main/resources/static"
+}
+
+bootJar {
+    dependsOn copyFrontendBuild
+}
