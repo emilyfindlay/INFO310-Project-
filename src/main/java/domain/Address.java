@@ -80,7 +80,7 @@ public class Address {
         this.postCode = postCode;
     }
     
-    public String country(){
+    public String getCountry(){
         return country;
     }
     
