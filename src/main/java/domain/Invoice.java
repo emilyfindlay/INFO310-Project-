@@ -6,11 +6,9 @@ package domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
-import net.sf.oval.constraint.Length;
-import net.sf.oval.constraint.NotBlank;
-import net.sf.oval.constraint.NotNull;
 
 /**
  *
@@ -18,56 +16,30 @@ import net.sf.oval.constraint.NotNull;
  */
 public class Invoice {
     private Integer invoiceId;
-    @NotNull(message = "ID must be provided.")
-    @NotBlank(message = "ID must be provided.")
-    @Length(min = 2, message = "ID must contain at least two characters.")
-    private LocalDate date;
-    @NotNull(message = "date must be provided.")
-    @NotBlank(message = "date must be provided.")
-    private LocalDate creationDate;
-    @NotNull(message = "creation date must be provided")
-    @NotBlank(message = "creation date must be provided")
-    private LocalDate dueDate;
-    @NotNull(message = "due date must be provided")
-    @NotBlank(message = "due date must be provided")
-    private LocalDate datePaid;
-    @NotNull(message = "date paid must be provided") 
-    @NotBlank(message = "date paid must be provided") 
-    private Integer clientID;
-    @NotNull(message = "client ID must be provided") 
-    @NotBlank(message = "client ID must be provided")
-    private Integer transactionID;
-    @NotNull(message = "transaction ID must be provided") 
-    @NotBlank(message = "transaction ID must be provided") 
+    private Integer clientId;
+    private Integer businessId;
+    private Integer productCode;
+    private Date issuedDate;
+    private Date dueDate;
     private String status;
-    @NotNull(message = "status must be provided") 
-    @NotBlank(message = "status must be provided")
-    private boolean isPaid;
-    private BigDecimal totalGst;
-    @NotNull(message = "total gst must be provided") 
-    @NotBlank(message = "total gst must be provided")
+    private BigDecimal totalGST;
     private BigDecimal invoiceTotal;
-    @NotNull(message = "invoice total must be provided")
-    @NotBlank(message = "invoice total must be provided")
 
     
     public Invoice(){
-        
-        
+          
     }
     
     
-    public Invoice(Integer invoiceId, LocalDate date, LocalDate creationDate, LocalDate dueDate, LocalDate datePaid, Integer clientID, Integer transactionID, String status, boolean isPaid, BigDecimal totalGst, BigDecimal invoiceTotal) {
+    public Invoice(Integer invoiceId, Integer clientId, Integer businessId, Integer productCode, Date issuedDate, Date dueDate, String status, BigDecimal totalGST, BigDecimal invoiceTotal) {
         this.invoiceId = invoiceId;
-        this.date = date;
-        this.creationDate = creationDate;
+        this.clientId = clientId;
+        this.businessId = businessId;
+        this.productCode = productCode;
+        this.issuedDate = issuedDate;
         this.dueDate = dueDate;
-        this.datePaid = datePaid;
-        this.clientID = clientID;
-        this.transactionID = transactionID;
         this.status = status;
-        this.isPaid = isPaid;
-        this.totalGst = totalGst;
+        this.totalGST = totalGST;
         this.invoiceTotal = invoiceTotal;
     }
 
@@ -79,37 +51,6 @@ public class Invoice {
         this.invoiceId = invoiceId;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public LocalDate getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public LocalDate getDatePaid() {
-        return datePaid;
-    }
-
-    public void setDatePaid(LocalDate datePaid) {
-        this.datePaid = datePaid;
-    }
 
     public String getStatus() {
         return status;
@@ -119,21 +60,9 @@ public class Invoice {
         this.status = status;
     }
 
-    public boolean isIsPaid() {
-        return isPaid;
-    }
 
-    public void setIsPaid(boolean isPaid) {
-        this.isPaid = isPaid;
-    }
 
-    public BigDecimal getTotalGst() {
-        return totalGst;
-    }
 
-    public void setTotalGst(BigDecimal totalGst) {
-        this.totalGst = totalGst;
-    }
 
     public BigDecimal getInvoiceTotal() {
         return invoiceTotal;
@@ -143,13 +72,7 @@ public class Invoice {
         this.invoiceTotal = invoiceTotal;
     }
     
-    public Integer clientID() {
-        return clientID;
-    }
-    
-    public Integer transactionID(){
-        return transactionID;
-    }
+
     
 
     @Override
