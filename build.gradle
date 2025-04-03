@@ -40,13 +40,28 @@ tasks.named("processResources") {
 
 task installFrontend(type: Exec) {
     workingDir "$projectDir/frontend"
-    commandLine 'cmd', '/c', 'npm install' // For Windows
+    environment "PATH", "/opt/homebrew/bin:" + System.getenv("PATH") // chatgpt
+
+    //commandLine 'cmd', '/c', 'npm install' // For Windows
+
+    if (System.getProperty("os.name").toLowerCase().contains("win")) {
+        commandLine 'cmd', '/c', 'npm install'
+    } else {
+        commandLine '/opt/homebrew/bin/npm', 'install'
+    }
 }
 
 task buildFrontend(type: Exec) {
     dependsOn installFrontend
     workingDir "$projectDir/frontend"
-    commandLine 'cmd', '/c', 'npm run build'
+    //commandLine 'cmd', '/c', 'npm run build'
+    environment "PATH", "/opt/homebrew/bin:" + System.getenv("PATH") // chatgpt
+
+    if (System.getProperty("os.name").toLowerCase().contains("win")) {
+        commandLine 'cmd', '/c', 'npm run build'
+    } else {
+        commandLine '/opt/homebrew/bin/npm', 'run', 'build'
+    }
 }
 
 task copyFrontendBuild(type: Copy) {
