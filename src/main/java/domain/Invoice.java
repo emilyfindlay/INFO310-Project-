@@ -50,8 +50,47 @@ public class Invoice {
     public void setInvoiceId(Integer invoiceId) {
         this.invoiceId = invoiceId;
     }
+    
+    public void setClientId(Integer clientId) {
+        this.clientId = clientId;
+    }
+    
+    public Integer getClientId() {
+        return clientId;
+    }
+    
+    public Integer getBusinessId() {
+        return businessId;
+    }
+    
+    public void setBusinessId(Integer businessId){
+        this.businessId = businessId;
+    }
+    
+    public Integer getProductCode(){
+        return productCode;
+    }
+    
+    public void setProductCode(Integer productCode){
+        this.productCode = productCode;
+    }
+    
+    public Date getIssuedDate(){
+        return issuedDate;
+    }
+    
+    public void setIssuedDate(Date issuedDate){
+        this.issuedDate = issuedDate;
+    }
 
-
+    public Date getDueDate(){
+        return dueDate;
+    }
+    
+    public void setDueDate(Date dueDate){
+        this.dueDate = dueDate;
+    }
+    
     public String getStatus() {
         return status;
     }
@@ -60,13 +99,17 @@ public class Invoice {
         this.status = status;
     }
 
-
-
-
-
-    public BigDecimal getInvoiceTotal() {
-        return invoiceTotal;
+    public BigDecimal getTotalGST(){
+        return totalGST;
     }
+
+    public void setTotalGST(BigDecimal totalGST){
+        this.totalGST = totalGST;
+    }
+
+//    public BigDecimal getInvoiceTotal() {
+//        return invoiceTotal;
+//    }
 
     public void setInvoiceTotal(BigDecimal invoiceTotal) {
         this.invoiceTotal = invoiceTotal;
@@ -79,8 +122,8 @@ public class Invoice {
     public int hashCode() {
         int hash = 5;
         hash = 67 * hash + Objects.hashCode(this.invoiceId);
-        hash = 67 * hash + Objects.hashCode(this.creationDate);
-        hash = 67 * hash + Objects.hashCode(this.totalGst);
+        hash = 67 * hash + Objects.hashCode(this.issuedDate);
+        hash = 67 * hash + Objects.hashCode(this.totalGST);
         hash = 67 * hash + Objects.hashCode(this.invoiceTotal);
         return hash;
     }
@@ -100,10 +143,10 @@ public class Invoice {
         if (!Objects.equals(this.invoiceId, other.invoiceId)) {
             return false;
         }
-        if (!Objects.equals(this.creationDate, other.creationDate)) {
+        if (!Objects.equals(this.issuedDate, other.issuedDate)) {
             return false;
         }
-        if (!Objects.equals(this.totalGst, other.totalGst)) {
+        if (!Objects.equals(this.totalGST, other.totalGST)) {
             return false;
         }
         return Objects.equals(this.invoiceTotal, other.invoiceTotal);
@@ -114,16 +157,14 @@ public class Invoice {
     public String toString() {
         return "Invoice(" +
                "invoiceId=" + invoiceId +
-               ", date=" + date +
-               ", creationDate=" + creationDate +
-               ", dueDate=" + dueDate +
-               ", datePaid=" + datePaid +
-               ", clientID=" + clientID +
-               ", transactionID=" + transactionID +
-               ", status='" + status + '\'' +
-               ", isPaid=" + isPaid +
-               ", totalGst=" + totalGst +
-               ", invoiceTotal=" + invoiceTotal +
+               ", clientId='" + clientId + '\'' +
+               ", businessId='" + businessId + '\'' + 
+               ", productCode='" + productCode + '\'' +
+               ", issuedDate='" + issuedDate + '\'' + 
+               ", dueDate='" + dueDate + '\'' + 
+               ", status'" + status + '\'' + 
+               ", totalGST'" + totalGST + '\'' + 
+               ", invoiceTotal'" + invoiceTotal + '\'' +
                ')';
     }
     
