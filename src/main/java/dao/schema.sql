@@ -1,9 +1,6 @@
-DROP TABLE IF EXISTS product_discount;
 DROP TABLE IF EXISTS invoice_item;
 DROP TABLE IF EXISTS invoice;
-DROP TABLE IF EXISTS discount;
 DROP TABLE IF EXISTS product;
-DROP TABLE IF EXISTS product_type;
 DROP TABLE IF EXISTS client;
 DROP TABLE IF EXISTS business;
 DROP TABLE IF EXISTS address;
@@ -45,33 +42,12 @@ CREATE TABLE client (
     CONSTRAINT client_uq_email UNIQUE (email)
 );
 
-CREATE TABLE product_type (
-    product_type_id SERIAL,
-    product_type_name VARCHAR(50) NOT NULL,
-    CONSTRAINT product_type_pk PRIMARY KEY (product_type_id)
-);
-
-CREATE TABLE discount (
-    discount_code SERIAL,
-    discount_percentage DECIMAL(5, 2) NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    is_active BOOLEAN NOT NULL,
-    CONSTRAINT discount_pk PRIMARY KEY (discount_code)
-);
-
 CREATE TABLE product (
     product_code SERIAL,
-    product_type_id INT NOT NULL,
-    discount_code INT,
+    product_type BOOLEAN NOT NULL,
     product_name VARCHAR(50) NOT NULL,
     product_price DECIMAL(10, 2) NOT NULL,
-    product_description TEXT,
-    product_stocked INT NOT NULL,
-    product_available BOOLEAN NOT NULL,
-    CONSTRAINT product_pk PRIMARY KEY (product_code),
-    CONSTRAINT product_fk_product_type FOREIGN KEY (product_type_id) REFERENCES product_type(product_type_id),
-    CONSTRAINT product_fk_discount FOREIGN KEY (discount_code) REFERENCES discount(discount_code)
+    CONSTRAINT product_pk PRIMARY KEY (product_code)
 );
 
 CREATE TABLE invoice (
@@ -95,18 +71,8 @@ CREATE TABLE invoice_item (
     product_code INT NOT NULL,
     quantity INT NOT NULL,
     discount DECIMAL(5, 2),
-    discount_total DECIMAL(10, 2),
     subtotal DECIMAL(10, 2) NOT NULL,
     CONSTRAINT invoice_item_pk PRIMARY KEY (invoice_id, product_code),
     CONSTRAINT invoice_item_fk_invoice FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id),
     CONSTRAINT invoice_item_fk_product FOREIGN KEY (product_code) REFERENCES product(product_code)
-);
-
-CREATE TABLE product_discount (
-    product_code INT NOT NULL,
-    discount_code INT NOT NULL,
-    total_discount_percentage DECIMAL(5, 2) NOT NULL,
-    CONSTRAINT product_discount_pk PRIMARY KEY (product_code, discount_code),
-    CONSTRAINT product_discount_fk_product FOREIGN KEY (product_code) REFERENCES product(product_code),
-    CONSTRAINT product_discount_fk_discount FOREIGN KEY (discount_code) REFERENCES discount(discount_code)
 );
