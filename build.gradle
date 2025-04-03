@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.4'
 	id 'io.spring.dependency-management' version '1.1.7'
+        id 'com.github.node-gradle.node' version '7.0.1'
 }
 
 group = 'zero'
@@ -38,23 +39,31 @@ tasks.named("processResources") {
     dependsOn copyFrontendBuild
 }
 
-task installFrontend(type: Exec) {
-    workingDir "$projectDir/frontend"
-    commandLine 'cmd', '/c', 'npm install' // For Windows
+def reactAppDir = "$projectDir/frontend"
+
+task installFrontend(type: NpmTask) {
+    workingDir = file(reactAppDir)
+    args = ['install']
 }
 
-task buildFrontend(type: Exec) {
+task buildFrontend(type: NpmTask) {
     dependsOn installFrontend
-    workingDir "$projectDir/frontend"
-    commandLine 'cmd', '/c', 'npm run build'
+    workingDir = file(reactAppDir)
+    args = ['run', 'build']
 }
 
 task copyFrontendBuild(type: Copy) {
     dependsOn buildFrontend
-    from "$projectDir/frontend/build"
+    from "$reactAppDir/build"
     into "$projectDir/src/main/resources/static"
 }
 
 bootJar {
     dependsOn copyFrontendBuild
+}
+
+node {
+    version = '23.11.0' // Node.js version
+    npmVersion = '11.2.0' // npm version
+    download = true // Auto-download Node.js
 }
