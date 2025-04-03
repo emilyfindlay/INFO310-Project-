@@ -4,27 +4,33 @@
  */
 package domain;
 
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-/**
- *
- * @author kevin
- */
+@Entity
+@Table(name = "product")
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private Integer productId;
-    private String name;
-    private BigDecimal price;
 
-    
-    public Product() {
-        
-    }
-    
-    public Product(Integer productId, String name, BigDecimal price) {
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
+    @Column(name = "product_type", nullable = false)
+    private Boolean productType;
+
+    @Column(name = "product_name", nullable = false, length = 50)
+    private String productName;
+
+    @Column(name = "product_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal productPrice;
+
+    public Product() {}
+
+    public Product(Boolean productType, String productName, BigDecimal productPrice) {
+        this.productType = productType;
+        this.productName = productName;
+        this.productPrice = productPrice;
     }
 
     public Integer getProductId() {
@@ -35,63 +41,50 @@ public class Product {
         this.productId = productId;
     }
 
-    public String getName() {
-        return name;
+    public Boolean getProductType() {
+        return productType;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductType(Boolean productType) {
+        this.productType = productType;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public BigDecimal getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(BigDecimal productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(productId, product.productId);
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.productId);
-        hash = 59 * hash + Objects.hashCode(this.name);
-        hash = 59 * hash + Objects.hashCode(this.price);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Product other = (Product) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (!Objects.equals(this.productId, other.productId)) {
-            return false;
-        }
-        return Objects.equals(this.price, other.price);
+        return Objects.hash(productId);
     }
 
     @Override
     public String toString() {
-        return "Product(" +
+        return "Product{" +
                "productId=" + productId +
-               ", name='" + name + '\'' +
-               ", price=" + price +
-               ')';
+               ", productType=" + productType +
+               ", productName='" + productName + '\'' +
+               ", productPrice=" + productPrice +
+               '}';
     }
-
-    
-    
-    
-    
 }

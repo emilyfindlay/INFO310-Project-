@@ -43,18 +43,18 @@ CREATE TABLE client (
 );
 
 CREATE TABLE product (
-    product_code SERIAL,
+    product_id SERIAL,
     product_type BOOLEAN NOT NULL,
     product_name VARCHAR(50) NOT NULL,
     product_price DECIMAL(10, 2) NOT NULL,
-    CONSTRAINT product_pk PRIMARY KEY (product_code)
+    CONSTRAINT product_pk PRIMARY KEY (product_id)
 );
 
 CREATE TABLE invoice (
     invoice_id SERIAL,
     client_id INT NOT NULL,
     business_id INT NOT NULL,
-    product_code INT,
+    product_id INT NOT NULL,
     issued_date DATE NOT NULL,
     due_date DATE NOT NULL,
     status VARCHAR(20) NOT NULL,
@@ -63,16 +63,16 @@ CREATE TABLE invoice (
     CONSTRAINT invoice_pk PRIMARY KEY (invoice_id),
     CONSTRAINT invoice_fk_client FOREIGN KEY (client_id) REFERENCES client(client_id),
     CONSTRAINT invoice_fk_business FOREIGN KEY (business_id) REFERENCES business(business_id),
-    CONSTRAINT invoice_fk_product FOREIGN KEY (product_code) REFERENCES product(product_code)
+    CONSTRAINT invoice_fk_product FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
 CREATE TABLE invoice_item (
     invoice_id INT NOT NULL,
-    product_code INT NOT NULL,
+    product_id INT NOT NULL,
     quantity INT NOT NULL,
     discount DECIMAL(5, 2),
     subtotal DECIMAL(10, 2) NOT NULL,
-    CONSTRAINT invoice_item_pk PRIMARY KEY (invoice_id, product_code),
+    CONSTRAINT invoice_item_pk PRIMARY KEY (invoice_id, product_id),
     CONSTRAINT invoice_item_fk_invoice FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id),
-    CONSTRAINT invoice_item_fk_product FOREIGN KEY (product_code) REFERENCES product(product_code)
+    CONSTRAINT invoice_item_fk_product FOREIGN KEY (product_id) REFERENCES product(product_id)
 );

@@ -165,7 +165,7 @@ public class ProductViewer extends javax.swing.JDialog {
         if (!lstProducts.isSelectionEmpty()) {
             Product selected = lstProducts.getSelectedValue();
 
-            int result = JOptionPane.showConfirmDialog(this, "Delete product " + selected.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+            int result = JOptionPane.showConfirmDialog(this, "Delete product " + selected.getProductName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
 //            // did the user click the yes button?
 //            if (result == JOptionPane.YES_OPTION) {

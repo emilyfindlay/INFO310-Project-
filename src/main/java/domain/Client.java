@@ -4,6 +4,7 @@
  */
 package domain;
 
+import jakarta.persistence.*;
 import java.util.Objects;
 import net.sf.oval.constraint.Email;
 import net.sf.oval.constraint.Length;
@@ -17,39 +18,51 @@ import net.sf.oval.constraint.NotNull;
  * 
  * TODO: Add address fields 
  */
+@Entity
+@Table(name = "client")
 public class Client {
-    private Integer clientID;
-    private Integer addressID; 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "client_id")
+    private Integer clientId;
+
+    @ManyToOne
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
+
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
+
+    @Column(name = "email", nullable = false, length = 50, unique = true)
     private String email;
+
+    @Column(name = "phone", length = 10)
     private String phone;
-    
-    public Client(){
-        
-    }
-    
-    public Client(Integer clientID, Integer addressID, String name, String email, String phone){
-        this.clientID = clientID;
-        this.addressID = addressID;
+
+    public Client() {}
+
+    public Client(Integer clientId, Address address, String name, String email, String phone) {
+        this.clientId = clientId;
+        this.address = address;
         this.name = name;
         this.email = email;
         this.phone = phone;
     }
 
-    public Integer getClientID() {
-        return clientID;
+    public Integer getClientId() {
+        return clientId;
     }
 
-    public void setClientID(Integer clientID) {
-        this.clientID = clientID;
+    public void setClientId(Integer clientId) {
+        this.clientId = clientId;
     }
-    
-    public Integer getAddressID() {
-        return addressID;
+
+    public Address getAddress() {
+        return address;
     }
-    
-    public void setAddressID(Integer addressID) {
-        this.addressID = addressID;
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public String getName() {
@@ -67,48 +80,36 @@ public class Client {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public String getPhone() {
         return phone;
     }
-    
+
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return Objects.equals(clientId, client.clientId) && 
+               Objects.equals(email, client.email);
+    }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 31 * hash + Objects.hashCode(this.clientID);
-        return hash;
+        return Objects.hash(clientId, email);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Client other = (Client) obj;
-        return Objects.equals(this.clientID, other.clientID);
-    }
-
-    
     @Override
     public String toString() {
-        return "Client(" +
-               "clientID=" + clientID +
-               "addressID=" + addressID + '\'' +
+        return "Client{" +
+               "clientId=" + clientId +
                ", name='" + name + '\'' +
                ", email='" + email + '\'' +
-               ", phone='" + phone + '\'' +
-               ')';
+               '}';
     }
     
 }

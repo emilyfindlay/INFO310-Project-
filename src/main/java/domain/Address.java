@@ -4,25 +4,40 @@
  */
 package domain;
 
-/**
- *
- * @author kevin
- */
+import jakarta.persistence.*;
+import java.util.Objects;
+
+@Entity
+@Table(name = "address")
 public class Address {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "address_id")
     private Integer addressId;
+    
+    @Column(name = "street_address1", nullable = false, length = 50)
     private String streetAddress1;
+    
+    @Column(name = "street_address2", length = 50)
     private String streetAddress2;
+    
+    @Column(name = "city", nullable = false, length = 50)
     private String city;
+    
+    @Column(name = "region", length = 50)
     private String region;
-    private Integer postCode;
+    
+    @Column(name = "post_code", nullable = false, length = 10)
+    private String postCode;  // Changed from Integer to String to match schema
+    
+    @Column(name = "country", nullable = false, length = 50)
     private String country;
-
     public Address() {
 
     }
 
-    public Address(Integer addressId, String streetAddress1, String streetAddress2, String city, String region, Integer postCode, String country) {
+    public Address(Integer addressId, String streetAddress1, String streetAddress2, String city, String region, String postCode, String country) {
         this.addressId = addressId;
         this.streetAddress1 = streetAddress1;
         this.streetAddress2 = streetAddress2;
@@ -72,11 +87,11 @@ public class Address {
         this.region = region;
     }
 
-    public Integer getPostCode() {
+    public String getPostCode() {
         return postCode;
     }
 
-    public void setPostCode(Integer postCode) {
+    public void setPostCode(String postCode) {
         this.postCode = postCode;
     }
     
@@ -86,6 +101,19 @@ public class Address {
     
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(addressId, address.addressId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(addressId);
     }
 
     @Override

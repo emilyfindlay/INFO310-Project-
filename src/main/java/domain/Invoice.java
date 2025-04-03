@@ -4,9 +4,9 @@
  */
 package domain;
 
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
 
@@ -14,32 +14,53 @@ import java.util.Objects;
  *
  * @author kevin
  */
+@Entity
+@Table(name = "invoice")
 public class Invoice {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "invoice_id")
     private Integer invoiceId;
-    private Integer clientId;
-    private Integer businessId;
-    private Integer productCode;
-    private Date issuedDate;
-    private Date dueDate;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
+    @ManyToOne
+    @JoinColumn(name = "business_id", nullable = false)
+    private Business business;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @Column(name = "issued_date", nullable = false)
+    private LocalDate issuedDate;
+
+    @Column(name = "due_date", nullable = false)
+    private LocalDate dueDate;
+
+    @Column(name = "status", nullable = false, length = 20)
     private String status;
-    private BigDecimal totalGST;
+
+    @Column(name = "total_gst", nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalGst;
+
+    @Column(name = "invoice_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal invoiceTotal;
 
-    
-    public Invoice(){
-          
-    }
-    
-    
-    public Invoice(Integer invoiceId, Integer clientId, Integer businessId, Integer productCode, Date issuedDate, Date dueDate, String status, BigDecimal totalGST, BigDecimal invoiceTotal) {
-        this.invoiceId = invoiceId;
-        this.clientId = clientId;
-        this.businessId = businessId;
-        this.productCode = productCode;
+    public Invoice() {}
+
+    public Invoice(Client client, Business business, Product product, 
+                  LocalDate issuedDate, LocalDate dueDate, String status,
+                  BigDecimal totalGst, BigDecimal invoiceTotal) {
+        this.client = client;
+        this.business = business;
+        this.product = product;
         this.issuedDate = issuedDate;
         this.dueDate = dueDate;
         this.status = status;
-        this.totalGST = totalGST;
+        this.totalGst = totalGst;
         this.invoiceTotal = invoiceTotal;
     }
 
@@ -50,47 +71,47 @@ public class Invoice {
     public void setInvoiceId(Integer invoiceId) {
         this.invoiceId = invoiceId;
     }
-    
-    public void setClientId(Integer clientId) {
-        this.clientId = clientId;
+
+    public Client getClient() {
+        return client;
     }
-    
-    public Integer getClientId() {
-        return clientId;
+
+    public void setClient(Client client) {
+        this.client = client;
     }
-    
-    public Integer getBusinessId() {
-        return businessId;
+
+    public Business getBusiness() {
+        return business;
     }
-    
-    public void setBusinessId(Integer businessId){
-        this.businessId = businessId;
+
+    public void setBusiness(Business business) {
+        this.business = business;
     }
-    
-    public Integer getProductCode(){
-        return productCode;
+
+    public Product getProduct() {
+        return product;
     }
-    
-    public void setProductCode(Integer productCode){
-        this.productCode = productCode;
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
-    
-    public Date getIssuedDate(){
+
+    public LocalDate getIssuedDate() {
         return issuedDate;
     }
-    
-    public void setIssuedDate(Date issuedDate){
+
+    public void setIssuedDate(LocalDate issuedDate) {
         this.issuedDate = issuedDate;
     }
 
-    public Date getDueDate(){
+    public LocalDate getDueDate() {
         return dueDate;
     }
-    
-    public void setDueDate(Date dueDate){
+
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
-    
+
     public String getStatus() {
         return status;
     }
@@ -99,73 +120,42 @@ public class Invoice {
         this.status = status;
     }
 
-    public BigDecimal getTotalGST(){
-        return totalGST;
+    public BigDecimal getTotalGst() {
+        return totalGst;
     }
 
-    public void setTotalGST(BigDecimal totalGST){
-        this.totalGST = totalGST;
+    public void setTotalGst(BigDecimal totalGst) {
+        this.totalGst = totalGst;
     }
 
-//    public BigDecimal getInvoiceTotal() {
-//        return invoiceTotal;
-//    }
+    public BigDecimal getInvoiceTotal() {
+        return invoiceTotal;
+    }
 
     public void setInvoiceTotal(BigDecimal invoiceTotal) {
         this.invoiceTotal = invoiceTotal;
     }
     
-
-    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Invoice invoice = (Invoice) o;
+        return Objects.equals(invoiceId, invoice.invoiceId);
+    }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 67 * hash + Objects.hashCode(this.invoiceId);
-        hash = 67 * hash + Objects.hashCode(this.issuedDate);
-        hash = 67 * hash + Objects.hashCode(this.totalGST);
-        hash = 67 * hash + Objects.hashCode(this.invoiceTotal);
-        return hash;
+        return Objects.hash(invoiceId);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Invoice other = (Invoice) obj;
-        if (!Objects.equals(this.invoiceId, other.invoiceId)) {
-            return false;
-        }
-        if (!Objects.equals(this.issuedDate, other.issuedDate)) {
-            return false;
-        }
-        if (!Objects.equals(this.totalGST, other.totalGST)) {
-            return false;
-        }
-        return Objects.equals(this.invoiceTotal, other.invoiceTotal);
-    }
-    
-    
-    @Override
     public String toString() {
-        return "Invoice(" +
+        return "Invoice{" +
                "invoiceId=" + invoiceId +
-               ", clientId='" + clientId + '\'' +
-               ", businessId='" + businessId + '\'' + 
-               ", productCode='" + productCode + '\'' +
-               ", issuedDate='" + issuedDate + '\'' + 
-               ", dueDate='" + dueDate + '\'' + 
-               ", status'" + status + '\'' + 
-               ", totalGST'" + totalGST + '\'' + 
-               ", invoiceTotal'" + invoiceTotal + '\'' +
-               ')';
+               ", issuedDate=" + issuedDate +
+               ", totalGst=" + totalGst +
+               ", invoiceTotal=" + invoiceTotal +
+               '}';
     }
-    
 }
