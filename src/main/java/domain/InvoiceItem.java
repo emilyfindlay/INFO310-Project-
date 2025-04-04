@@ -3,19 +3,24 @@ package domain;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
+import net.sf.oval.constraint.NotNull;
 
 @Entity
 @Table(name = "invoice_item")
 public class InvoiceItem {
     @EmbeddedId
+    @NotNull(message = "Invoice item ID must be provided.")
     private InvoiceItemPK id;
 
+    @NotNull(message = "Quantity is required.")
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
+    @NotNull(message = "discount is required")
     @Column(name = "discount", precision = 5, scale = 2)
     private BigDecimal discount;
 
+    @NotNull(message = "discount is required")
     @Column(name = "subtotal", nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;
 
