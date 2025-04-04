@@ -1,11 +1,11 @@
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Other/reactjs.jsx to edit this template
- */
-var Hello = React.createClass({
-    render: function () {
-        return (
-                <div></div>
-                );
-    }
-});
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";             // Load main component
+import "./styles/main.css";         // Optional: global styles
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
