@@ -6,6 +6,10 @@ package domain;
 
 import jakarta.persistence.*;
 import java.util.Objects;
+import net.sf.oval.constraint.Length;
+import net.sf.oval.constraint.NotBlank;
+import net.sf.oval.constraint.NotNull;
+import net.sf.oval.constraint.Range;
 
 @Entity
 @Table(name = "address")
@@ -14,25 +18,42 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
+    @NotNull(message = "ID must be provided.")
+    @Length(min = 2, message = "ID must contain at least two characters.")
     private Integer addressId;
-    
+
+    @NotNull(message = "Street Address must be provided")
+    @NotBlank(message = "Street address must be provided")
+    @Range(min = 2, max = 50, message = "Street address must be greater than two and less than 50")
     @Column(name = "street_address1", nullable = false, length = 50)
     private String streetAddress1;
-    
+
+    @Range(min = 2, max = 50, message = "Street address must be greater than two and less than 50")
     @Column(name = "street_address2", length = 50)
     private String streetAddress2;
-    
+
+    @NotNull(message = "city must be provided")
+    @NotBlank(message = "city must be provided")
+    @Range(min = 2, max = 50, message = "City must be greater than two and less than 50")
     @Column(name = "city", nullable = false, length = 50)
     private String city;
-    
+
+    @Range(min = 2, max = 50, message = "Region must be greater than two and less than 50")
     @Column(name = "region", length = 50)
     private String region;
-    
+
+    @NotNull(message = "Post Code must be provided")
+    @NotBlank(message = "Post Code must be provided")
+    @Length(max = 10, message = "Post Code must be less than 10")
     @Column(name = "post_code", nullable = false, length = 10)
     private String postCode;  // Changed from Integer to String to match schema
-    
+
+    @NotNull(message = "country must be provided")
+    @NotBlank(message = "country must be provided")
+    @Range(min = 2, max = 50, message = "Post Code must be greater than two and less than 50")
     @Column(name = "country", nullable = false, length = 50)
     private String country;
+
     public Address() {
 
     }
@@ -78,11 +99,11 @@ public class Address {
     public void setCity(String city) {
         this.city = city;
     }
-    
-    public String getRegion(){
+
+    public String getRegion() {
         return region;
     }
-    
+
     public void setRegion(String region) {
         this.region = region;
     }
@@ -94,19 +115,23 @@ public class Address {
     public void setPostCode(String postCode) {
         this.postCode = postCode;
     }
-    
-    public String getCountry(){
+
+    public String getCountry() {
         return country;
     }
-    
+
     public void setCountry(String country) {
         this.country = country;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Address address = (Address) o;
         return Objects.equals(addressId, address.addressId);
     }
@@ -118,15 +143,15 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address{" + 
-                "addressId=" + addressId + 
-                ", streetAddress1='" + streetAddress1 + '\'' +
-                ", streetAddress2='" + streetAddress2 + '\'' + 
-                ", city='" + city + '\'' +
-                ", region='" + region + '\'' + 
-                ", postCode='" + postCode + '\'' + 
-                ", country='" + country + '\'' + 
-                '}';
+        return "Address{"
+                + "addressId=" + addressId
+                + ", streetAddress1='" + streetAddress1 + '\''
+                + ", streetAddress2='" + streetAddress2 + '\''
+                + ", city='" + city + '\''
+                + ", region='" + region + '\''
+                + ", postCode='" + postCode + '\''
+                + ", country='" + country + '\''
+                + '}';
     }
 
 }
