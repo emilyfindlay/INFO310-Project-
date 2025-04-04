@@ -7,6 +7,9 @@ package domain;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
+import net.sf.oval.constraint.NotBlank;
+import net.sf.oval.constraint.NotNull;
+import net.sf.oval.constraint.Range;
 
 @Entity
 @Table(name = "product")
@@ -14,14 +17,20 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
+    @NotNull(message = "product id must be provided")
     private Integer productId;
 
+    @NotNull(message = "product type must be provided")
     @Column(name = "product_type", nullable = false)
     private Boolean productType;
 
+    @NotNull(message = "product name must be provided")
+    @NotBlank(message = "product name must be provided")
+    @Range(min = 2, max = 50, message = "product name must be more than 2 characters but less than 50 characters")
     @Column(name = "product_name", nullable = false, length = 50)
     private String productName;
 
+    @NotNull(message = "product price is not provided")
     @Column(name = "product_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal productPrice;
 
