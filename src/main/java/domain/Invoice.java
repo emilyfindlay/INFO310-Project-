@@ -8,6 +8,12 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
+import net.sf.oval.constraint.Future;
+import net.sf.oval.constraint.Length;
+import net.sf.oval.constraint.NotBlank;
+import net.sf.oval.constraint.NotNull;
+import net.sf.oval.constraint.Past;
+import net.sf.oval.constraint.Range;
 
 
 /**
@@ -17,35 +23,52 @@ import java.util.Objects;
 @Entity
 @Table(name = "invoice")
 public class Invoice {
+    @NotNull(message="invoice ID is not provided") 
+    @Length(min = 2, message = "invoice ID must be more than 2 characters")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "invoice_id")
     private Integer invoiceId;
 
+    @NotNull(message = "client ID is not provided")
+    @Length(min = 2, message = "client ID must be greater than 2 characters") 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
     @ManyToOne
     @JoinColumn(name = "business_id", nullable = false)
+    @NotNull(message = "business ID is not provided") 
+    @Length(min = 2, message = "business ID must be greater than 2") 
     private Business business;
 
+    @NotNull(message = "product ID is not provided") 
+    @Length(min = 2, message = "Product ID must be greater than 2 characters")
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @NotNull(message = "issued date must be provided")
+    @Past(message = "Issued date must be in the past.")
     @Column(name = "issued_date", nullable = false)
     private LocalDate issuedDate;
 
+    @NotNull(message = "due date must be provided")
+    @Future(message = "due date must be in the future")
     @Column(name = "due_date", nullable = false)
     private LocalDate dueDate;
 
+    @NotNull(message = "status must be provided") 
+    @NotBlank(message = "status must be provided")
+    @Range(min = 2, max = 20, message = "status must be greater than 2 characters and less that 50 characters")
     @Column(name = "status", nullable = false, length = 20)
     private String status;
 
+    @NotNull(message = "total gst must be provided")
     @Column(name = "total_gst", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalGst;
 
+    @NotNull(message = "invoice total must be provided")
     @Column(name = "invoice_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal invoiceTotal;
 
