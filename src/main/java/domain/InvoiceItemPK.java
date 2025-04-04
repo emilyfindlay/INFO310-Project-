@@ -3,14 +3,17 @@ package domain;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import net.sf.oval.constraint.NotNull;
 
 public class InvoiceItemPK implements Serializable {
     @ManyToOne
     @JoinColumn(name = "invoice_id", nullable = false)
+    @NotNull(message = "invoice must be provided")
     private Invoice invoice;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
+    @NotNull(message = "product must be provided")
     private Product product;
 
     public Invoice getInvoice() {
