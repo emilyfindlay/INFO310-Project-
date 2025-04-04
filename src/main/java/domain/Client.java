@@ -10,6 +10,7 @@ import net.sf.oval.constraint.Email;
 import net.sf.oval.constraint.Length;
 import net.sf.oval.constraint.NotBlank;
 import net.sf.oval.constraint.NotNull;
+import net.sf.oval.constraint.Range;
 
 /**
  *
@@ -21,21 +22,32 @@ import net.sf.oval.constraint.NotNull;
 @Entity
 @Table(name = "client")
 public class Client {
+    
+    @NotNull(message = "client ID must be provided")
+    @Length(min = 2, message = "client ID must have more than 2 characters")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "client_id")
     private Integer clientId;
 
+    @Length(min = 2, message = "address ID must have more than 2 characters")
     @ManyToOne
     @JoinColumn(name = "address_id", nullable = false)
     private Address address;
 
+    @NotNull(message = "name must be provided") 
+    @NotBlank(message = "name must be provided") 
+    @Range(min = 2, max = 50, message = "name must be greater than 2 characters and less than 50 characters")
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
+    @NotNull(message = "email must be provided") 
+    @NotBlank(message = "email must be provided") 
+    @Range(min = 2, max = 50, message = "email must be greater than 2 characters and less than 50 characters")
     @Column(name = "email", nullable = false, length = 50, unique = true)
     private String email;
 
+    @Range(min = 2, max = 10, message = "phone number must be more than 2 characters and less than 10 characters")
     @Column(name = "phone", length = 10)
     private String phone;
 
