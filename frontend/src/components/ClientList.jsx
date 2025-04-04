@@ -1,11 +1,23 @@
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Other/reactjs.jsx to edit this template
- */
-var Hello = React.createClass({
-    render: function () {
-        return (
-                <div></div>
-                );
-    }
-});
+import { useEffect, useState } from "react";
+
+export default function ClientList() {
+  const [clients, setClients] = useState([]);
+
+  useEffect(() => {
+    setClients([
+      { id: 1, name: "Kevin", email: "kev@email.com" },
+      { id: 2, name: "Tele", email: "tele@email.com" }
+    ]);
+  }, []);
+
+  return (
+    <div>
+      <h2>Clients</h2>
+      <ul>
+        {clients.map(client => (
+          <li key={client.id}>{client.name} — {client.email}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
