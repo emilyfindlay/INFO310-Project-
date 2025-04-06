@@ -1,23 +1,18 @@
-import { useEffect, useState } from "react";
-
-export default function ClientList() {
-  const [clients, setClients] = useState([]);
-
-  useEffect(() => {
-    setClients([
-      { id: 1, name: "Kevin", email: "kev@email.com" },
-      { id: 2, name: "Tele", email: "tele@email.com" }
-    ]);
-  }, []);
-
+export default function ClientList({ clients }) {
   return (
     <div>
-      <h2>Clients</h2>
-      <ul>
-        {clients.map(client => (
-          <li key={client.id}>{client.name} — {client.email}</li>
-        ))}
-      </ul>
+      <h2>Client List</h2>
+      {clients.length === 0 ? (
+        <p>No clients added.</p>
+      ) : (
+        <ul>
+          {clients.map((c) => (
+            <li key={c.id}>
+              {c.name} — {c.email} {c.phone && `(${c.phone})`}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
