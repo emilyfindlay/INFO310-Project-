@@ -1,28 +1,18 @@
-import { useEffect, useState } from "react";
-
-export default function InvoiceList() {
-  const [invoices, setInvoices] = useState([]);
-
-  useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setInvoices([
-        { invoiceId: 1, total: 99.99, status: "PAID" },
-        { invoiceId: 2, total: 199.49, status: "DUE" }
-      ]);
-    }, 500);
-  }, []);
-
+export default function InvoiceList({ invoices = [] }) {
   return (
     <div>
-      <h2>Invoices</h2>
-      <ul>
-        {invoices.map(inv => (
-          <li key={inv.invoiceId}>
-            #{inv.invoiceId} — ${inv.total} — {inv.status}
-          </li>
-        ))}
-      </ul>
+      <h2>Invoice List</h2>
+      {invoices.length === 0 ? (
+        <p>No invoices yet.</p>
+      ) : (
+        <ul>
+          {invoices.map((inv) => (
+            <li key={inv.id}>
+              {inv.client?.name} — ${inv.invoiceTotal?.toFixed(2)} — {inv.status}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
