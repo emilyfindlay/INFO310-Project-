@@ -1,11 +1,18 @@
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Other/reactjs.jsx to edit this template
- */
-var Hello = React.createClass({
-    render: function () {
-        return (
-                <div></div>
-                );
-    }
-});
+export default function ClientList({ clients }) {
+  return (
+    <div>
+      <h2>Client List</h2>
+      {clients.length === 0 ? (
+        <p>No clients added.</p>
+      ) : (
+        <ul>
+          {clients.map((c) => (
+            <li key={c.id}>
+              {c.name} — {c.email} {c.phone && `(${c.phone})`}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
