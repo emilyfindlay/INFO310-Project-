@@ -15,11 +15,10 @@ import net.sf.oval.constraint.Range;
 @Table(name = "address")
 public class Address {
 
+        //address ID created by DB
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
-    @NotNull(message = "ID must be provided.")
-    @Length(min = 2, message = "ID must contain at least two characters.")
     private Integer addressId;
 
     @NotNull(message = "Street Address must be provided")
@@ -59,22 +58,15 @@ public class Address {
     }
 
     public Address(Integer addressId, String streetAddress1, String streetAddress2, String city, String region, String postCode, String country) {
-        this.addressId = addressId;
         this.streetAddress1 = streetAddress1;
-        this.streetAddress2 = streetAddress2;
         this.city = city;
-        this.region = region;
         this.postCode = postCode;
-        this.country = country;
     }
 
     public Integer getAddressId() {
         return addressId;
     }
 
-    public void setAddressId(Integer addressId) {
-        this.addressId = addressId;
-    }
 
     public String getStreetAddress1() {
         return streetAddress1;

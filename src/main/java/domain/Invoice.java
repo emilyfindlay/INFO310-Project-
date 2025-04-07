@@ -7,6 +7,7 @@ package domain;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Objects;
 import net.sf.oval.constraint.Future;
 import net.sf.oval.constraint.Length;
@@ -14,6 +15,7 @@ import net.sf.oval.constraint.NotBlank;
 import net.sf.oval.constraint.NotNull;
 import net.sf.oval.constraint.Past;
 import net.sf.oval.constraint.Range;
+import domain.InvoiceItem;
 
 
 /**
@@ -23,8 +25,6 @@ import net.sf.oval.constraint.Range;
 @Entity
 @Table(name = "invoice")
 public class Invoice {
-    @NotNull(message="invoice ID is not provided") 
-    @Length(min = 2, message = "invoice ID must be more than 2 characters")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "invoice_id")
@@ -42,16 +42,14 @@ public class Invoice {
     @Length(min = 2, message = "business ID must be greater than 2") 
     private Business business;
 
-    @NotNull(message = "product ID is not provided") 
-    @Length(min = 2, message = "Product ID must be greater than 2 characters")
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
 
-    @NotNull(message = "issued date must be provided")
     @Past(message = "Issued date must be in the past.")
     @Column(name = "issued_date", nullable = false)
     private LocalDate issuedDate;
+
+    @Past(message = "Issued date must be in the past.")
+    @Column(name = "creation_date", nullable = false)
+    private LocalDate creationDate;
 
     @NotNull(message = "due date must be provided")
     @Future(message = "due date must be in the future")
@@ -72,27 +70,28 @@ public class Invoice {
     @Column(name = "invoice_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal invoiceTotal;
 
-    public Invoice() {}
+    private Collection<InvoiceItem> invoiceItems;
 
-    public Invoice(Client client, Business business, Product product, 
+    public Invoice(
+            //set creation date?
+    ) {}
+
+    public Invoice(Client client, Business business, Collection<InvoiceItem> invoiceItems,
                   LocalDate issuedDate, LocalDate dueDate, String status,
                   BigDecimal totalGst, BigDecimal invoiceTotal) {
-        this.client = client;
         this.business = business;
-        this.product = product;
-        this.issuedDate = issuedDate;
-        this.dueDate = dueDate;
+        this.dueDate = dueDate;     //???
+        this.creationDate = LocalDate.now();
         this.status = status;
-        this.totalGst = totalGst;
-        this.invoiceTotal = invoiceTotal;
+        this.invoiceItems = invoiceItems;
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
     }
 
     public Integer getInvoiceId() {
         return invoiceId;
-    }
-
-    public void setInvoiceId(Integer invoiceId) {
-        this.invoiceId = invoiceId;
     }
 
     public Client getClient() {
@@ -105,18 +104,6 @@ public class Invoice {
 
     public Business getBusiness() {
         return business;
-    }
-
-    public void setBusiness(Business business) {
-        this.business = business;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public LocalDate getIssuedDate() {
@@ -144,19 +131,21 @@ public class Invoice {
     }
 
     public BigDecimal getTotalGst() {
-        return totalGst;
+        return null;        //TODO, add calculation for total gst
     }
 
-    public void setTotalGst(BigDecimal totalGst) {
-        this.totalGst = totalGst;
-    }
 
     public BigDecimal getInvoiceTotal() {
-        return invoiceTotal;
+        return null;    //TODO, add calculation for invoice total
     }
 
-    public void setInvoiceTotal(BigDecimal invoiceTotal) {
-        this.invoiceTotal = invoiceTotal;
+
+    public void setInvoiceItems(Collection<InvoiceItem> invoiceItems) {
+        this.invoiceItems = invoiceItems;
+    }
+
+    public Collection<InvoiceItem> getInvoiceItems() {
+        return invoiceItems;
     }
     
     @Override
@@ -179,6 +168,8 @@ public class Invoice {
                ", issuedDate=" + issuedDate +
                ", totalGst=" + totalGst +
                ", invoiceTotal=" + invoiceTotal +
-               '}';
+               '}';     //list items required
     }
+
+
 }

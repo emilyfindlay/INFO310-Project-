@@ -16,8 +16,7 @@ import net.sf.oval.constraint.Range;
  *
  * @author kevin
  * 
- * 
- * TODO: Add address fields 
+ *
  */
 @Entity
 @Table(name = "client")
@@ -41,7 +40,8 @@ public class Client {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @NotNull(message = "email must be provided") 
+    @NotNull(message = "email must be provided")
+    @Email(message = "Email address must be a valid email format.")
     @NotBlank(message = "email must be provided") 
     @Range(min = 2, max = 50, message = "email must be greater than 2 characters and less than 50 characters")
     @Column(name = "email", nullable = false, length = 50, unique = true)

@@ -15,11 +15,10 @@ import net.sf.oval.constraint.Range;
 @Table(name = "business")
 public class Business {
 
+        //business ID created by DB
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "business_id")
-    @NotNull(message = "Business ID must be provided")
-    @Length(min = 2, message = "Business ID must have 2 or more characters")
     private Integer businessId;
 
     @ManyToOne
@@ -38,11 +37,7 @@ public class Business {
     @NotBlank(message = "bank account name must be provided")
     @Range(min = 2, max = 50, message = "bank account name must be greater than 2 and less than 50")
     @Column(name = "bank_account_name", nullable = false, length = 50)
-    private String bankAccountName;
-
-    @Length(min = 2, message = "business description must be more than 2 characters")
-    @Column(name = "business_description")
-    private String businessDescription;
+    private String bankAccountNumber;
 
     @Range(min = 2, max = 15, message = "GST number has to be greater than 2 and less than 15")
     @Column(name = "gst_number", length = 15)
@@ -71,28 +66,20 @@ public class Business {
     public Business() {
     }
 
-    public Business(Integer businessId, Address address, String businessName,
-            String bankAccountName, String businessDescription,
-            String gstNumber, String email, String phone,
-            String websiteLink, byte[] logo) {
+    public Business(Address address, String businessName,
+                    String bankAccountName,
+                    String gstNumber, String email, String phone,
+                    String websiteLink) {
         this.businessId = businessId;
         this.address = address;
         this.businessName = businessName;
-        this.bankAccountName = bankAccountName;
-        this.businessDescription = businessDescription;
-        this.gstNumber = gstNumber;
+        this.bankAccountNumber = bankAccountName;
         this.email = email;
-        this.phone = phone;
-        this.websiteLink = websiteLink;
-        this.logo = logo;
     }
+
 
     public Integer getBusinessId() {
         return businessId;
-    }
-
-    public void setBusinessId(Integer businessId) {
-        this.businessId = businessId;
     }
 
     public Address getAddress() {
@@ -112,20 +99,13 @@ public class Business {
     }
 
     public String getBankAccountName() {
-        return bankAccountName;
+        return bankAccountNumber;
     }
 
     public void setBankAccountName(String bankAccountName) {
-        this.bankAccountName = bankAccountName;
+        this.bankAccountNumber = bankAccountName;
     }
 
-    public String getBusinessDescription() {
-        return businessDescription;
-    }
-
-    public void setBusinessDescription(String businessDescription) {
-        this.businessDescription = businessDescription;
-    }
 
     public String getGstNumber() {
         return gstNumber;

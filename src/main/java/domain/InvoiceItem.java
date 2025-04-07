@@ -20,18 +20,22 @@ public class InvoiceItem {
     @Column(name = "discount", precision = 5, scale = 2)
     private BigDecimal discount;
 
-    @NotNull(message = "discount is required")
     @Column(name = "subtotal", nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;
 
+    private String description;
+
+    @NotNull(message = "unitPrice is required")
+    private BigDecimal unitPrice;
+
     public InvoiceItem() {}
 
-    public InvoiceItem(InvoiceItemPK id, Integer quantity, 
-                      BigDecimal discount, BigDecimal subtotal) {
+    public InvoiceItem(InvoiceItemPK id, Integer quantity,
+                       BigDecimal discount, BigDecimal subtotal, String description, BigDecimal unitPrice) {
         this.id = id;
         this.quantity = quantity;
-        this.discount = discount;
-        this.subtotal = subtotal;
+        this.description = description;
+        this.unitPrice = unitPrice;
     }
 
     public InvoiceItemPK getId() {
@@ -59,11 +63,23 @@ public class InvoiceItem {
     }
 
     public BigDecimal getSubtotal() {
-        return subtotal;
+        return unitPrice.multiply(new BigDecimal(quantity)).subtract(discount);
     }
 
-    public void setSubtotal(BigDecimal subtotal) {
-        this.subtotal = subtotal;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     @Override
