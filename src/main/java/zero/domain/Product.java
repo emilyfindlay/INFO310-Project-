@@ -2,14 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package domain;
+package zero.domain;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
+
+import net.sf.oval.constraint.Length;
 import net.sf.oval.constraint.NotBlank;
 import net.sf.oval.constraint.NotNull;
-import net.sf.oval.constraint.Range;
 
 @Entity
 @Table(name = "product")
@@ -17,7 +18,6 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
-    @NotNull(message = "product id must be provided")
     private Integer productId;
 
     @NotNull(message = "product type must be provided")
@@ -26,13 +26,17 @@ public class Product {
 
     @NotNull(message = "product name must be provided")
     @NotBlank(message = "product name must be provided")
-    @Range(min = 2, max = 50, message = "product name must be more than 2 characters but less than 50 characters")
-    @Column(name = "product_name", nullable = false, length = 50)
+    @Length(min = 2, max = 50, message = "product name must be between 2 and 50 characters")
+    @Column(name = "user_defined_product_name", nullable = false, length = 50)
     private String productName;
 
     @NotNull(message = "product price is not provided")
     @Column(name = "product_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal productPrice;
+
+    @NotNull(message = "product description is not provided")
+    @Column(name = "product_description", nullable = false, length = 255)
+    private String productDescription;
 
     public Product() {}
 
@@ -44,10 +48,6 @@ public class Product {
 
     public Integer getProductId() {
         return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
     }
 
     public Boolean getProductType() {
@@ -72,6 +72,14 @@ public class Product {
 
     public void setProductPrice(BigDecimal productPrice) {
         this.productPrice = productPrice;
+    }
+
+    public String getProdcutDescription() {
+        return productDescription;
+    }
+
+    public void setProdcutDescription(String prodcutDescription) {
+        this.productDescription = prodcutDescription;
     }
 
     @Override

@@ -13,7 +13,7 @@ CREATE TABLE address
     city            VARCHAR(50) NOT NULL,
     region          VARCHAR(50),
     post_code       VARCHAR(10) NOT NULL,
-    country         VARCHAR(50),            --optional field
+    country         VARCHAR(50), --optional field
     CONSTRAINT address_pk PRIMARY KEY (address_id)
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE business
     email               VARCHAR(50) NOT NULL,
     phone               VARCHAR(10),          -- optional
     website_link        VARCHAR(255),
-    logo                BYTEA,
+--     logo                BYTEA,
     CONSTRAINT business_pk PRIMARY KEY (business_id),
     CONSTRAINT business_fk_address FOREIGN KEY (address_id) REFERENCES address (address_id)
 );
@@ -49,7 +49,7 @@ CREATE TABLE product
     product_id                SERIAL,
     product_type              BOOLEAN        NOT NULL,
     user_defined_product_name VARCHAR(50), --name user saves a product under if they choose to do so
-    product_description       VARCHAR(50)    NOT NULL,
+    product_description       VARCHAR(255)    NOT NULL,
     product_price             DECIMAL(10, 2) NOT NULL,
     CONSTRAINT product_pk PRIMARY KEY (product_id)
 );
@@ -74,13 +74,13 @@ CREATE TABLE invoice
 
 CREATE TABLE invoice_item
 (
-    invoice_id INT            NOT NULL,
-    product_id INT            NOT NULL, --not all items in an invoice need to be a saved product
-    product_description       VARCHAR(50)    NOT NULL,
-    quantity   INT            NOT NULL,
-    discount   DECIMAL(5, 2),           -- percentage? sum?
-    unit_price DECIMAL(10, 2) NOT NULL,
-    subtotal   DECIMAL(10, 2) NOT NULL, --calculated by backend?
+    invoice_id          INT            NOT NULL,
+    product_id          INT            NOT NULL, -- not all items in an invoice need to be a saved product
+    product_description VARCHAR(50)    NOT NULL,
+    quantity            INT            NOT NULL,
+    discount            DECIMAL(5, 2)  NOT NULL DEFAULT 0.00, -- Enforced as NOT NULL with a default value of 0.00
+    unit_price          DECIMAL(10, 2) NOT NULL,
+    subtotal            DECIMAL(10, 2) NOT NULL, -- calculated by backend
     CONSTRAINT invoice_item_pk PRIMARY KEY (invoice_id, product_id),
     CONSTRAINT invoice_item_fk_invoice FOREIGN KEY (invoice_id) REFERENCES invoice (invoice_id),
     CONSTRAINT invoice_item_fk_product FOREIGN KEY (product_id) REFERENCES product (product_id)

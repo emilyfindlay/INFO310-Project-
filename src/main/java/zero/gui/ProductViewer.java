@@ -2,23 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package gui;
+package zero.gui;
 
-import domain.Invoice;
-import helpers.SimpleListModel;
+import zero.domain.Product;
+import zero.helpers.SimpleListModel;
+
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author kevin
  */
-public class InvoiceViewer extends javax.swing.JDialog {
+public class ProductViewer extends javax.swing.JDialog {
 
-    //private final InvoiceDAO dao;
+    //private final ProductDAO dao;
 
-	private final SimpleListModel invoicesModel = new SimpleListModel();
+	private final SimpleListModel productsModel = new SimpleListModel();
 
-	public InvoiceViewer(java.awt.Frame parent, boolean modal){         //, ProductDAO dao) {
+	public ProductViewer(java.awt.Frame parent, boolean modal){         //, ProductDAO dao) {
 		super(parent, modal);
 
 //		this.dao = dao;
@@ -26,9 +27,9 @@ public class InvoiceViewer extends javax.swing.JDialog {
 		initComponents();
 //
 //		// load products into JList
-//		Collection<Invoice> invoices = dao.getInvoices();
-//		invoicesModel.updateItems(invoices);
-//		lstInvoice.setModel(invoicesModel);
+//		Collection<Product> products = dao.getProducts();
+//		productsModel.updateItems(products);
+//		lstProducts.setModel(productsModel);
 //
 //		// load categories into combo
 //		SimpleListModel categoriesModel = new SimpleListModel();
@@ -36,7 +37,7 @@ public class InvoiceViewer extends javax.swing.JDialog {
 //		categoriesModel.updateItems(categories);
 //		cmbCategories.setModel(categoriesModel);
                 
-                System.out.println("Invoice Viewer opened");
+                System.out.println("Product Viewer opened");
 	}
 
     /**
@@ -54,7 +55,7 @@ public class InvoiceViewer extends javax.swing.JDialog {
         cmbCategories = new javax.swing.JComboBox<>();
         btnClose = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        lstInvoice = new javax.swing.JList<>();
+        lstProducts = new javax.swing.JList<>();
         btnDelete = new javax.swing.JButton();
         lblId = new javax.swing.JLabel();
 
@@ -82,7 +83,7 @@ public class InvoiceViewer extends javax.swing.JDialog {
             }
         });
 
-        jScrollPane1.setViewportView(lstInvoice);
+        jScrollPane1.setViewportView(lstProducts);
 
         btnDelete.setText("Delete");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
@@ -146,14 +147,14 @@ public class InvoiceViewer extends javax.swing.JDialog {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
 //        String id = txtSearchId.getText();
-//        Invoice invoice = dao.searchById(id);
-//        invoicesModel.updateItems(invoice);
+//        Product product = dao.searchById(id);
+//        productsModel.updateItems(product);
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void cmbCategoriesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCategoriesActionPerformed
 //        String category = (String) cmbCategories.getSelectedItem();
-//        Collection<Invoice> products = dao.filterByCategory(category);
-//        invoicesModel.updateItems(invoices);
+//        Collection<Product> products = dao.filterByCategory(category);
+//        productsModel.updateItems(products);
     }//GEN-LAST:event_cmbCategoriesActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
@@ -161,22 +162,22 @@ public class InvoiceViewer extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-//        if (!lstInvoice.isSelectionEmpty()) {
-//            Invoice selected = lstInvoice.getSelectedValue();
-//
-//            int result = JOptionPane.showConfirmDialog(this, "Delete invoice " + selected.getName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
-//
+        if (!lstProducts.isSelectionEmpty()) {
+            Product selected = lstProducts.getSelectedValue();
+
+            int result = JOptionPane.showConfirmDialog(this, "Delete product " + selected.getProductName() + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+
 //            // did the user click the yes button?
 //            if (result == JOptionPane.YES_OPTION) {
-//                dao.removeInvoice(selected);
+//                dao.removeProduct(selected);
 //
 //                // update JList
-//                productsModel.updateItems(dao.getInvoices());
+//                productsModel.updateItems(dao.getProducts());
 //
 //                // selected item was deleted, so clear selection
-//                lstInvoice.clearSelection();
+//                lstProducts.clearSelection();
 //            }
-//        }
+        }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
 
@@ -188,7 +189,7 @@ public class InvoiceViewer extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCategory;
     private javax.swing.JLabel lblId;
-    private javax.swing.JList<Invoice> lstInvoice;
+    private javax.swing.JList<Product> lstProducts;
     private javax.swing.JTextField txtSearchId;
     // End of variables declaration//GEN-END:variables
 }

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package domain;
+package zero.domain;
 
 import jakarta.persistence.*;
 import java.util.Objects;
@@ -36,7 +36,7 @@ public class Business {
     @NotNull(message = "bank account name must be provided")
     @NotBlank(message = "bank account name must be provided")
     @Range(min = 2, max = 50, message = "bank account name must be greater than 2 and less than 50")
-    @Column(name = "bank_account_name", nullable = false, length = 50)
+    @Column(name = "bank_account_number", nullable = false, length = 50)
     private String bankAccountNumber;
 
     @Range(min = 2, max = 15, message = "GST number has to be greater than 2 and less than 15")
@@ -58,10 +58,10 @@ public class Business {
     @Length(min = 2, message = "website link must be greater than 2 character")
     @Column(name = "website_link", length = 255)
     private String websiteLink;
-
-    @Lob
-    @Column(name = "logo")
-    private byte[] logo;
+//
+//    @Lob
+//    @Column(name = "logo")
+//    private byte[] logo;
 
     public Business() {
     }
@@ -70,7 +70,6 @@ public class Business {
                     String bankAccountName,
                     String gstNumber, String email, String phone,
                     String websiteLink) {
-        this.businessId = businessId;
         this.address = address;
         this.businessName = businessName;
         this.bankAccountNumber = bankAccountName;
@@ -139,13 +138,13 @@ public class Business {
         this.websiteLink = websiteLink;
     }
 
-    public byte[] getLogo() {
-        return logo;
-    }
-
-    public void setLogo(byte[] logo) {
-        this.logo = logo;
-    }
+//    public byte[] getLogo() {
+//        return logo;
+//    }
+//
+//    public void setLogo(byte[] logo) {
+//        this.logo = logo;
+//    }
 
     @Override
     public boolean equals(Object o) {

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package domain;
+package zero.domain;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -15,7 +15,6 @@ import net.sf.oval.constraint.NotBlank;
 import net.sf.oval.constraint.NotNull;
 import net.sf.oval.constraint.Past;
 import net.sf.oval.constraint.Range;
-import domain.InvoiceItem;
 
 
 /**
@@ -70,6 +69,7 @@ public class Invoice {
     @Column(name = "invoice_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal invoiceTotal;
 
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
     private Collection<InvoiceItem> invoiceItems;
 
     public Invoice(

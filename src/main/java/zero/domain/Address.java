@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package domain;
+package zero.domain;
 
 import jakarta.persistence.*;
 import java.util.Objects;
@@ -47,8 +47,7 @@ public class Address {
     @Column(name = "post_code", nullable = false, length = 10)
     private String postCode;  // Changed from Integer to String to match schema
 
-    @NotNull(message = "country must be provided")
-    @NotBlank(message = "country must be provided")
+
     @Range(min = 2, max = 50, message = "Post Code must be greater than two and less than 50")
     @Column(name = "country", nullable = false, length = 50)
     private String country;

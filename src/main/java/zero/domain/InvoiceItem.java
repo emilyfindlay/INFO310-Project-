@@ -1,4 +1,4 @@
-package domain;
+package zero.domain;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -16,25 +16,37 @@ public class InvoiceItem {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @NotNull(message = "discount is required")
+    @NotNull(message = "Discount is required")
     @Column(name = "discount", precision = 5, scale = 2)
     private BigDecimal discount;
 
     @Column(name = "subtotal", nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;
 
-    private String description;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
+    private Product product;
 
-    @NotNull(message = "unitPrice is required")
+    @NotNull(message = "Unit price is required")
     private BigDecimal unitPrice;
 
-    public InvoiceItem() {}
+    @ManyToOne
+    @JoinColumn(name = "invoice_id", nullable = false, insertable = false, updatable = false)
+    private Invoice invoice;
+
+
+    public InvoiceItem() {
+        // Default constructor
+        this.discount = BigDecimal.ZERO;  // Ensuring discount defaults to 0 if not provided
+    }
 
     public InvoiceItem(InvoiceItemPK id, Integer quantity,
                        BigDecimal discount, BigDecimal subtotal, String description, BigDecimal unitPrice) {
         this.id = id;
         this.quantity = quantity;
-        this.description = description;
+        this.discount = discount != null ? discount : BigDecimal.ZERO; // If discount is null, set to 0
+        this.subtotal = calculateSubtotal(); // Assuming you want subtotal to be calculated here
+        this.product.setProdcutDescription(description);
         this.unitPrice = unitPrice;
     }
 
@@ -52,6 +64,7 @@ public class InvoiceItem {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+        this.subtotal = calculateSubtotal(); // Recalculate subtotal when quantity changes
     }
 
     public BigDecimal getDiscount() {
@@ -59,19 +72,24 @@ public class InvoiceItem {
     }
 
     public void setDiscount(BigDecimal discount) {
-        this.discount = discount;
+        this.discount = discount != null ? discount : BigDecimal.ZERO; // Default to 0 if discount is null
+        this.subtotal = calculateSubtotal(); // Recalculate subtotal when discount changes
     }
 
     public BigDecimal getSubtotal() {
+        return subtotal != null ? subtotal : calculateSubtotal();
+    }
+
+    private BigDecimal calculateSubtotal() {
         return unitPrice.multiply(new BigDecimal(quantity)).subtract(discount);
     }
 
     public String getDescription() {
-        return description;
+        return product.getProdcutDescription();
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.product.setProdcutDescription(description);
     }
 
     public BigDecimal getUnitPrice() {
@@ -80,6 +98,7 @@ public class InvoiceItem {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+        this.subtotal = calculateSubtotal(); // Recalculate subtotal when unitPrice changes
     }
 
     @Override

@@ -1,19 +1,19 @@
-package helpers;
+package zero.helpers;
 
-import domain.*;
+import zero.domain.*;
 import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.font.*;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import zero.domain.Business;
+import zero.domain.Client;
+import zero.domain.Invoice;
+import zero.domain.InvoiceItem;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.*;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 public class GenerateInvoice {
 
