@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-export default function ProductEditor({ setProducts }) {
+export default function ProductEditor() {
   const [productType, setProductType] = useState(true); // true = service
   const [productName, setProductName] = useState("");
   const [productPrice, setProductPrice] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const parsedPrice = parseFloat(productPrice);
@@ -15,60 +15,74 @@ export default function ProductEditor({ setProducts }) {
     }
 
     const newProduct = {
-      id: Math.floor(Math.random() * 100000),
-      productType,
-      productName,
-      productPrice: parsedPrice
+      type: productType ? "SERVICE" : "PHYSICAL", // adjust based on backend enum or field
+      name: productName,
+      price: parsedPrice
     };
 
-    setProducts((prev) => [...prev, newProduct]);
+    try {
+      const response = await fetch("/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newProduct)
+      });
 
-    // Reset form fields
-    setProductType(true);
-    setProductName("");
-    setProductPrice("");
-    alert("Mock product added!");
+      if (!response.ok) {
+        throw new Error("Failed to save product");
+      }
+
+      alert("Product added successfully!");
+      // Reset form fields
+      setProductType(true);
+      setProductName("");
+      setProductPrice("");
+    } catch (err) {
+      console.error(err);
+      alert("Error saving product.");
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Add Product</h2>
+      <form onSubmit={handleSubmit}>
+        <h2>Add Product</h2>
 
-      <label>
-        Product Type:
-        <select
-          value={productType.toString()}
-          onChange={(e) => setProductType(e.target.value === "true")}
-        >
-          <option value="true">Service</option>
-          <option value="false">Physical Product</option>
-        </select>
-      </label>
+        <label>
+          Product Type:
+          <select
+              value={productType.toString()}
+              onChange={(e) => setProductType(e.target.value === "true")}
+          >
+            <option value="true">Service</option>
+            <option value="false">Physical Product</option>
+          </select>
+        </label>
 
-      <label>
-        Product Name:
-        <input
-          type="text"
-          value={productName}
-          onChange={(e) => setProductName(e.target.value)}
-          required
-          minLength={2}
-          maxLength={50}
-        />
-      </label>
+        <label>
+          Product Name:
+          <input
+              type="text"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+              required
+              minLength={2}
+              maxLength={50}
+          />
+        </label>
 
-      <label>
-        Product Price:
-        <input
-          type="number"
-          value={productPrice}
-          onChange={(e) => setProductPrice(e.target.value)}
-          required
-          step="0.01"
-        />
-      </label>
+        <label>
+          Product Price:
+          <input
+              type="number"
+              value={productPrice}
+              onChange={(e) => setProductPrice(e.target.value)}
+              required
+              step="0.01"
+          />
+        </label>
 
-      <button type="submit">Add Product</button>
-    </form>
+        <button type="submit">Add Product</button>
+      </form>
   );
 }

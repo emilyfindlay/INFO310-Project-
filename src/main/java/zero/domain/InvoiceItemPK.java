@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import net.sf.oval.constraint.NotNull;
 
+@Embeddable
 public class InvoiceItemPK implements Serializable {
     @ManyToOne
     @JoinColumn(name = "invoice_id", nullable = false)

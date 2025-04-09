@@ -9,7 +9,6 @@ import net.sf.oval.constraint.NotNull;
 @Table(name = "invoice_item")
 public class InvoiceItem {
     @EmbeddedId
-    @NotNull(message = "Invoice item ID must be provided.")
     private InvoiceItemPK id;
 
     @NotNull(message = "Quantity is required.")
