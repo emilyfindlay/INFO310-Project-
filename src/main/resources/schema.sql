@@ -40,8 +40,7 @@ CREATE TABLE client
     email      VARCHAR(50) NOT NULL,
     phone      VARCHAR(10),
     CONSTRAINT client_pk PRIMARY KEY (client_id),
-    CONSTRAINT client_fk_address FOREIGN KEY (address_id) REFERENCES address (address_id) --,
-    --CONSTRAINT client_uq_email UNIQUE (email)     unique email needed?
+    CONSTRAINT client_fk_address FOREIGN KEY (address_id) REFERENCES address (address_id)
 );
 
 CREATE TABLE product
@@ -59,17 +58,15 @@ CREATE TABLE invoice
     invoice_id    SERIAL,
     business_id   INT            NOT NULL,
     client_id     INT,                     --not all invoice must have a client.
-    product_id    INT            NOT NULL, --not all items in an invoice need to be a saved product but all need a product ID
     creation_date DATE           NOT NULL, --invoices must have a date of creation
     issued_date   DATE,                    --invoice can be created but not issued
     due_date      DATE           NOT NULL, --invoice need due date???
     status        VARCHAR(20)    NOT NULL,
-    total_gst     DECIMAL(10, 2) NOT NULL, --calculated from the invoice items by DB?
-    invoice_total DECIMAL(10, 2) NOT NULL, --calculated from the invoice items by DB?
+    total_gst     DECIMAL(10, 2) NOT NULL,
+    invoice_total DECIMAL(10, 2) NOT NULL,
     CONSTRAINT invoice_pk PRIMARY KEY (invoice_id),
     CONSTRAINT invoice_fk_client FOREIGN KEY (client_id) REFERENCES client (client_id),
-    CONSTRAINT invoice_fk_business FOREIGN KEY (business_id) REFERENCES business (business_id),
-    CONSTRAINT invoice_fk_product FOREIGN KEY (product_id) REFERENCES product (product_id)
+    CONSTRAINT invoice_fk_business FOREIGN KEY (business_id) REFERENCES business (business_id)
 );
 
 CREATE TABLE invoice_item
