@@ -38,7 +38,7 @@ tasks.named("processResources") {
     dependsOn copyFrontendBuild
 }
 
-task installFrontend(type: Exec) {
+tasks.register('installFrontend', Exec) {
     workingDir "$projectDir/frontend"
     environment "PATH", "/opt/homebrew/bin:" + System.getenv("PATH") // chatgpt
 
@@ -51,7 +51,7 @@ task installFrontend(type: Exec) {
     }
 }
 
-task buildFrontend(type: Exec) {
+tasks.register('buildFrontend', Exec) {
     dependsOn installFrontend
     workingDir "$projectDir/frontend"
     //commandLine 'cmd', '/c', 'npm run build'
@@ -64,7 +64,7 @@ task buildFrontend(type: Exec) {
     }
 }
 
-task copyFrontendBuild(type: Copy) {
+tasks.register('copyFrontendBuild', Copy) {
     dependsOn buildFrontend
     from "$projectDir/frontend/build"
     into "$projectDir/src/main/resources/static"
