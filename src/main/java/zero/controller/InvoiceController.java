@@ -8,7 +8,7 @@ import zero.repository.InvoiceRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping("/invoices")
+@RequestMapping("/api/invoices")
 public class InvoiceController {
 
     private final InvoiceRepository invoiceRepository;
