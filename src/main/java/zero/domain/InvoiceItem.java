@@ -45,7 +45,7 @@ public class InvoiceItem {
         this.quantity = quantity;
         this.discount = discount != null ? discount : BigDecimal.ZERO; // If discount is null, set to 0
         this.subtotal = calculateSubtotal(); // Assuming you want subtotal to be calculated here
-        this.product.setProdcutDescription(description);
+        this.product.setProductDescription(description);
         this.unitPrice = unitPrice;
     }
 
@@ -84,11 +84,11 @@ public class InvoiceItem {
     }
 
     public String getDescription() {
-        return product.getProdcutDescription();
+        return product.getProductDescription();
     }
 
     public void setDescription(String description) {
-        this.product.setProdcutDescription(description);
+        this.product.setProductDescription(description);
     }
 
     public BigDecimal getUnitPrice() {

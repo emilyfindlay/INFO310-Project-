@@ -74,12 +74,12 @@ public class Product {
         this.productPrice = productPrice;
     }
 
-    public String getProdcutDescription() {
+    public String getProductDescription() {
         return productDescription;
     }
 
-    public void setProdcutDescription(String prodcutDescription) {
-        this.productDescription = prodcutDescription;
+    public void setProductDescription(String productDescription) {
+        this.productDescription = productDescription;
     }
 
     @Override
