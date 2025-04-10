@@ -21,34 +21,40 @@ public class BusinessController {
         return businessRepo.findAll();
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Business> getBusinessById(@PathVariable Long id) {
-//        return businessRepo.findById(id)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-//
-//    @PostMapping
-//    public Business createBusiness(@RequestBody Business business) {
-//        return businessRepo.save(business);
-//    }
-//
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Business> updateBusiness(@PathVariable Long id, @RequestBody Business updatedBusiness) {
-//        return businessRepo.findById(id).map(business -> {
-//            business.setBusinessName(updatedBusiness.getBusinessName());
-//            business.setAddress(updatedBusiness.getAddress());
-//            // Update any other fields you need
-//            return ResponseEntity.ok(businessRepo.save(business));
-//        }).orElse(ResponseEntity.notFound().build());
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteBusiness(@PathVariable Long id) {
-//        if (businessRepo.existsById(id)) {
-//            businessRepo.deleteById(id);
-//            return ResponseEntity.noContent().build();
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Business> getBusinessById(@PathVariable Long id) {
+        return businessRepo.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public Business createBusiness(@RequestBody Business business) {
+        System.out.println("Creating new business: " + business);
+        return businessRepo.save(business);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Business> updateBusiness(@PathVariable Long id, @RequestBody Business updatedBusiness) {
+        return businessRepo.findById(id).map(business -> {
+            business.setBusinessName(updatedBusiness.getBusinessName());
+            business.setAddress(updatedBusiness.getAddress());
+            business.setBankAccountNumber(updatedBusiness.getBankAccountNumber());
+            business.setGstNumber(updatedBusiness.getGstNumber());
+            business.setEmail(updatedBusiness.getEmail());
+            business.setPhone(updatedBusiness.getPhone());
+            business.setWebsiteLink(updatedBusiness.getWebsiteLink());
+            //TODO add logo things
+            return ResponseEntity.ok(businessRepo.save(business));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBusiness(@PathVariable Long id) {
+        if (businessRepo.existsById(id)) {
+            businessRepo.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

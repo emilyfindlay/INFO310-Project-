@@ -97,12 +97,12 @@ public class Business {
         this.businessName = businessName;
     }
 
-    public String getBankAccountName() {
+    public String getBankAccountNumber() {
         return bankAccountNumber;
     }
 
-    public void setBankAccountName(String bankAccountName) {
-        this.bankAccountNumber = bankAccountName;
+    public void setBankAccountNumber(String bankAccountNumber) {
+        this.bankAccountNumber = bankAccountNumber;
     }
 
 
@@ -138,6 +138,7 @@ public class Business {
         this.websiteLink = websiteLink;
     }
 
+    //TODO add logo things
 //    public byte[] getLogo() {
 //        return logo;
 //    }
