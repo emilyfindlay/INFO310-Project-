@@ -79,7 +79,7 @@ public class Address {
         return streetAddress2;
     }
 
-    public void getStreetAddress2(String streetAddress2) {
+    public void setStreetAddress2(String streetAddress2) {
         this.streetAddress2 = streetAddress2;
     }
 
