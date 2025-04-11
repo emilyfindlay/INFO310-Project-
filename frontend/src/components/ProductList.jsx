@@ -39,7 +39,7 @@ export default function ProductList() {
               {typeof p.productPrice === "number"
                 ? p.productPrice.toFixed(2)
                 : Number(p.productPrice).toFixed(2)}{" "}
-              ({p.productType === "SERVICE" ? "Service" : "Product"})
+              ({p.productType === true ? "Service" : "Product"})
             </li>
           ))}
         </ul>

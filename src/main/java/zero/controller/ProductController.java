@@ -30,10 +30,17 @@ public class ProductController {
 
     // Add new product
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        System.out.println("Creating new product: " + product);
-        return productRepository.save(product);
+    public ResponseEntity<?> createProduct(@RequestBody Product product) {
+        try {
+            System.out.println(">>> Received product: " + product);
+            Product saved = productRepository.save(product);
+            return ResponseEntity.ok(saved);
+        } catch (Exception e) {
+            e.printStackTrace(); // print full error
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
     }
+
 
      // Read a product by ID
     @GetMapping("/{id}")
