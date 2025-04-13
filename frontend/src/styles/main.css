@@ -1,26 +1,171 @@
-/* 
-    Created on : 5/04/2025, 2:18:06 am
-    Author     : Tele
-*/
+/* Base Styles */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  padding: 2rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7fa; /* Light background color for clean look */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  height: 100vh;
+  color: #333; /* Dark gray text for readability */
 }
 
+/* Sidebar Styles */
+aside {
+  background-color: #1e4e79; /* Xero's primary blue color */
+  color: white;
+  min-width: 240px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 4px 0 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for separation */
+}
+
+aside h1 {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+aside nav button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+aside nav button:hover {
+  background-color: #2e6da4; /* Darker blue on hover */
+}
+
+/* Main content area */
+main {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  background-color: #fff; /* White background for main content */
+}
+
+/* Navigation Buttons (if reused elsewhere) */
 nav button {
   margin: 0.5rem;
   padding: 0.5rem 1rem;
-  background: #333;
+  background: #1e4e79;
   color: white;
   border: none;
   border-radius: 4px;
+  transition: background-color 0.3s;
 }
 
-form input {
+nav button:hover {
+  background-color: #2e6da4;
+}
+
+/* Forms */
+form {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 600px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for form */
+  margin: 0 auto; /* Center the form */
+}
+
+form input,
+form select,
+form textarea {
   display: block;
   margin: 1rem 0;
-  padding: 0.5rem;
+  padding: 0.75rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #333; /* Dark text for input fields */
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border-color: #0061F2; /* Xero's blue color on focus */
+  outline: none;
+}
+
+/* Form Buttons */
+form button {
+  background-color: #1e4e79;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+form button:hover {
+  background-color: #2e6da4; /* Darker blue on hover */
+}
+
+/* Card Style for Lists (Clients, Invoices, Products) */
+.card {
+  background-color: white;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Soft shadow for cards */
+}
+
+/* Table Styles for Invoice/Product Lists */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #0061F2; /* Xero's blue */
+  color: white;
+  font-weight: 600;
+}
+
+tr:nth-child(even) {
+  background-color: #f7f7f7; /* Light gray rows for better contrast */
+}
+
+tr:hover {
+  background-color: #e6f7ff; /* Light blue on hover */
+}
+
+/* Responsive layout tweaks */
+@media (max-width: 768px) {
+  aside {
+    min-width: 180px;
+  }
+
+  form {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .container {
+    padding: 1rem;
+  }
 }

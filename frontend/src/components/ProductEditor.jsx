@@ -1,102 +1,92 @@
 import { useState } from "react";
 
-export default function ProductEditor() {
-  const [productType, setProductType] = useState(true); // true = service
-  const [productName, setProductName] = useState("");
-  const [productPrice, setProductPrice] = useState("");
-  const [productDescription, setProductDescription] = useState("");
+export default function ProductEditor({ setProducts }) {
+    const [productName, setProductName] = useState("");
+    const [productDescription, setProductDescription] = useState("");
+    const [productPrice, setProductPrice] = useState("");
+    const [productType, setProductType] = useState("");
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-  const parsedPrice = parseFloat(productPrice);
-  if (isNaN(parsedPrice)) {
-    alert("Please enter a valid product price.");
-    return;
-  }
+        const newProduct = {
+            productName,
+            productDescription,
+            productPrice: parseFloat(productPrice), // Ensure it's a number
+            productType,
+        };
 
-  const newProduct = {
-    productType: productType, // boolean, true for service
-    productName: productName,
-    productPrice: parsedPrice,
-    productDescription: productDescription // ← required!
-  };
+        try {
+            const response = await fetch("http://localhost:8080/api/products", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newProduct),
+            });
 
-  try {
-    const response = await fetch("http://localhost:8080/api/products", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(newProduct)
-    });
+            if (!response.ok) {
+                throw new Error("Failed to add product");
+            }
 
-    const responseText = await response.text(); // capture error detail if needed
+            const createdProduct = await response.json();
 
-    if (!response.ok) {
-      throw new Error(responseText || "Failed to save product");
-    }
+            setProducts((prev) => [...prev, createdProduct]);
 
-    alert("Product added successfully!");
-    setProductType(true);
-    setProductName("");
-    setProductPrice("");
-    setProductDescription(""); // reset
-  } catch (err) {
-    console.error(err);
-    alert("Error saving product: " + err.message);
-  }
-};
+            setProductName("");
+            setProductDescription("");
+            setProductPrice("");
+            setProductType("");
+            alert("Product added successfully!");
+        } catch (err) {
+            alert("Error adding product: " + err.message);
+        }
+    };
 
-  return (
-      <form onSubmit={handleSubmit}>
-        <h2>Add Product</h2>
+    return (
+        <form onSubmit={handleSubmit}>
+            <h2>Add Product</h2>
 
-        <label>
-          Product Type:
-          <select
-              value={productType}
-              onChange={(e) => setProductType(e.target.value === "true")}
-          >
-            <option value="true">Service</option>
-            <option value="false">Physical Product</option>
-          </select>
-        </label>
+            <label>
+                Name:
+                <input
+                    type="text"
+                    value={productName}
+                    onChange={(e) => setProductName(e.target.value)}
+                    required
+                />
+            </label>
 
-        <label>
-          Product Name:
-          <input
-              type="text"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-              required
-              minLength={2}
-              maxLength={50}
-          />
-        </label>
+            <label>
+                Description:
+                <input
+                    type="text"
+                    value={productDescription}
+                    onChange={(e) => setProductDescription(e.target.value)}
+                />
+            </label>
 
-        <label>
-          Product Price:
-          <input
-              type="number"
-              value={productPrice}
-              onChange={(e) => setProductPrice(e.target.value)}
-              required
-              step="0.01"
-          />
-        </label>
-        
-        <label>
-            Product Description:
-            <textarea
-              value={productDescription}
-              onChange={(e) => setProductDescription(e.target.value)}
-              required
-              maxLength={255}
-            />
-      </label>
+            <label>
+                Price:
+                <input
+                    type="number"
+                    step="0.01"
+                    value={productPrice}
+                    onChange={(e) => setProductPrice(e.target.value)}
+                    required
+                />
+            </label>
 
-        <button type="submit">Add Product</button>
-      </form>
-  );
+            <label>
+                Type:
+                <input
+                    type="text"
+                    value={productType}
+                    onChange={(e) => setProductType(e.target.value)}
+                />
+            </label>
+
+            <button type="submit">Add Product</button>
+        </form>
+    );
 }

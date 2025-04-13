@@ -40,11 +40,13 @@ public class Product {
 
     public Product() {}
 
-    public Product(Boolean productType, String productName, BigDecimal productPrice) {
+    public Product(Boolean productType, String productName, BigDecimal productPrice, String productDescription) {
         this.productType = productType;
         this.productName = productName;
         this.productPrice = productPrice;
+        this.productDescription = productDescription;
     }
+
 
     public Integer getProductId() {
         return productId;

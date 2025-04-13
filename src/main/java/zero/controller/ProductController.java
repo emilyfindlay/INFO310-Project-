@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package zero.controller;
 
 import org.springframework.http.ResponseEntity;
@@ -28,21 +24,21 @@ public class ProductController {
         return productRepository.findAll();
     }
 
-    // Add new product
+    // ✅ Add multiple products at once
     @PostMapping
-    public ResponseEntity<?> createProduct(@RequestBody Product product) {
+    public ResponseEntity<?> createProducts(@RequestBody List<Product> products) {
         try {
-            System.out.println(">>> Received product: " + product);
-            Product saved = productRepository.save(product);
-            return ResponseEntity.ok(saved);
+            products.forEach(p -> System.out.println("→ Product received: " + p));
+            System.out.println(">>> Received products: " + products);
+            List<Product> savedProducts = productRepository.saveAll(products);
+            return ResponseEntity.ok(savedProducts);
         } catch (Exception e) {
             e.printStackTrace(); // print full error
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
 
-
-     // Read a product by ID
+    // Read a product by ID
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable long id) {
         Optional<Product> product = productRepository.findById(id);

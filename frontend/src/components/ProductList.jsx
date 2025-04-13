@@ -1,49 +1,89 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function ProductList() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  // Fetch products when component mounts
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("/api/products");
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
+
+
+export default function ProductList({ products, setProducts }) {
+
+    console.log("Products:", products);
+    console.log("setProducts:", setProducts);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    // Fetch products from the API when the component mounts
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch("http://localhost:8080/api/products");
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch products");
+                }
+
+                const data = await response.json();
+                setProducts(data);
+            } catch (err) {
+                setError(err.message || "Something went wrong.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, [setProducts]); // Ensures that products are fetched when this component loads
+
+    // Handle product deletion
+    const handleDelete = async (id) => {
+        if (window.confirm("Are you sure you want to delete this product?")) {
+            try {
+                const response = await fetch(`http://localhost:8080/api/products/${id}`, {
+                    method: "DELETE",
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to delete product");
+                }
+
+                setProducts((prev) => prev.filter((product) => product.productId !== id));
+                alert("Product deleted!");
+            } catch (err) {
+                setError(err.message || "Something went wrong while deleting.");
+            }
         }
-        const data = await response.json();
-        setProducts(data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
     };
 
-    fetchProducts();
-  }, []); // Empty dependency array ensures it runs once when the component mounts
+    return (
+        <div>
+            <h2>Product List</h2>
 
-  return (
-    <div>
-      <h2>Product List</h2>
-      {loading ? (
-        <p>Loading products...</p>
-      ) : products.length === 0 ? (
-        <p>No products yet.</p>
-      ) : (
-        <ul>
-          {products.map((p) => (
-            <li key={p.productId ?? p.id}>
-              {p.productName ?? "Unnamed Product"} — $
-              {typeof p.productPrice === "number"
-                ? p.productPrice.toFixed(2)
-                : Number(p.productPrice).toFixed(2)}{" "}
-              ({p.productType === true ? "Service" : "Product"})
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+            {loading && <p>Loading products...</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
+
+            {!loading && !products.length && <p>No products found.</p>}
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {products.map((product) => (
+                    <tr key={product.productId}>
+                        <td>{product.productName}</td>
+                        <td>{product.productDescription}</td>
+                        <td>{product.productPrice}</td>
+                        <td>
+                            <button onClick={() => handleDelete(product.productId)}>Delete</button>
+                        </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        </div>
+    );
 }
