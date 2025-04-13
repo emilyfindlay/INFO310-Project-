@@ -76,7 +76,7 @@ public class InvoiceItem {
     }
 
     public BigDecimal getSubtotal() {
-        return subtotal != null ? subtotal : calculateSubtotal();
+        return calculateSubtotal();
     }
 
     private BigDecimal calculateSubtotal() {
@@ -111,5 +111,9 @@ public class InvoiceItem {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public void setInvoice(Invoice invoice) {
+        this.invoice = invoice;
     }
 }

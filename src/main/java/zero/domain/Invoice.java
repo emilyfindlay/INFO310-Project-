@@ -21,6 +21,8 @@ import net.sf.oval.constraint.Range;
  *
  * @author kevin
  */
+
+
 @Entity
 @Table(name = "invoice")
 public class Invoice {
@@ -30,17 +32,16 @@ public class Invoice {
     private Integer invoiceId;
 
     @NotNull(message = "client ID is not provided")
-    @Length(min = 2, message = "client ID must be greater than 2 characters") 
+    @Length(min = 2, message = "client ID must be greater than 2 characters")
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
     @ManyToOne
     @JoinColumn(name = "business_id", nullable = false)
-    @NotNull(message = "business ID is not provided") 
-    @Length(min = 2, message = "business ID must be greater than 2") 
+    @NotNull(message = "business ID is not provided")
+    @Length(min = 2, message = "business ID must be greater than 2")
     private Business business;
-
 
     @Past(message = "Issued date must be in the past.")
     @Column(name = "issued_date", nullable = false)
@@ -55,9 +56,9 @@ public class Invoice {
     @Column(name = "due_date", nullable = false)
     private LocalDate dueDate;
 
-    @NotNull(message = "status must be provided") 
+    @NotNull(message = "status must be provided")
     @NotBlank(message = "status must be provided")
-    @Range(min = 2, max = 20, message = "status must be greater than 2 characters and less that 50 characters")
+    @Range(min = 2, max = 20, message = "status must be greater than 2 characters and less than 50 characters")
     @Column(name = "status", nullable = false, length = 20)
     private String status;
 
@@ -72,38 +73,51 @@ public class Invoice {
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
     private Collection<InvoiceItem> invoiceItems;
 
-    public Invoice(
-            //set creation date?
-    ) {}
-
     public Invoice(Client client, Business business, Collection<InvoiceItem> invoiceItems,
-                  LocalDate issuedDate, LocalDate dueDate, String status,
-                  BigDecimal totalGst, BigDecimal invoiceTotal) {
+                   LocalDate issuedDate, LocalDate dueDate, String status,
+                   BigDecimal totalGst, BigDecimal invoiceTotal) {
+        this.client = client;
         this.business = business;
-        this.dueDate = dueDate;     //???
-        this.creationDate = LocalDate.now();
-        this.status = status;
         this.invoiceItems = invoiceItems;
+        this.issuedDate = issuedDate;
+        this.dueDate = dueDate;
+        this.status = status;
+        this.totalGst = totalGst;
+        this.invoiceTotal = invoiceTotal;
+        this.creationDate = LocalDate.now(); // Setting the creation date to current date
     }
 
-    public LocalDate getCreationDate() {
-        return creationDate;
+    public Invoice() {
+        // Default constructor
+        this.creationDate = LocalDate.now(); // Setting the creation date to current date
+    }
+
+    public BigDecimal getTotalGst() {
+        BigDecimal gstRate = new BigDecimal("0.15"); // Example GST rate of 15%
+        return invoiceItems.stream()
+                .map(item -> item.getSubtotal().multiply(gstRate))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getInvoiceTotal() {
+        BigDecimal total = invoiceItems.stream()
+                .map(InvoiceItem::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return total.add(getTotalGst());
+    }
+
+    // Add item to invoice
+    public void addItem(InvoiceItem item) {
+        this.invoiceItems.add(item);
+        item.setInvoice(this); // Set the parent invoice for the item
     }
 
     public Integer getInvoiceId() {
         return invoiceId;
     }
 
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public Business getBusiness() {
-        return business;
+    public LocalDate getCreationDate() {
+        return creationDate;
     }
 
     public LocalDate getIssuedDate() {
@@ -130,24 +144,14 @@ public class Invoice {
         this.status = status;
     }
 
-    public BigDecimal getTotalGst() {
-        return null;        //TODO, add calculation for total gst
+    public Collection<InvoiceItem> getInvoiceItems() {
+        return invoiceItems;
     }
-
-
-    public BigDecimal getInvoiceTotal() {
-        return null;    //TODO, add calculation for invoice total
-    }
-
 
     public void setInvoiceItems(Collection<InvoiceItem> invoiceItems) {
         this.invoiceItems = invoiceItems;
     }
 
-    public Collection<InvoiceItem> getInvoiceItems() {
-        return invoiceItems;
-    }
-    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -164,12 +168,18 @@ public class Invoice {
     @Override
     public String toString() {
         return "Invoice{" +
-               "invoiceId=" + invoiceId +
-               ", issuedDate=" + issuedDate +
-               ", totalGst=" + totalGst +
-               ", invoiceTotal=" + invoiceTotal +
-               '}';     //list items required
+                "invoiceId=" + invoiceId +
+                ", issuedDate=" + issuedDate +
+                ", totalGst=" + totalGst +
+                ", invoiceTotal=" + invoiceTotal +
+                '}'; // List items required
     }
 
+    public Business getBusiness() {
+        return business;
+    }
 
+    public Client getClient() {
+        return client;
+    }
 }
