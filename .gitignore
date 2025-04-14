@@ -39,3 +39,4 @@ out/
 # React build files
 /frontend/build/
 /src/main/resources/static/
+/node_modules/
