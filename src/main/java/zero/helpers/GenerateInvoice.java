@@ -65,7 +65,7 @@ public class GenerateInvoice {
             cs.endText();
 
             // Customer info
-            y -= 75;
+            y -= 100;
             cs.beginText();
             cs.newLineAtOffset(margin, y - 30);
             cs.showText("Bill To:");

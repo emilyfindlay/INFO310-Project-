@@ -45,7 +45,7 @@ public class InvoiceItemController {
             InvoiceItem item = new InvoiceItem();
             item.setInvoice(invoice);
             item.setProduct(product);
-            item.setId(new InvoiceItemPK(invoice, product));
+            item.setId(new InvoiceItemPK(invoice.getInvoiceId(), product.getProductId()));
             item.setQuantity(dto.getQuantity());
             item.setUnitPrice(dto.getUnitPrice());
             item.setDiscount(dto.getDiscount());
@@ -58,6 +58,6 @@ public class InvoiceItemController {
 
     @GetMapping("/invoice/{invoiceId}")
     public List<InvoiceItem> getItemsByInvoice(@PathVariable Long invoiceId) {
-        return invoiceItemRepository.findById_Invoice_InvoiceId(invoiceId);
+        return invoiceItemRepository.findById_InvoiceId(invoiceId);
     }
 }

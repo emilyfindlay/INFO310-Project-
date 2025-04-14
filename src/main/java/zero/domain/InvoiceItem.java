@@ -39,21 +39,6 @@ public class InvoiceItem {
         this.discount = BigDecimal.ZERO;  // Default discount to 0 if not provided
     }
 
-    public InvoiceItem(Invoice invoice, Product product,
-                       Integer quantity, BigDecimal discount,BigDecimal unitPrice) {
-        this.id = new InvoiceItemPK(invoice, product);
-        this.invoice = invoice.getInvoiceId();
-        this.product = product;
-        this.quantity = quantity;
-        this.discount = (discount != null) ? discount : BigDecimal.ZERO;
-        this.unitPrice = unitPrice;
-
-    }
-
-
-    // Getters and setters
-
-
     public Product getProduct() {
         return product;
     }

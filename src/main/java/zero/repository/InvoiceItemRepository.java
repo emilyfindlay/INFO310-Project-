@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface InvoiceItemRepository extends JpaRepository<InvoiceItem, InvoiceItemPK> {
-    List<InvoiceItem> findById_Invoice_InvoiceId(Long invoiceId);
+    List<InvoiceItem> findById_InvoiceId(Long invoiceId);
+
 
 }

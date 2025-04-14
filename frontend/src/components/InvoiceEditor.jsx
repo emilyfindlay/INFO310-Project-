@@ -175,7 +175,15 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
             // Step 4: Patch invoice with saved items
             const finalInvoiceUpdate = {
                 ...createdInvoice,
-                invoiceItems: savedInvoiceItems,
+                invoiceItems: savedInvoiceItems.map(item => ({
+                    id: {
+                        invoiceId: item.invoiceId,
+                        productId: item.productId
+                    },
+                    quantity: item.quantity,
+                    unitPrice: item.unitPrice,
+                    discount: item.discount
+                }))
             };
 
             const patchResponse = await fetch(`http://localhost:8080/api/invoices/${newInvoiceId}`, {

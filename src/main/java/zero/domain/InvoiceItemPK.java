@@ -1,5 +1,7 @@
 package zero.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -7,51 +9,49 @@ import net.sf.oval.constraint.NotNull;
 
 @Embeddable
 public class InvoiceItemPK implements Serializable {
-    @ManyToOne
-    @JoinColumn(name = "invoice_id", nullable = false)
-    @NotNull(message = "invoice must be provided")
-    private Invoice invoice;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    @NotNull(message = "product must be provided")
-    private Product product;
+    @Column(name = "invoice_id")
+    private Long invoiceId;
 
-    public Invoice getInvoice() {
-        return invoice;
-    }
-
-    public void setInvoice(Invoice invoice) {
-        this.invoice = invoice;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
+    @Column(name = "product_id")
+    private Long productId;
 
     public InvoiceItemPK() {}
 
-    public InvoiceItemPK(Invoice invoice, Product product) {
-        this.invoice = invoice;
-        this.product = product;
+    @JsonCreator
+    public InvoiceItemPK(@JsonProperty("invoiceId") Long invoiceId,
+                         @JsonProperty("productId") Long productId) {
+        this.invoiceId = invoiceId;
+        this.productId = productId;
     }
 
+    public Long getInvoiceId() {
+        return invoiceId;
+    }
+
+    public void setInvoiceId(Long invoiceId) {
+        this.invoiceId = invoiceId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof InvoiceItemPK)) return false;
         InvoiceItemPK that = (InvoiceItemPK) o;
-        return Objects.equals(invoice, that.invoice) && 
-               Objects.equals(product, that.product);
+        return Objects.equals(invoiceId, that.invoiceId) &&
+                Objects.equals(productId, that.productId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(invoice, product);
+        return Objects.hash(invoiceId, productId);
     }
 }
