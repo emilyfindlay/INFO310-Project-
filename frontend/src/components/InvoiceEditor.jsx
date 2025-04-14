@@ -7,8 +7,9 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
     const [dueDate, setDueDate] = useState("");
     const [status, setStatus] = useState("");
     const [invoiceItems, setInvoiceItems] = useState([
-        { productId: "", quantity: 1, unitPrice: 0, discount: 0 },
+        { product: { productName: "", productDescription: "", productPrice: 0 }, quantity: 1, discount: 0 },
     ]);
+
 
     const [clients, setClients] = useState([]);
     const [businesses, setBusinesses] = useState([]);
@@ -29,7 +30,6 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
             .then((data) => setProducts(data));
 
         if (invoiceId) {
-            // Fetch existing invoice data if editing
             fetch(`http://localhost:8080/api/invoices/${invoiceId}`)
                 .then((response) => response.json())
                 .then((data) => {
@@ -38,23 +38,58 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                     setIssuedDate(data.issuedDate);
                     setDueDate(data.dueDate);
                     setStatus(data.status);
-                    setInvoiceItems(data.invoiceItems);
+
+                    const resolvedItems = data.invoiceItems.map((item) => {
+                        const fullProduct = products.find(p => p.id === item.productId) || {
+                            productName: "",
+                            productDescription: "",
+                            productPrice: 0,
+                        };
+                        return {
+                            product: fullProduct,
+                            quantity: item.quantity,
+                            discount: item.discount,
+                        };
+                    });
+                    setInvoiceItems(resolvedItems);
                 });
         }
+
     }, [invoiceId]);
 
     const handleInvoiceItemChange = (index, field, value) => {
         const updatedItems = [...invoiceItems];
-        updatedItems[index][field] = value;
+        if (field === "quantity" || field === "discount") {
+            updatedItems[index][field] = Number(value);
+        } else if (field.startsWith("product.")) {
+            const productField = field.split(".")[1];
+            updatedItems[index].product = {
+                ...updatedItems[index].product,
+                [productField]: productField === "productPrice" ? Number(value) : value,
+            };
+        } else {
+            updatedItems[index][field] = value;
+        }
+
         setInvoiceItems(updatedItems);
     };
+
 
     const addInvoiceItem = () => {
         setInvoiceItems([
             ...invoiceItems,
-            { productId: "", quantity: 1, unitPrice: 0, discount: 0 },
+            {
+                product: {
+                    productName: "",
+                    productDescription: "",
+                    productPrice: 0,
+                },
+                quantity: 1,
+                discount: 0,
+            },
         ]);
     };
+
 
     const removeInvoiceItem = (index) => {
         const updatedItems = [...invoiceItems];
@@ -65,15 +100,16 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+
+
         try {
-            // Step 1: Prepare all products from invoice items
-            const productsToSave = invoiceItems.map(item => ({
-                name: item.productName || null,
-                description: item.description || null,
-                unitPrice: item.unitPrice || 0,
+            const productsToSave = invoiceItems.map((item) => ({
+                productName: item.product.productName,
+                productType: true,
+                productDescription: item.product.productDescription,
+                productPrice: item.product.productPrice,
             }));
 
-            // Step 2: Save products
             const productResponse = await fetch("http://localhost:8080/api/products", {
                 method: "POST",
                 headers: {
@@ -82,21 +118,18 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                 body: JSON.stringify(productsToSave),
             });
 
-            if (!productResponse.ok) {
-                throw new Error("Failed to save products");
-            }
+            if (!productResponse.ok) throw new Error("Failed to save products");
 
-            const savedProducts = await productResponse.json(); // Should be same order
+            const savedProducts = await productResponse.json();
 
-            // Step 3: Map invoice items with saved products
             const invoiceItemsToSave = invoiceItems.map((item, idx) => ({
-                productId: savedProducts[idx].id, // Use the saved product's ID
+                productId: savedProducts[idx].id,
                 quantity: item.quantity,
-                unitPrice: item.unitPrice,
+                unitPrice: item.product.productPrice,
                 discount: item.discount,
             }));
 
-            // Step 4: Save invoice items
+
             const itemsResponse = await fetch("http://localhost:8080/api/invoice-items", {
                 method: "POST",
                 headers: {
@@ -111,7 +144,6 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
 
             const savedInvoiceItems = await itemsResponse.json();
 
-            // Step 5: Save the invoice using the saved invoice items
             const newInvoice = {
                 clientId,
                 businessId,
@@ -231,22 +263,30 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                         <td>
                             <input
                                 type="text"
-                                placeholder="Product ID (optional)"
-                                value={item.productId}
+                                value={item.product.productName}
                                 onChange={(e) =>
-                                    handleInvoiceItemChange(index, "productId", e.target.value)
+                                    handleInvoiceItemChange(index, "product.productName", e.target.value)
                                 }
                             />
-
                         </td>
                         <td>
                             <input
                                 type="text"
-                                value={item.description}
+                                value={item.product.productDescription}
                                 onChange={(e) =>
-                                    handleInvoiceItemChange(index, "description", e.target.value)
+                                    handleInvoiceItemChange(index, "product.productDescription", e.target.value)
                                 }
                             />
+                        </td>
+                        <td>
+                            <input
+                                type="number"
+                                value={item.product.productPrice}
+                                onChange={(e) =>
+                                    handleInvoiceItemChange(index, "product.productPrice", e.target.value)
+                                }
+                            />
+
                         </td>
                         <td>
                             <input
@@ -260,15 +300,6 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                         <td>
                             <input
                                 type="number"
-                                value={item.unitPrice}
-                                onChange={(e) =>
-                                    handleInvoiceItemChange(index, "unitPrice", e.target.value)
-                                }
-                            />
-                        </td>
-                        <td>
-                            <input
-                                type="number"
                                 value={item.discount}
                                 onChange={(e) =>
                                     handleInvoiceItemChange(index, "discount", e.target.value)
@@ -276,7 +307,7 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                             />
                         </td>
                         <td>
-                            {(item.unitPrice * item.quantity - item.discount).toFixed(2)}
+                            {(item.product.productPrice * item.quantity - item.discount).toFixed(2)}
                         </td>
                         <td>
                             <button type="button" onClick={() => removeInvoiceItem(index)}>
@@ -292,7 +323,13 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                 Add Item
             </button>
 
-            <button type="submit">{invoiceId ? "Update Invoice" : "Create Invoice"}</button>
+            <button
+                type="submit"
+                disabled={!clientId || !businessId || !issuedDate || !dueDate || !status}
+            >
+                {invoiceId ? "Update Invoice" : "Create Invoice"}
+            </button>
+
         </form>
     );
 }
