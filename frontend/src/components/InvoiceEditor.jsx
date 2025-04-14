@@ -128,11 +128,6 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
             if (!productResponse.ok) throw new Error("Failed to save products");
             const savedProducts = await productResponse.json();
 
-            console.error(clientId, businessId, issuedDate, dueDate, status);
-            console.error("client id", clientId);
-            console.error("client id tostring", clientId.toString());
-            console.error("client id", Number(clientId));
-
 
             // Step 2: Create Invoice without items
             const baseInvoice = {
@@ -215,7 +210,7 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                 >
                     <option value="">Select a client</option>
                     {clients.map((client) => (
-                        <option key={client.id} value={client.id}>
+                        <option key={client.clientId} value={client.clientId}>
                             {client.name}
                         </option>
                     ))}
