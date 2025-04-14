@@ -3,13 +3,9 @@ package zero.helpers;
 import zero.domain.*;
 import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.font.*;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import zero.domain.Business;
-import zero.domain.Client;
-import zero.domain.Invoice;
-import zero.domain.InvoiceItem;
-
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.*;
@@ -17,52 +13,13 @@ import java.util.Collection;
 
 public class GenerateInvoice {
 
-    public static void main(String[] args) {
-
-//        Address userAddy = new Address((Integer)001, "123 Main St", "Apt 4B", "Wellington", "reigon", "6011", "New Zealand");
-//        String userName = "Kevin";
-//        String irdNum = "123-456-789";
-//        String email = "example@email.com";
-//        String phone = "123-456-7890";
-//        String bankAccNum = "123456789";
-//        Integer id = 001;
-//
-//        Business user = new Business(id, userAddy, userName, bankAccNum, "Business Description", irdNum, email, phone, null);
-//
-//        Collection<InvoiceItem> invoiceItems = List.of(
-//                new InvoiceItem(2, new BigDecimal("0.00"), new BigDecimal("0.00"), "Product A", new BigDecimal("50.00")),
-//                new InvoiceItem(1, new BigDecimal("0.00"), new BigDecimal("0.00"), "Product B", new BigDecimal("50.00"))
-//        );
-//
-//        Address clientAddy = new Address((Integer)002, "456 Elm St", "Apt 2A", "Auckland", "reigon", "1010", "New Zealand");
-//        String clientName = "John Doe";
-//        String clientEmail = "anotherExample@rmail.com";
-//        String clientPhone = "098-765-4321";
-//        Integer clientId = 002;
-//
-//        Client client = new Client(clientId, clientAddy, clientName, clientEmail, clientPhone);
-//
-//        Integer invoiceId = 001;
-//        LocalDate issuedDate = LocalDate.now();
-//        LocalDate dueDate = issuedDate.plusDays(14);
-//        String status = "Pending";
-//        BigDecimal totalGst = new BigDecimal("15.00");
-//        BigDecimal invoiceTotal = new BigDecimal("115.00");
-//        Invoice invoice = new Invoice(client, user, invoiceItems, issuedDate, dueDate, status, totalGst, invoiceTotal);
-//
-//        // Generate the invoice
-
-
-
-        //GenerateInvoice(invoice);
+    public static byte[] generateInvoice(Invoice invoice) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        createInvoice(invoice.getBusiness(), invoice.getClient(), invoice.getInvoiceItems(), invoice, byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
     }
 
-    public static void GenerateInvoice(Invoice invoice) {
-
-        createInvoice(invoice.getBusiness(), invoice.getClient(), invoice.getInvoiceItems(), invoice, "invoice.pdf");
-    }
-
-    public static void createInvoice(Business user, Client client, Collection<InvoiceItem> descriptions, Invoice invoice, String outputFilePath) {
+    public static void createInvoice(Business user, Client client, Collection<InvoiceItem> descriptions, Invoice invoice, ByteArrayOutputStream byteArrayOutputStream) {
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
@@ -74,7 +31,7 @@ public class GenerateInvoice {
             float pageWidth = page.getMediaBox().getWidth();
             float y = 720;
 
-// === Company Info (Top Left) ===
+            // === Company Info (Top Left) ===
             cs.setFont(font, 12);
             cs.beginText();
             cs.newLineAtOffset(margin, y);
@@ -95,7 +52,7 @@ public class GenerateInvoice {
             cs.showText("IRD Number: " + user.getBusinessId());
             cs.endText();
 
-// === INVOICE Info (Top Right) ===
+            // === INVOICE Info (Top Right) ===
             cs.setFont(font, 18);
             cs.beginText();
             cs.newLineAtOffset(pageWidth - margin - 200, y);
@@ -106,7 +63,6 @@ public class GenerateInvoice {
             cs.newLineAtOffset(0, -15);
             cs.showText("Date: " + invoice.getIssuedDate());
             cs.endText();
-
 
             // Customer info
             y -= 75;
@@ -123,22 +79,7 @@ public class GenerateInvoice {
             cs.showText(client.getAddress().getRegion());
             cs.newLineAtOffset(0, -15);
             cs.showText(client.getAddress().getCity() + " " + client.getAddress().getPostCode());
-
             cs.endText();
-
-
-            // shipping info
-            //add check for different mailing address
-//            cs.beginText();
-//            cs.newLineAtOffset(pageWidth - margin - 250, y - 30);
-//            cs.showText("Ship To:");
-//            cs.newLineAtOffset(0, -15);
-//            cs.showText(customerName);
-//            for (String line : customerAddress.split("\n")) {
-//                cs.newLineAtOffset(0, -15);
-//                cs.showText(line);
-//            }
-//            cs.endText();
 
             // Table header
             float tableTopY = y - 120;
@@ -150,12 +91,12 @@ public class GenerateInvoice {
             cs.setStrokingColor(0, 0, 0);
             cs.setLineWidth(1);
 
-// Draw header row
+            // Draw header row
             float currentY = tableTopY;
             cs.addRect(tableX, currentY - rowHeight, tableWidth, rowHeight);
             cs.stroke();
 
-// Header text
+            // Header text
             cs.beginText();
             cs.setFont(font, 12);
             float textY = currentY - 15;
@@ -170,11 +111,11 @@ public class GenerateInvoice {
             cs.showText("Total");
             cs.endText();
 
-// Rows
+            // Rows
             BigDecimal subtotal = BigDecimal.ZERO;
             currentY -= rowHeight;
             for (InvoiceItem item : descriptions) {
-                String description = item.getDescription();
+                String description = item.getProduct().getProductDescription();
                 double quantity = item.getQuantity();
                 BigDecimal unitPrice = item.getUnitPrice();
                 BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
@@ -199,7 +140,7 @@ public class GenerateInvoice {
                 currentY -= rowHeight;
             }
 
-// Draw column lines
+            // Draw column lines
             float colX = tableX;
             for (float w : colWidths) {
                 colX += w;
@@ -208,11 +149,7 @@ public class GenerateInvoice {
             }
             cs.stroke();
 
-
             // Totals
-//            BigDecimal taxRate = new BigDecimal("0.15");
-//            BigDecimal tax = subtotal.multiply(taxRate);
-//            BigDecimal total = subtotal.add(tax);
             BigDecimal tax = invoice.getTotalGst();
             BigDecimal total = invoice.getInvoiceTotal();
 
@@ -231,14 +168,14 @@ public class GenerateInvoice {
             cs.beginText();
             cs.setFont(font, 10);
             cs.newLineAtOffset(tableX, 100);
-            cs.showText("Thank you for your business!");        //business info needs default line for end of invoice
+            cs.showText("Thank you for your business!");
             cs.newLineAtOffset(0, -15);
-            cs.showText("Please make payment within 14 days to: BANK ACC NUMBER");  //due date calculation
+            cs.showText("Please make payment within 14 days to: BANK ACC NUMBER");
             cs.endText();
 
             cs.close();
-            document.save(outputFilePath);
-            System.out.println("Invoice saved to " + outputFilePath);
+            document.save(byteArrayOutputStream);
+            System.out.println("Invoice saved to byte stream.");
         } catch (IOException e) {
             System.err.println("Error generating invoice: " + e.getMessage());
         }

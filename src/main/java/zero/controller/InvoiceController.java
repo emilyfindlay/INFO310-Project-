@@ -1,5 +1,7 @@
 package zero.controller;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import zero.domain.Business;
@@ -9,6 +11,7 @@ import zero.dto.InvoiceDTO;
 import zero.repository.BusinessRepository;
 import zero.repository.ClientRepository;
 import zero.repository.InvoiceRepository;
+import zero.helpers.GenerateInvoice;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -85,5 +88,20 @@ public class InvoiceController {
         }
         invoiceRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // New endpoint to generate and download the PDF for a specific invoice
+    @GetMapping("/{id}/pdf")
+    public ResponseEntity<byte[]> generateInvoicePDF(@PathVariable Long id) {
+        System.out.println("Generating PDF for invoice ID: " + id);
+        return invoiceRepository.findById(id)
+                .map(invoice -> {
+                    byte[] pdfContent = GenerateInvoice.generateInvoice(invoice);
+                    return ResponseEntity.ok()
+                            .header("Content-Type", "application/pdf")
+                            .header("Content-Disposition", "inline; filename=invoice.pdf")
+                            .body(pdfContent);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 }
