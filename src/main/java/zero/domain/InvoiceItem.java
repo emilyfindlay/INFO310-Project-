@@ -31,29 +31,39 @@ public class InvoiceItem {
     @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    @ManyToOne
     @JoinColumn(name = "invoice_id", nullable = false, insertable = false, updatable = false)
-    private Invoice invoice;
+    private Long invoice;
 
     // Default constructor
     public InvoiceItem() {
         this.discount = BigDecimal.ZERO;  // Default discount to 0 if not provided
     }
 
-    // Constructor with all required fields
-    public InvoiceItem(InvoiceItemPK id, Integer quantity,
-                       BigDecimal discount, String description, BigDecimal unitPrice) {
+    public InvoiceItem(Invoice invoice, Product product,
+                       Integer quantity, BigDecimal discount,BigDecimal unitPrice) {
         this.id = new InvoiceItemPK(invoice, product);
+        this.invoice = invoice.getInvoiceId();
+        this.product = product;
         this.quantity = quantity;
-        this.discount = (discount != null) ? discount : BigDecimal.ZERO;  // Default discount to 0 if null
+        this.discount = (discount != null) ? discount : BigDecimal.ZERO;
         this.unitPrice = unitPrice;
-        this.product = new Product();  // Ensure the product is initialized
-        this.product.setProductDescription(description);  // Set product description
+
     }
 
+
     // Getters and setters
-    public InvoiceItemPK getId() {
-        return id;
+
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public int getId() {
+        return id.hashCode();
     }
 
     public void setId(InvoiceItemPK id) {
@@ -90,15 +100,6 @@ public class InvoiceItem {
         return unitPrice.multiply(new BigDecimal(quantity)).subtract(discount);
     }
 
-    public String getDescription() {
-        return (product != null) ? product.getProductDescription() : "";  // Guard against null product
-    }
-
-    public void setDescription(String description) {
-        if (this.product != null) {
-            this.product.setProductDescription(description);
-        }
-    }
 
     public BigDecimal getUnitPrice() {
         return unitPrice;
@@ -124,7 +125,7 @@ public class InvoiceItem {
     }
 
     public void setInvoice(Invoice invoice) {
-        this.invoice = invoice;
+        this.invoice = invoice.getInvoiceId();
     }
 
     @Override
@@ -137,6 +138,6 @@ public class InvoiceItem {
                 ", product=" + product +
                 ", unitPrice=" + unitPrice +
                 ", invoice=" + invoice +
-                '}';
+                ", prod desc=" + product.getProductDescription() + "}";
     }
 }

@@ -112,6 +112,7 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
 
         try {
             // Step 1: Save Products
+            console.log("Invoice Items to save:", invoiceItems);
             const productsToSave = invoiceItems.map((item) => ({
                 productName: item.product.productName,
                 productType: true,
@@ -150,11 +151,12 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
             if (!invoiceResponse.ok) throw new Error("Failed to create invoice");
 
             const createdInvoice = await invoiceResponse.json();
-            const newInvoiceId = createdInvoice.id;
+            const newInvoiceId = createdInvoice.invoiceId;
+            console.log("Created Invoice:", createdInvoice);
 
             // Step 3: Save Invoice Items with reference to invoice ID
             const invoiceItemsToSave = invoiceItems.map((item, idx) => ({
-                productId: savedProducts[idx].id,
+                productId: savedProducts[idx].productId,
                 invoiceId: newInvoiceId,
                 quantity: item.quantity,
                 unitPrice: item.product.productPrice,

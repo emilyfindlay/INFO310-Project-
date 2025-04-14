@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public interface InvoiceItemRepository extends JpaRepository<InvoiceItem, InvoiceItemPK> {
+    List<InvoiceItem> findById_Invoice_InvoiceId(Long invoiceId);
 
-    // Query to find InvoiceItems by Invoice's ID
-    List<InvoiceItem> findByInvoice_InvoiceId(Integer invoiceId);
 }

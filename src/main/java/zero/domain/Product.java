@@ -18,7 +18,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
-    private Integer productId;
+    private Long productId;
 
     @NotNull(message = "product type must be provided")
     @Column(name = "product_type", nullable = false)
@@ -48,7 +48,7 @@ public class Product {
     }
 
 
-    public Integer getProductId() {
+    public Long getProductId() {
         return productId;
     }
 

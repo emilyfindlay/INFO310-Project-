@@ -29,7 +29,7 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "invoice_id")
-    private Integer invoiceId;
+    private Long invoiceId;
 
     @NotNull(message = "client ID is not provided")
     @Length(min = 2, message = "client ID must be greater than 2 characters")
@@ -112,7 +112,7 @@ public class Invoice {
         item.setInvoice(this); // Set the parent invoice for the item
     }
 
-    public Integer getInvoiceId() {
+    public Long getInvoiceId() {
         return invoiceId;
     }
 

@@ -73,7 +73,6 @@ CREATE TABLE invoice_item
 (
     invoice_id          INT            NOT NULL,
     product_id          INT            NOT NULL, -- not all items in an invoice need to be a saved product
-    product_description VARCHAR(50)    NOT NULL,
     quantity            INT            NOT NULL,
     discount            DECIMAL(5, 2)  NOT NULL DEFAULT 0.00, -- Enforced as NOT NULL with a default value of 0.00
     unit_price          DECIMAL(10, 2) NOT NULL,
