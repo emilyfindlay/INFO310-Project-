@@ -48,7 +48,7 @@ export default function App() {
         <div className="flex h-screen">
             {/* Sidebar */}
             <aside className="w-64 bg-blue-800 text-white p-4 space-y-4">
-                <h1 className="text-2xl font-bold mb-6">Invoicing App</h1>
+                <h1 className="text-2xl font-bold mb-6">Zero</h1>
                 <nav className="flex flex-col space-y-2">
                     <button
                         onClick={() => setPage("invoice-list")}
