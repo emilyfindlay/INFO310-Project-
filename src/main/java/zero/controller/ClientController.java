@@ -3,6 +3,7 @@ package zero.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import zero.domain.Business;
 import zero.domain.Client;
 import zero.repository.ClientRepository;
 
@@ -24,8 +25,8 @@ public class ClientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Client> getClientById(@PathVariable Long id) {
-        Optional<Client> client = clientRepo.findById(id);
-        return client.map(ResponseEntity::ok)
+        return clientRepo.findById(id)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 

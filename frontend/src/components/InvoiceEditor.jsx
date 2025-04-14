@@ -15,24 +15,33 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
     const [businesses, setBusinesses] = useState([]);
     const [products, setProducts] = useState([]);
 
-    // Fetch clients, businesses, and products for dropdowns
     useEffect(() => {
         fetch("http://localhost:8080/api/clients")
             .then((response) => response.json())
-            .then((data) => setClients(data));
+            .then((data) => {
+                console.log("Clients fetched:", data); // Log clients to check the data
+                setClients(data);
+            });
 
         fetch("http://localhost:8080/api/businesses")
             .then((response) => response.json())
-            .then((data) => setBusinesses(data));
+            .then((data) => {
+                console.log("Businesses fetched:", data); // Log businesses to check the data
+                setBusinesses(data);
+            });
 
         fetch("http://localhost:8080/api/products")
             .then((response) => response.json())
-            .then((data) => setProducts(data));
+            .then((data) => {
+                console.log("Products fetched:", data); // Log products to check the data
+                setProducts(data);
+            });
 
         if (invoiceId) {
             fetch(`http://localhost:8080/api/invoices/${invoiceId}`)
                 .then((response) => response.json())
                 .then((data) => {
+                    console.log("Invoice fetched:", data); // Log the invoice to check the data
                     setClientId(data.clientId);
                     setBusinessId(data.businessId);
                     setIssuedDate(data.issuedDate);
@@ -56,6 +65,7 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
         }
 
     }, [invoiceId]);
+
 
     const handleInvoiceItemChange = (index, field, value) => {
         const updatedItems = [...invoiceItems];
@@ -118,15 +128,23 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
             if (!productResponse.ok) throw new Error("Failed to save products");
             const savedProducts = await productResponse.json();
 
+            console.error(clientId, businessId, issuedDate, dueDate, status);
+            console.error("client id", clientId);
+            console.error("client id tostring", clientId.toString());
+            console.error("client id", Number(clientId));
+
+
             // Step 2: Create Invoice without items
             const baseInvoice = {
-                clientId,
-                businessId,
+                clientId: Number(clientId),
+                businessId: Number(businessId),
                 issuedDate,
                 dueDate,
                 status,
                 invoiceItems: [], // initially empty
             };
+
+            console.log("Base Invoice:", baseInvoice);
 
             const invoiceResponse = await fetch("http://localhost:8080/api/invoices", {
                 method: "POST",
@@ -189,7 +207,7 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
             <h2>{invoiceId ? "Edit Invoice" : "Create Invoice"}</h2>
 
             <label>
-                Client:
+                {clientId && <span> (ID: {clientId})</span>} {/* Display client ID next to label */} Client:
                 <select
                     value={clientId}
                     onChange={(e) => setClientId(e.target.value)}
@@ -202,25 +220,28 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                         </option>
                     ))}
                 </select>
-            </label>
 
-            <label>
-                Business:
-                <select
+                    </label>
+
+                    <label>
+                {businessId && <span> (ID: {businessId})</span>} {/* Display business ID next to label */} Business:
+                    <select
                     value={businessId}
-                    onChange={(e) => setBusinessId(e.target.value)}
-                    required
-                >
-                    <option value="">Select a business</option>
-                    {businesses.map((business) => (
-                        <option key={business.businessId} value={business.businessId}>
-                            {business.businessName}
-                        </option>
-                    ))}
-                </select>
-            </label>
+                onChange={(e) => setBusinessId(e.target.value)}
+                required
+            >
+                <option value="">Select a business</option>
+                {businesses.map((business) => (
+                    <option key={business.businessId} value={business.businessId}>
+                        {business.businessName}
+                    </option>
+                ))}
+            </select>
 
-            <label>
+                </label>
+
+
+                <label>
                 Issued Date:
                 <input
                     type="date"

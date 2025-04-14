@@ -169,10 +169,16 @@ public class Invoice {
     public String toString() {
         return "Invoice{" +
                 "invoiceId=" + invoiceId +
+                ", client=" + client +
+                ", business=" + business +
                 ", issuedDate=" + issuedDate +
+                ", creationDate=" + creationDate +
+                ", dueDate=" + dueDate +
+                ", status='" + status + '\'' +
                 ", totalGst=" + totalGst +
                 ", invoiceTotal=" + invoiceTotal +
-                '}'; // List items required
+                ", invoiceItems=" + invoiceItems +
+                '}';
     }
 
     public Business getBusiness() {

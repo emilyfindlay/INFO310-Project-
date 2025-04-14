@@ -8,7 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
-    // Optional: Add custom queries like:
-//    Client findByEmail(String email);
-    //List<Client> findByNameContainingIgnoreCase(String name);
+
 }
