@@ -100,9 +100,8 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-
-
         try {
+            // Step 1: Save Products
             const productsToSave = invoiceItems.map((item) => ({
                 productName: item.product.productName,
                 productType: true,
@@ -112,69 +111,76 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
 
             const productResponse = await fetch("http://localhost:8080/api/products", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(productsToSave),
             });
 
             if (!productResponse.ok) throw new Error("Failed to save products");
-
             const savedProducts = await productResponse.json();
 
-            const invoiceItemsToSave = invoiceItems.map((item, idx) => ({
-                productId: savedProducts[idx].id,
-                quantity: item.quantity,
-                unitPrice: item.product.productPrice,
-                discount: item.discount,
-            }));
-
-
-            const itemsResponse = await fetch("http://localhost:8080/api/invoice-items", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(invoiceItemsToSave),
-            });
-
-            if (!itemsResponse.ok) {
-                throw new Error("Failed to save invoice items");
-            }
-
-            const savedInvoiceItems = await itemsResponse.json();
-
-            const newInvoice = {
+            // Step 2: Create Invoice without items
+            const baseInvoice = {
                 clientId,
                 businessId,
                 issuedDate,
                 dueDate,
                 status,
-                invoiceItems: savedInvoiceItems,
+                invoiceItems: [], // initially empty
             };
 
             const invoiceResponse = await fetch("http://localhost:8080/api/invoices", {
-                method: invoiceId ? "PUT" : "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(newInvoice),
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(baseInvoice),
             });
 
-            if (!invoiceResponse.ok) {
-                throw new Error("Failed to save invoice");
-            }
+            if (!invoiceResponse.ok) throw new Error("Failed to create invoice");
 
             const createdInvoice = await invoiceResponse.json();
-            setInvoices((prev) => [...prev, createdInvoice]);
+            const newInvoiceId = createdInvoice.id;
 
-            alert(invoiceId ? "Invoice updated successfully!" : "Invoice created successfully!");
+            // Step 3: Save Invoice Items with reference to invoice ID
+            const invoiceItemsToSave = invoiceItems.map((item, idx) => ({
+                productId: savedProducts[idx].id,
+                invoiceId: newInvoiceId,
+                quantity: item.quantity,
+                unitPrice: item.product.productPrice,
+                discount: item.discount,
+            }));
 
+            const itemsResponse = await fetch("http://localhost:8080/api/invoice-items", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(invoiceItemsToSave),
+            });
+
+            if (!itemsResponse.ok) throw new Error("Failed to save invoice items");
+            const savedInvoiceItems = await itemsResponse.json();
+
+            // Step 4: Patch invoice with saved items
+            const finalInvoiceUpdate = {
+                ...createdInvoice,
+                invoiceItems: savedInvoiceItems,
+            };
+
+            const patchResponse = await fetch(`http://localhost:8080/api/invoices/${newInvoiceId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(finalInvoiceUpdate),
+            });
+
+            if (!patchResponse.ok) throw new Error("Failed to update invoice with items");
+
+            const updatedInvoice = await patchResponse.json();
+            setInvoices((prev) => [...prev, updatedInvoice]);
+
+            alert("Invoice created successfully!");
         } catch (err) {
             console.error("Error during invoice submission:", err);
             alert("Error saving invoice: " + err.message);
         }
     };
+
 
 
 

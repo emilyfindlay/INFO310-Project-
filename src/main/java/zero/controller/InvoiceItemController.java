@@ -25,7 +25,7 @@ public class InvoiceItemController {
     // Endpoint to save multiple invoice items
     @PostMapping
     public ResponseEntity<List<InvoiceItem>> createInvoiceItems(@RequestBody List<InvoiceItem> invoiceItems) {
-        // Save all invoice items to the database
+        System.out.println("Received invoice items: " + invoiceItems);
         List<InvoiceItem> savedItems = invoiceItemRepository.saveAll(invoiceItems);
         return ResponseEntity.ok(savedItems);  // Return the saved items
     }
