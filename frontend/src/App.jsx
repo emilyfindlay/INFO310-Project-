@@ -12,6 +12,7 @@ import BusinessList from "./components/BusinessList";
 import './styles/main.css';
 
 export default function App() {
+
     const [page, setPage] = useState("home");
 
     const [clients, setClients] = useState([]);
@@ -42,6 +43,7 @@ export default function App() {
             .then(setBusinesses)
             .catch((err) => console.error("Failed to load businesses", err));
 
+        document.title = "Zero";
     }, []);
 
     return (
