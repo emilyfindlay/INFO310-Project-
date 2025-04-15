@@ -144,6 +144,11 @@ button:hover {
     background-color: #005f99;
 }
 
+.button-row {
+    display: flex;
+    gap: 16px; /* Adjust spacing between buttons */
+}
+
 input, select, textarea {
     width: 100%;
     padding: 10px;
@@ -169,4 +174,18 @@ h1, h2, h3 {
 #majors button {
     margin-left: 2pt;
     margin-right: 2pt;
+}
+
+h1, h2 {
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.card {
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    margin-bottom: 24px;
+    border-radius: 8px;
 }
