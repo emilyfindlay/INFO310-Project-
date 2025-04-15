@@ -119,7 +119,7 @@ export default function App() {
                 {page === "product-editor" && (
                     <ProductEditor products={products} setProducts={setProducts} />
                 )}
-                {page === "client-list" && <ClientList clients={clients} />}
+                {page === "client-list" && <ClientList clients={clients} setClients={setClients} />}
                 {page === "client-editor" && (
                     <ClientEditor setClients={setClients} />
                 )}
