@@ -7,25 +7,56 @@ export default function BusinessEditor({ setBusinesses }) {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [websiteLink, setWebsiteLink] = useState("");
-    const [addressId, setAddressId] = useState(""); // assuming addressId dropdown or input
+
+    // Address fields
+    const [streetAddress1, setStreetAddress1] = useState("");
+    const [streetAddress2, setStreetAddress2] = useState("");
+    const [city, setCity] = useState("");
+    const [region, setRegion] = useState("");
+    const [postCode, setPostCode] = useState("");
+    const [country, setCountry] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const newBusiness = {
-            businessName,
-            bankAccountNumber,
-            gstNumber,
-            email,
-            phone,
-            websiteLink,
-            address: {
-                addressId,
-            },
+        const address = {
+            streetAddress1,
+            streetAddress2,
+            city,
+            region,
+            postCode,
+            country
         };
 
         try {
-            const res = await fetch("http://localhost:8080/api/businesses", {
+            // Step 1: Save the address
+            const addressRes = await fetch("http://localhost:8080/api/addresses", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(address),
+            });
+
+            if (!addressRes.ok) {
+                throw new Error("Failed to save address");
+            }
+
+            const savedAddress = await addressRes.json();
+            const addressId = savedAddress.addressId;
+
+            // Step 2: Save the business with addressId
+            const newBusiness = {
+                businessName,
+                bankAccountNumber,
+                gstNumber,
+                email,
+                phone,
+                websiteLink,
+                address: { addressId }
+            };
+
+            const businessRes = await fetch("http://localhost:8080/api/businesses", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -33,21 +64,26 @@ export default function BusinessEditor({ setBusinesses }) {
                 body: JSON.stringify(newBusiness),
             });
 
-            if (!res.ok) {
-                throw new Error("Failed to add business");
+            if (!businessRes.ok) {
+                throw new Error("Failed to save business");
             }
 
-            const created = await res.json();
-            setBusinesses((prev) => [...prev, created]);
+            const createdBusiness = await businessRes.json();
+            setBusinesses(prev => [...prev, createdBusiness]);
 
-            // Reset form
+            // Reset fields
             setBusinessName("");
             setBankAccountNumber("");
             setGstNumber("");
             setEmail("");
             setPhone("");
             setWebsiteLink("");
-            setAddressId("");
+            setStreetAddress1("");
+            setStreetAddress2("");
+            setCity("");
+            setRegion("");
+            setPostCode("");
+            setCountry("");
 
             alert("Business added successfully!");
         } catch (err) {
@@ -61,70 +97,64 @@ export default function BusinessEditor({ setBusinesses }) {
 
             <label>
                 Business Name:
-                <input
-                    type="text"
-                    value={businessName}
-                    onChange={(e) => setBusinessName(e.target.value)}
-                    required
-                />
+                <input type="text" value={businessName} onChange={e => setBusinessName(e.target.value)} required />
             </label>
 
             <label>
                 Bank Account Number:
-                <input
-                    type="text"
-                    value={bankAccountNumber}
-                    onChange={(e) => setBankAccountNumber(e.target.value)}
-                    required
-                />
+                <input type="text" value={bankAccountNumber} onChange={e => setBankAccountNumber(e.target.value)} required />
             </label>
 
             <label>
                 GST Number:
-                <input
-                    type="text"
-                    value={gstNumber}
-                    onChange={(e) => setGstNumber(e.target.value)}
-                />
+                <input type="text" value={gstNumber} onChange={e => setGstNumber(e.target.value)} />
             </label>
 
             <label>
                 Email:
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
             </label>
 
             <label>
                 Phone:
-                <input
-                    type="text"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                />
+                <input type="text" value={phone} onChange={e => setPhone(e.target.value)} required />
             </label>
 
             <label>
                 Website Link:
-                <input
-                    type="text"
-                    value={websiteLink}
-                    onChange={(e) => setWebsiteLink(e.target.value)}
-                />
+                <input type="text" value={websiteLink} onChange={e => setWebsiteLink(e.target.value)} />
+            </label>
+
+            <h3 className="mt-4 font-semibold">Address</h3>
+
+            <label>
+                Street Address 1:
+                <input type="text" value={streetAddress1} onChange={e => setStreetAddress1(e.target.value)} required />
             </label>
 
             <label>
-                Address ID:
-                <input
-                    type="number"
-                    value={addressId}
-                    onChange={(e) => setAddressId(e.target.value)}
-                    required
-                />
+                Street Address 2:
+                <input type="text" value={streetAddress2} onChange={e => setStreetAddress2(e.target.value)} />
+            </label>
+
+            <label>
+                City:
+                <input type="text" value={city} onChange={e => setCity(e.target.value)} required />
+            </label>
+
+            <label>
+                Region:
+                <input type="text" value={region} onChange={e => setRegion(e.target.value)} />
+            </label>
+
+            <label>
+                Post Code:
+                <input type="text" value={postCode} onChange={e => setPostCode(e.target.value)} required />
+            </label>
+
+            <label>
+                Country:
+                <input type="text" value={country} onChange={e => setCountry(e.target.value)} required />
             </label>
 
             <button type="submit">Add Business</button>
