@@ -123,7 +123,7 @@ export default function App() {
                 {page === "client-editor" && (
                     <ClientEditor setClients={setClients} />
                 )}
-                {page === "product-list" && <ProductList products={products} />}
+                {page === "product-list" && <ProductList products={products} setProducts={setProducts} />}
 
                 {page === "business-editor" && (
                     <BusinessEditor setBusinesses={setBusinesses} />

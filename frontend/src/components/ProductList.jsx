@@ -7,6 +7,10 @@ export default function ProductList({ products, setProducts }) {
 
     console.log("Products:", products);
     console.log("setProducts:", setProducts);
+    if (typeof setProducts !== "function") {
+    console.error("setProducts is not a function!");
+}
+
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
