@@ -54,6 +54,7 @@ export default function App() {
             <aside className="w-64 bg-blue-800 text-white p-4 space-y-4">
                 <h1 className="text-2xl font-bold mb-6">Zero</h1>
                 <nav className="flex flex-col space-y-2">
+                <div className="button-row">
                     <button
                         onClick={() => setPage("invoice-list")}
                         className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded"
@@ -102,7 +103,7 @@ export default function App() {
                     >
                         <FaPlus/> Add Business
                     </button>
-
+                    </div>
                 </nav>
             </aside>
 

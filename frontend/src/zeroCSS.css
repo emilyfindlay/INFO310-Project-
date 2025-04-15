@@ -189,3 +189,11 @@ h1, h2 {
     margin-bottom: 24px;
     border-radius: 8px;
 }
+
+.button-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;         /* spacing between buttons */
+    padding: 0 1rem 1rem;     /* spacing around the button row */
+}
