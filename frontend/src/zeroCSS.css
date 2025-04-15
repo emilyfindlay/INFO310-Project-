@@ -197,3 +197,11 @@ h1, h2 {
     gap: 16px;         /* spacing between buttons */
     padding: 0 1rem 1rem;     /* spacing around the button row */
 }
+
+.invoice-subm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;         /* spacing between buttons */
+    padding: 1rem;     /* spacing around the button row */
+}
+

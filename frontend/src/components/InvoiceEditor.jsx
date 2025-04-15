@@ -350,7 +350,7 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                 ))}
                 </tbody>
             </table>
-
+            <div className="invoice-subm">
             <button type="button" onClick={addInvoiceItem}>
                 Add Item
             </button>
@@ -361,7 +361,7 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
             >
                 {invoiceId ? "Update Invoice" : "Create Invoice"}
             </button>
-
+            </div>
         </form>
     );
 }
