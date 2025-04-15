@@ -9,7 +9,9 @@ import ProductEditor from "./components/ProductEditor";
 import BusinessEditor from "./components/BusinessEditor";
 import BusinessList from "./components/BusinessList";
 
-import './styles/main.css';
+//import './styles/main.css';
+import './zeroCSS.css';
+
 
 export default function App() {
 
