@@ -58,10 +58,17 @@ public class Business {
     @Length(min = 2, message = "website link must be greater than 2 character")
     @Column(name = "website_link", length = 255)
     private String websiteLink;
+
+    @Column(name = "invoice_footer", length = 255)
+    private String invoiceFooter;
+
+    @Column(name = "quote_footer", length = 255)
+    private String quoteFooter;
 //
 //    @Lob
 //    @Column(name = "logo")
 //    private byte[] logo;
+
 
     public Business() {
     }
@@ -69,11 +76,13 @@ public class Business {
     public Business(Address address, String businessName,
                     String bankAccountName,
                     String gstNumber, String email, String phone,
-                    String websiteLink) {
+                    String websiteLink, String invoiceFooter, String quoteFooter) {
         this.address = address;
         this.businessName = businessName;
         this.bankAccountNumber = bankAccountName;
         this.email = email;
+        this.invoiceFooter = invoiceFooter;
+        this.quoteFooter = quoteFooter;
     }
 
 
@@ -136,6 +145,22 @@ public class Business {
 
     public void setWebsiteLink(String websiteLink) {
         this.websiteLink = websiteLink;
+    }
+
+    public String getInvoiceFooter() {
+        return invoiceFooter;
+    }
+
+    public void setInvoiceFooter(String invoiceFooter) {
+        this.invoiceFooter = invoiceFooter;
+    }
+
+    public String getQuoteFooter() {
+        return quoteFooter;
+    }
+
+    public void setQuoteFooter(String quoteFooter) {
+        this.quoteFooter = quoteFooter;
     }
 
     //TODO add logo things

@@ -16,6 +16,11 @@ export default function BusinessEditor({ setBusinesses }) {
     const [postCode, setPostCode] = useState("");
     const [country, setCountry] = useState("");
 
+    // Invoice & Quote fields
+    const [invoiceFooter, setInvoiceFooter] = useState("Thank you for your business!");
+    const [quoteFooter, setQuoteFooter] = useState("Thank you for your business!");
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -97,64 +102,77 @@ export default function BusinessEditor({ setBusinesses }) {
 
             <label>
                 Business Name:
-                <input type="text" value={businessName} onChange={e => setBusinessName(e.target.value)} required />
+                <input type="text" value={businessName} onChange={e => setBusinessName(e.target.value)} required/>
             </label>
 
             <label>
                 Bank Account Number:
-                <input type="text" value={bankAccountNumber} onChange={e => setBankAccountNumber(e.target.value)} required />
+                <input type="text" value={bankAccountNumber} onChange={e => setBankAccountNumber(e.target.value)}
+                       required/>
             </label>
 
             <label>
                 GST Number:
-                <input type="text" value={gstNumber} onChange={e => setGstNumber(e.target.value)} />
+                <input type="text" value={gstNumber} onChange={e => setGstNumber(e.target.value)}/>
             </label>
 
             <label>
                 Email:
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required/>
             </label>
 
             <label>
                 Phone:
-                <input type="text" value={phone} onChange={e => setPhone(e.target.value)} required />
+                <input type="text" value={phone} onChange={e => setPhone(e.target.value)} required/>
             </label>
 
             <label>
                 Website Link:
-                <input type="text" value={websiteLink} onChange={e => setWebsiteLink(e.target.value)} />
+                <input type="text" value={websiteLink} onChange={e => setWebsiteLink(e.target.value)}/>
             </label>
 
             <h3 className="mt-4 font-semibold">Address</h3>
 
             <label>
                 Street Address 1:
-                <input type="text" value={streetAddress1} onChange={e => setStreetAddress1(e.target.value)} required />
+                <input type="text" value={streetAddress1} onChange={e => setStreetAddress1(e.target.value)}/>
             </label>
 
             <label>
                 Street Address 2:
-                <input type="text" value={streetAddress2} onChange={e => setStreetAddress2(e.target.value)} />
+                <input type="text" value={streetAddress2} onChange={e => setStreetAddress2(e.target.value)}/>
             </label>
 
             <label>
                 City:
-                <input type="text" value={city} onChange={e => setCity(e.target.value)} required />
+                <input type="text" value={city} onChange={e => setCity(e.target.value)}/>
             </label>
 
             <label>
                 Region:
-                <input type="text" value={region} onChange={e => setRegion(e.target.value)} />
+                <input type="text" value={region} onChange={e => setRegion(e.target.value)}/>
             </label>
 
             <label>
                 Post Code:
-                <input type="text" value={postCode} onChange={e => setPostCode(e.target.value)} required />
+                <input type="text" value={postCode} onChange={e => setPostCode(e.target.value)}/>
             </label>
 
             <label>
                 Country:
-                <input type="text" value={country} onChange={e => setCountry(e.target.value)} required />
+                <input type="text" value={country} onChange={e => setCountry(e.target.value)}/>
+            </label>
+
+            <h3 className="mt-4 font-semibold">Invoice & Quote details</h3>
+
+            <label>
+                Invoice Footer:
+                <input type="text" value={invoiceFooter} onChange={e => setInvoiceFooter(e.target.value)} required/>
+            </label>
+
+            <label>
+                Quote Footer:
+                <input type="text" value={quoteFooter} onChange={e => setQuoteFooter(e.target.value)} required/>
             </label>
 
             <button type="submit">Add Business</button>

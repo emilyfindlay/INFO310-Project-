@@ -22,6 +22,7 @@ public class GenerateInvoice {
     public static void createInvoice(Business user, Client client, Collection<InvoiceItem> descriptions, Invoice invoice, ByteArrayOutputStream byteArrayOutputStream) {
         final String BANK_ACC = user.getBankAccountNumber();
         String dueDate = invoice.getDueDate().toString();
+        String footer = user.getInvoiceFooter();
 
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage(PDRectangle.A4);
@@ -177,7 +178,7 @@ public class GenerateInvoice {
             cs.beginText();
             cs.setFont(font, 10);
             cs.newLineAtOffset(tableX, 100);
-            cs.showText("Thank you for your business!");
+            cs.showText(footer);
             cs.newLineAtOffset(0, -15);
             cs.showText("Please make payments to: " + BANK_ACC);
 

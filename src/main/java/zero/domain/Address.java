@@ -21,8 +21,6 @@ public class Address {
     @Column(name = "address_id")
     private Integer addressId;
 
-    @NotNull(message = "Street Address must be provided")
-    @NotBlank(message = "Street address must be provided")
     @Range(min = 2, max = 50, message = "Street address must be greater than two and less than 50")
     @Column(name = "street_address1", nullable = false, length = 50)
     private String streetAddress1;
@@ -31,8 +29,6 @@ public class Address {
     @Column(name = "street_address2", length = 50)
     private String streetAddress2;
 
-    @NotNull(message = "city must be provided")
-    @NotBlank(message = "city must be provided")
     @Range(min = 2, max = 50, message = "City must be greater than two and less than 50")
     @Column(name = "city", nullable = false, length = 50)
     private String city;
@@ -41,8 +37,6 @@ public class Address {
     @Column(name = "region", length = 50)
     private String region;
 
-    @NotNull(message = "Post Code must be provided")
-    @NotBlank(message = "Post Code must be provided")
     @Length(max = 10, message = "Post Code must be less than 10")
     @Column(name = "post_code", nullable = false, length = 10)
     private String postCode;  // Changed from Integer to String to match schema

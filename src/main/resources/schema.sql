@@ -8,12 +8,12 @@ DROP TABLE IF EXISTS address;
 CREATE TABLE address
 (
     address_id      SERIAL,
-    street_address1 VARCHAR(50) NOT NULL,
+    street_address1 VARCHAR(50),
     street_address2 VARCHAR(50),
-    city            VARCHAR(50) NOT NULL,
+    city            VARCHAR(50),
     region          VARCHAR(50),
-    post_code       VARCHAR(10) NOT NULL,
-    country         VARCHAR(50), --optional field
+    post_code       VARCHAR(10),
+    country         VARCHAR(50),
     CONSTRAINT address_pk PRIMARY KEY (address_id)
 );
 
