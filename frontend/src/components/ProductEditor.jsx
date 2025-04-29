@@ -1,52 +1,77 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function ProductEditor({ setProducts }) {
-    const [productName, setProductName] = useState("");
-    const [productDescription, setProductDescription] = useState("");
-    const [productPrice, setProductPrice] = useState("");
-    const [productType, setProductType] = useState("");
-
+export default function ProductEditor({ product, setProducts, setSelectedProduct, setPage }) {
+    const [productName, setProductName] = useState(product ? product.productName : "");
+    const [productDescription, setProductDescription] = useState(product ? product.productDescription : "");
+    const [productPrice, setProductPrice] = useState(product ? product.productPrice : "");
+    const [productType, setProductType] = useState(product ? product.productType : "");
+    
+    useEffect(() => {
+        // If a product is provided (for editing), populate the form
+        if (product) {
+          setProductName(product.productName);
+          setProductDescription(product.productDescription);
+          setProductPrice(product.productPrice);
+          setProductType(product.productType);
+        }
+      }, [product]);
+      
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const newProduct = {
             productName,
             productDescription,
-            productPrice: parseFloat(productPrice), // Ensure it's a number
+            productPrice: parseFloat(productPrice),
             productType,
         };
 
         try {
-            const response = await fetch("http://localhost:8080/api/products", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(newProduct),
-            });
+            let response;
+            let updatedProduct;
 
-            if (!response.ok) {
-                throw new Error("Failed to add product");
+            if (product) {
+                // Editing
+                response = await fetch(`http://localhost:8080/api/products/${product.productId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ ...product, ...newProduct }),
+                });
+                if (!response.ok) throw new Error("Failed to update product");
+                updatedProduct = await response.json();
+
+                setProducts(prev =>
+                    prev.map(p => (p.productId === updatedProduct.productId ? updatedProduct : p))
+                );
+                alert("Product updated!");
+            } else {
+                // Adding
+                response = await fetch("http://localhost:8080/api/products", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newProduct),
+                });
+                if (!response.ok) throw new Error("Failed to add product");
+
+                updatedProduct = await response.json();
+                setProducts((prev) => [...prev, updatedProduct]);
+                alert("Product added!");
             }
-
-            const createdProduct = await response.json();
-
-            setProducts((prev) => [...prev, createdProduct]);
 
             setProductName("");
             setProductDescription("");
             setProductPrice("");
             setProductType("");
-            alert("Product added successfully!");
+            setSelectedProduct(null);
+            setPage("product-list");
         } catch (err) {
-            alert("Error adding product: " + err.message);
+            alert("Error submitting product: " + err.message);
         }
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <h2>Add Product</h2>
-
+            <h2>{product ? "Edit Product" : "Add Product"}</h2>
             <label>
                 Name:
                 <input
@@ -83,10 +108,10 @@ export default function ProductEditor({ setProducts }) {
                     type="text"
                     value={productType}
                     onChange={(e) => setProductType(e.target.value)}
-                />
+                /> 
             </label>
 
-            <button type="submit">Add Product</button>
+            <button type="submit">{product ? "Update Product" : "Add Product"}</button>
         </form>
     );
 }

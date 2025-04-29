@@ -21,7 +21,7 @@ export default function App() {
     const [products, setProducts] = useState([]);
     const [invoices, setInvoices] = useState([]);
     const [businesses, setBusinesses] = useState([]);
-
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
     // Fetch all data from backend
     useEffect(() => {
@@ -117,15 +117,26 @@ export default function App() {
                         setInvoices={setInvoices}
                     />
                 )}
-                {page === "product-editor" && (
-                    <ProductEditor products={products} setProducts={setProducts} />
-                )}
                 {page === "client-list" && <ClientList clients={clients} setClients={setClients} />}
                 {page === "client-editor" && (
                     <ClientEditor setClients={setClients} />
                 )}
-                {page === "product-list" && <ProductList products={products} setProducts={setProducts} />}
-
+                {page === "product-list" && (
+                    <ProductList
+                        products={products}
+                        setProducts={setProducts}
+                        setSelectedProduct={setSelectedProduct}
+                        setPage={setPage}
+                    />
+                )}
+                {page === "product-editor" && (
+                    <ProductEditor 
+                        product={selectedProduct}
+                        setProducts={setProducts}
+                        setSelectedProduct={setSelectedProduct}
+                        setPage={setPage}
+                    />
+                )}
                 {page === "business-editor" && (
                     <BusinessEditor setBusinesses={setBusinesses} />
                 )}

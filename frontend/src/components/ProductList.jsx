@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 
-
-
-
-export default function ProductList({ products, setProducts }) {
+export default function ProductList({ products, setProducts, setSelectedProduct, setPage }) {
 
     console.log("Products:", products);
     console.log("setProducts:", setProducts);
@@ -11,10 +8,9 @@ export default function ProductList({ products, setProducts }) {
     console.error("setProducts is not a function!");
 }
 
-
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-
+    
     // Fetch products from the API when the component mounts
     useEffect(() => {
         const fetchProducts = async () => {
@@ -56,12 +52,28 @@ export default function ProductList({ products, setProducts }) {
             }
         }
     };
+    
+     // Handle client edits
+    const handleEdit = async (id) => {
+        if (window.confirm("Are you sure you want to edit this product?")) {
+            try {
+                const selected = products.find((p) => p.productId === id);
+                if (selected) {
+                    setSelectedProduct(selected); // Pass the full product, not just ID
+                    setPage("product-editor");
+                }
+            } catch (err) {
+                setError(err.message || "Something went wrong while editing.");
+            }
+        }
+    }
+
 
     return (
         <div>
             <h2>Product List</h2>
 
-            {loading && <p>Loading products...</p>}
+            {loading && <p>Loading products...</p>} 
             {error && <p style={{ color: "red" }}>{error}</p>}
 
             {!loading && !products.length && <p>No products found.</p>}
@@ -82,6 +94,7 @@ export default function ProductList({ products, setProducts }) {
                         <td>{product.productDescription}</td>
                         <td>{product.productPrice}</td>
                         <td>
+                            <button onClick={() => handleEdit(product.productId)}>Edit</button>
                             <button onClick={() => handleDelete(product.productId)}>Delete</button>
                         </td>
                     </tr>
