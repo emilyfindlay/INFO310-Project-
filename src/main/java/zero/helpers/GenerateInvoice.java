@@ -20,6 +20,9 @@ public class GenerateInvoice {
     }
 
     public static void createInvoice(Business user, Client client, Collection<InvoiceItem> descriptions, Invoice invoice, ByteArrayOutputStream byteArrayOutputStream) {
+        final String BANK_ACC = user.getBankAccountNumber();
+        String dueDate = invoice.getDueDate().toString();
+
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
@@ -44,7 +47,7 @@ public class GenerateInvoice {
             cs.showText(user.getAddress().getRegion());
             cs.newLineAtOffset(0, -15);
             cs.showText(user.getAddress().getCity() + " " + client.getAddress().getPostCode());
-            cs.newLineAtOffset(0, -15);
+            cs.newLineAtOffset(0, -30);
             cs.showText("Phone: " + user.getPhone());
             cs.newLineAtOffset(0, -15);
             cs.showText("Email: " + user.getEmail());
@@ -62,6 +65,8 @@ public class GenerateInvoice {
             cs.showText("Invoice #: INV-" + invoice.getInvoiceId());
             cs.newLineAtOffset(0, -15);
             cs.showText("Date: " + invoice.getIssuedDate());
+            cs.newLineAtOffset(0, -15);
+            cs.showText("Due Date: " + dueDate);
             cs.endText();
 
             // Customer info
@@ -84,9 +89,9 @@ public class GenerateInvoice {
             // Table header
             float tableTopY = y - 120;
             float rowHeight = 20;
-            float tableWidth = 400; // Adjusted width now that 'Item' column is removed
+            float tableWidth = 475;
             float tableX = margin;
-            float[] colWidths = {200, 50, 75, 75}; // Description, Qty, Unit Price, Total
+            float[] colWidths = {200, 50, 75, 75, 75}; // Description, Qty, Unit Price, Discount, Total
 
             cs.setStrokingColor(0, 0, 0);
             cs.setLineWidth(1);
@@ -108,18 +113,19 @@ public class GenerateInvoice {
             cs.newLineAtOffset(colWidths[1], 0);
             cs.showText("Unit Price");
             cs.newLineAtOffset(colWidths[2], 0);
+            cs.showText("Discount");
+            cs.newLineAtOffset(colWidths[3], 0);
             cs.showText("Total");
             cs.endText();
 
             // Rows
-            BigDecimal subtotal = BigDecimal.ZERO;
             currentY -= rowHeight;
             for (InvoiceItem item : descriptions) {
                 String description = item.getProduct().getProductDescription();
                 double quantity = item.getQuantity();
                 BigDecimal unitPrice = item.getUnitPrice();
-                BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
-                subtotal = subtotal.add(lineTotal);
+                BigDecimal discount = item.getDiscount();
+                BigDecimal lineTotal = item.getSubtotal();
 
                 // Draw row border
                 cs.addRect(tableX, currentY - rowHeight, tableWidth, rowHeight);
@@ -134,6 +140,8 @@ public class GenerateInvoice {
                 cs.newLineAtOffset(colWidths[1], 0);
                 cs.showText(String.format("$%.2f", unitPrice));
                 cs.newLineAtOffset(colWidths[2], 0);
+                cs.showText(String.format("$%.2f", discount));
+                cs.newLineAtOffset(colWidths[3], 0);
                 cs.showText(String.format("$%.2f", lineTotal));
                 cs.endText();
 
@@ -152,12 +160,13 @@ public class GenerateInvoice {
             // Totals
             BigDecimal tax = invoice.getTotalGst();
             BigDecimal total = invoice.getInvoiceTotal();
+            //BigDecimal subtotal = invoice.get      subtotal needed?
 
             currentY -= 30;
             cs.beginText();
             cs.setFont(font, 12);
             cs.newLineAtOffset(pageWidth - margin - 150, currentY);
-            cs.showText("Subtotal: " + String.format("$%.2f", subtotal));
+            //cs.showText("Subtotal: " + String.format("$%.2f", subtotal));     as above
             cs.newLineAtOffset(0, -15);
             cs.showText("GST (15%): " + String.format("$%.2f", tax));
             cs.newLineAtOffset(0, -15);
@@ -170,7 +179,8 @@ public class GenerateInvoice {
             cs.newLineAtOffset(tableX, 100);
             cs.showText("Thank you for your business!");
             cs.newLineAtOffset(0, -15);
-            cs.showText("Please make payment within 14 days to: BANK ACC NUMBER");
+            cs.showText("Please make payments to: " + BANK_ACC);
+
             cs.endText();
 
             cs.close();
