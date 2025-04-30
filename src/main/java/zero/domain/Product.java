@@ -21,7 +21,7 @@ public class Product {
     private Long productId;
 
     @NotNull(message = "product type must be provided")
-    @Column(name = "product_type", nullable = false)
+    @Column(name = "product_type", nullable = true)
     private Boolean productType;
 
     @NotNull(message = "product name must be provided")

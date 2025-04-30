@@ -1,16 +1,17 @@
 package zero.domain;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.util.Objects;
 import net.sf.oval.constraint.NotNull;
 
+import java.math.BigDecimal;
+import java.util.Objects;
+
 @Entity
-@Table(name = "invoice_item")
-public class InvoiceItem {
+@Table(name = "quote_item")
+public class QuoteItem {
 
     @EmbeddedId
-    private InvoiceItemPK id;
+    private QuoteItemPK id;
 
     @NotNull(message = "Quantity is required.")
     @Column(name = "quantity", nullable = false)
@@ -24,19 +25,27 @@ public class InvoiceItem {
     private BigDecimal subtotal;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
+    @MapsId("productId") // maps to field in QuoteItemPK
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @NotNull(message = "Unit price is required")
     @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    @JoinColumn(name = "invoice_id", nullable = false, insertable = false, updatable = false)
-    private Long invoice;
+    @JoinColumn(name = "quote_id", nullable = false, insertable = false, updatable = false)
+    private Long quote;
 
-    // Default constructor
-    public InvoiceItem() {
-        this.discount = BigDecimal.ZERO;  // Default discount to 0 if not provided
+    public QuoteItem() {
+        this.discount = BigDecimal.ZERO;
+    }
+
+    public QuoteItemPK getId() {
+        return id;
+    }
+
+    public void setId(QuoteItemPK id) {
+        this.id = id;
     }
 
     public Product getProduct() {
@@ -47,21 +56,13 @@ public class InvoiceItem {
         this.product = product;
     }
 
-    public int getId() {
-        return id.hashCode();
-    }
-
-    public void setId(InvoiceItemPK id) {
-        this.id = id;
-    }
-
     public Integer getQuantity() {
         return quantity;
     }
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
-        this.subtotal = calculateSubtotal();  // Recalculate subtotal when quantity changes
+        this.subtotal = calculateSubtotal();
     }
 
     public BigDecimal getDiscount() {
@@ -69,22 +70,20 @@ public class InvoiceItem {
     }
 
     public void setDiscount(BigDecimal discount) {
-        this.discount = (discount != null) ? discount : BigDecimal.ZERO;  // Default discount to 0 if null
-        this.subtotal = calculateSubtotal();  // Recalculate subtotal when discount changes
+        this.discount = (discount != null) ? discount : BigDecimal.ZERO;
+        this.subtotal = calculateSubtotal();
     }
 
     public BigDecimal getSubtotal() {
-        return calculateSubtotal();  // Always calculate subtotal dynamically
+        return calculateSubtotal();
     }
 
-    // Calculate subtotal dynamically (only when needed)
     private BigDecimal calculateSubtotal() {
         if (unitPrice == null || quantity == null || discount == null) {
-            return BigDecimal.ZERO;  // Return 0 if any value is missing
+            return BigDecimal.ZERO;
         }
         return unitPrice.multiply(new BigDecimal(quantity)).subtract(discount);
     }
-
 
     public BigDecimal getUnitPrice() {
         return unitPrice;
@@ -92,15 +91,22 @@ public class InvoiceItem {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
-        this.subtotal = calculateSubtotal();  // Recalculate subtotal when unitPrice changes
+        this.subtotal = calculateSubtotal();
     }
 
-    // Equals and hashCode based on the embedded primary key
+    public Long getQuote() {
+        return quote;
+    }
+
+    public void setQuote(Quote quote) {
+        this.quote = quote.getQuoteId();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        InvoiceItem that = (InvoiceItem) o;
+        if (!(o instanceof QuoteItem)) return false;
+        QuoteItem that = (QuoteItem) o;
         return Objects.equals(id, that.id);
     }
 
@@ -109,24 +115,17 @@ public class InvoiceItem {
         return Objects.hash(id);
     }
 
-    public void setInvoice(Invoice invoice) {
-        this.invoice = invoice.getInvoiceId();
-    }
-
-    public Long getInvoice() {
-        return invoice;
-    }
-
     @Override
     public String toString() {
-        return "InvoiceItem{" +
+        return "QuoteItem{" +
                 "id=" + id +
                 ", quantity=" + quantity +
                 ", discount=" + discount +
                 ", subtotal=" + subtotal +
                 ", product=" + product +
                 ", unitPrice=" + unitPrice +
-                ", invoice=" + invoice +
-                ", prod desc=" + product.getProductDescription() + "}";
+                ", quoteId=" + quote +
+                ", productDesc=" + (product != null ? product.getProductDescription() : "null") +
+                '}';
     }
 }

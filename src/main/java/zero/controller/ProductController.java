@@ -24,7 +24,7 @@ public class ProductController {
         return productRepository.findAll();
     }
 
-    // ✅ Add multiple products at once
+    //Add multiple products at once
     @PostMapping
     public ResponseEntity<?> createProducts(@RequestBody List<Product> products) {
         try {

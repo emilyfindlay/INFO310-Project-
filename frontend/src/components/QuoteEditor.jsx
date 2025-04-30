@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 
-export default function InvoiceEditor({ setInvoices, invoiceId }) {
+export default function QuoteEditor({ setQuotes, quoteId }) {
     const [clientId, setClientId] = useState("");
     const [businessId, setBusinessId] = useState("");
     const [issuedDate, setIssuedDate] = useState("");
-    const [dueDate, setDueDate] = useState("");
+    const [expiryDate, setExpiryDate] = useState("");
     const [status, setStatus] = useState("");
-    const [invoiceItems, setInvoiceItems] = useState([
+    const [quoteItems, setQuoteItems] = useState([
         { product: { productName: "", productDescription: "", productPrice: 0 }, quantity: 1, discount: 0 },
     ]);
 
@@ -15,21 +15,29 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/clients").then(res => res.json()).then(setClients);
-        fetch("http://localhost:8080/api/businesses").then(res => res.json()).then(setBusinesses);
-        fetch("http://localhost:8080/api/products").then(res => res.json()).then(setProducts);
+        fetch("http://localhost:8080/api/clients")
+            .then(res => res.json())
+            .then(setClients);
 
-        if (invoiceId) {
-            fetch(`http://localhost:8080/api/invoices/${invoiceId}`)
+        fetch("http://localhost:8080/api/businesses")
+            .then(res => res.json())
+            .then(setBusinesses);
+
+        fetch("http://localhost:8080/api/products")
+            .then(res => res.json())
+            .then(setProducts);
+
+        if (quoteId) {
+            fetch(`http://localhost:8080/api/quotes/${quoteId}`)
                 .then(res => res.json())
                 .then(data => {
                     setClientId(data.clientId);
                     setBusinessId(data.businessId);
                     setIssuedDate(data.issuedDate);
-                    setDueDate(data.dueDate);
+                    setExpiryDate(data.expiryDate);
                     setStatus(data.status);
 
-                    const resolvedItems = data.invoiceItems.map(item => {
+                    const resolvedItems = data.quoteItems.map(item => {
                         const fullProduct = products.find(p => p.id === item.productId) || {
                             productName: "",
                             productDescription: "",
@@ -41,13 +49,13 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                             discount: item.discount,
                         };
                     });
-                    setInvoiceItems(resolvedItems);
+                    setQuoteItems(resolvedItems);
                 });
         }
-    }, [invoiceId]);
+    }, [quoteId]);
 
-    const handleInvoiceItemChange = (index, field, value) => {
-        const updatedItems = [...invoiceItems];
+    const handleQuoteItemChange = (index, field, value) => {
+        const updatedItems = [...quoteItems];
         if (field === "quantity" || field === "discount") {
             updatedItems[index][field] = Number(value);
         } else if (field.startsWith("product.")) {
@@ -57,28 +65,29 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                 [productField]: productField === "productPrice" ? Number(value) : value,
             };
         }
-        setInvoiceItems(updatedItems);
+        setQuoteItems(updatedItems);
     };
 
-    const addInvoiceItem = () => {
-        setInvoiceItems([
-            ...invoiceItems,
+    const addQuoteItem = () => {
+        setQuoteItems([
+            ...quoteItems,
             { product: { productName: "", productDescription: "", productPrice: 0 }, quantity: 1, discount: 0 }
         ]);
     };
 
-    const removeInvoiceItem = (index) => {
-        const updated = [...invoiceItems];
+    const removeQuoteItem = (index) => {
+        const updated = [...quoteItems];
         updated.splice(index, 1);
-        setInvoiceItems(updated);
+        setQuoteItems(updated);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const productsToSave = invoiceItems.map(item => ({
+            const productsToSave = quoteItems.map(item => ({
                 productName: item.product.productName,
+                productType: true,
                 productDescription: item.product.productDescription,
                 productPrice: item.product.productPrice,
             }));
@@ -92,50 +101,49 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
             if (!productResponse.ok) throw new Error("Failed to save products");
             const savedProducts = await productResponse.json();
 
-            const baseInvoice = {
+            const baseQuote = {
                 clientId: Number(clientId) || null,
                 businessId: Number(businessId),
                 issuedDate,
-                dueDate,
+                expiryDate,
                 status,
-                invoiceItems: []
+                quoteItems: []
             };
 
-            const invoiceResponse = await fetch("http://localhost:8080/api/invoices", {
+            const quoteResponse = await fetch("http://localhost:8080/api/quotes", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(baseInvoice),
+                body: JSON.stringify(baseQuote),
             });
 
-            if (!invoiceResponse.ok) throw new Error("Failed to create invoice");
+            if (!quoteResponse.ok) throw new Error("Failed to create quote");
 
-            const createdInvoice = await invoiceResponse.json();
-            const newInvoiceId = createdInvoice.invoiceId;
+            const createdQuote = await quoteResponse.json();
+            const newQuoteId = createdQuote.quoteId;
 
-            const invoiceItemsToSave = invoiceItems.map((item, idx) => ({
+            const quoteItemsToSave = quoteItems.map((item, idx) => ({
                 productId: savedProducts[idx].productId,
-                invoiceId: newInvoiceId,
+                quoteId: newQuoteId,
                 quantity: item.quantity,
                 unitPrice: item.product.productPrice,
                 discount: item.discount,
-                productType: true
             }));
 
-            const itemsResponse = await fetch("http://localhost:8080/api/invoice-items", {
+            const itemsResponse = await fetch("http://localhost:8080/api/quote-items", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(invoiceItemsToSave),
+                body: JSON.stringify(quoteItemsToSave),
             });
 
-            if (!itemsResponse.ok) throw new Error("Failed to save invoice items");
+            if (!itemsResponse.ok) throw new Error("Failed to save quote items");
 
-            const savedInvoiceItems = await itemsResponse.json();
+            const savedQuoteItems = await itemsResponse.json();
 
-            const finalInvoiceUpdate = {
-                ...createdInvoice,
-                invoiceItems: savedInvoiceItems.map(item => ({
+            const finalQuoteUpdate = {
+                ...createdQuote,
+                quoteItems: savedQuoteItems.map(item => ({
                     id: {
-                        invoiceId: item.invoiceId,
+                        quoteId: item.quoteId,
                         productId: item.productId
                     },
                     quantity: item.quantity,
@@ -144,27 +152,27 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                 }))
             };
 
-            const patchResponse = await fetch(`http://localhost:8080/api/invoices/${newInvoiceId}`, {
+            const patchResponse = await fetch(`http://localhost:8080/api/quotes/${newQuoteId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(finalInvoiceUpdate),
+                body: JSON.stringify(finalQuoteUpdate),
             });
 
-            if (!patchResponse.ok) throw new Error("Failed to update invoice");
+            if (!patchResponse.ok) throw new Error("Failed to update quote");
 
-            const updatedInvoice = await patchResponse.json();
-            setInvoices(prev => [...prev, updatedInvoice]);
+            const updatedQuote = await patchResponse.json();
+            setQuotes(prev => [...prev, updatedQuote]);
 
-            alert("Invoice created successfully!");
+            alert("Quote created successfully!");
         } catch (err) {
-            console.error("Error creating invoice:", err);
-            alert("Error saving invoice: " + err.message);
+            console.error("Error creating quote:", err);
+            alert("Error saving quote: " + err.message);
         }
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <h2>{invoiceId ? "Edit Invoice" : "Create Invoice"}</h2>
+            <h2>{quoteId ? "Edit Quote" : "Create Quote"}</h2>
 
             <label>
                 Client:
@@ -192,8 +200,8 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
             </label>
 
             <label>
-                Due Date:
-                <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} required />
+                Expiry Date:
+                <input type="date" value={expiryDate} onChange={(e) => setExpiryDate(e.target.value)} required />
             </label>
 
             <label>
@@ -201,7 +209,7 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                 <input type="text" value={status} onChange={(e) => setStatus(e.target.value)} required />
             </label>
 
-            <h3>Invoice Items</h3>
+            <h3>Quote Items</h3>
             <table>
                 <thead>
                 <tr>
@@ -215,56 +223,59 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                 </tr>
                 </thead>
                 <tbody>
-                {invoiceItems.map((item, index) => (
+                {quoteItems.map((item, index) => (
                     <tr key={index}>
                         <td>
                             <input
                                 value={item.product.productName}
-                                onChange={(e) => handleInvoiceItemChange(index, "product.productName", e.target.value)}
+                                onChange={(e) => handleQuoteItemChange(index, "product.productName", e.target.value)}
                             />
                         </td>
                         <td>
                             <input
                                 value={item.product.productDescription}
-                                onChange={(e) => handleInvoiceItemChange(index, "product.productDescription", e.target.value)}
+                                onChange={(e) => handleQuoteItemChange(index, "product.productDescription", e.target.value)}
                             />
                         </td>
                         <td>
                             <input
                                 type="number"
                                 value={item.product.productPrice}
-                                onChange={(e) => handleInvoiceItemChange(index, "product.productPrice", e.target.value)}
+                                onChange={(e) => handleQuoteItemChange(index, "product.productPrice", e.target.value)}
                             />
                         </td>
                         <td>
                             <input
                                 type="number"
                                 value={item.quantity}
-                                onChange={(e) => handleInvoiceItemChange(index, "quantity", e.target.value)}
+                                onChange={(e) => handleQuoteItemChange(index, "quantity", e.target.value)}
                             />
                         </td>
                         <td>
                             <input
                                 type="number"
                                 value={item.discount}
-                                onChange={(e) => handleInvoiceItemChange(index, "discount", e.target.value)}
+                                onChange={(e) => handleQuoteItemChange(index, "discount", e.target.value)}
                             />
                         </td>
                         <td>
                             {(item.product.productPrice * item.quantity - item.discount).toFixed(2)}
                         </td>
                         <td>
-                            <button type="button" onClick={() => removeInvoiceItem(index)}>Remove</button>
+                            <button type="button" onClick={() => removeQuoteItem(index)}>Remove</button>
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
 
-            <button type="button" onClick={addInvoiceItem}>Add Item</button>
+            <button type="button" onClick={addQuoteItem}>Add Item</button>
 
-            <button type="submit" disabled={!businessId || !dueDate || !status}>
-                {invoiceId ? "Update Invoice" : "Create Invoice"}
+            <button
+                type="submit"
+                disabled={!businessId || !expiryDate || !status}
+            >
+                {quoteId ? "Update Quote" : "Create Quote"}
             </button>
         </form>
     );

@@ -1,35 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package zero.domain;
 
 import jakarta.persistence.*;
+import net.sf.oval.constraint.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
-import net.sf.oval.constraint.Future;
-import net.sf.oval.constraint.Length;
-import net.sf.oval.constraint.NotBlank;
-import net.sf.oval.constraint.NotNull;
-import net.sf.oval.constraint.Past;
-import net.sf.oval.constraint.Range;
-
-
-/**
- *
- * @author kevin
- */
-
 
 @Entity
-@Table(name = "invoice")
-public class Invoice {
+@Table(name = "quote")
+public class Quote {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "invoice_id")
-    private Long invoiceId;
+    @Column(name = "quote_id")
+    private Long quoteId;
 
     @NotNull(message = "client ID is not provided")
     @Length(min = 2, message = "client ID must be greater than 2 characters")
@@ -51,10 +37,10 @@ public class Invoice {
     @Column(name = "creation_date", nullable = false)
     private LocalDate creationDate;
 
-    @NotNull(message = "due date must be provided")
-    @Future(message = "due date must be in the future")
-    @Column(name = "due_date", nullable = false)
-    private LocalDate dueDate;
+    @NotNull(message = "expiry date must be provided")
+    @Future(message = "expiry date must be in the future")
+    @Column(name = "expiry_date", nullable = false)
+    private LocalDate expiryDate;
 
     @NotNull(message = "status must be provided")
     @NotBlank(message = "status must be provided")
@@ -66,53 +52,52 @@ public class Invoice {
     @Column(name = "total_gst", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalGst;
 
-    @NotNull(message = "invoice total must be provided")
-    @Column(name = "invoice_total", nullable = false, precision = 10, scale = 2)
-    private BigDecimal invoiceTotal;
+    @NotNull(message = "quote total must be provided")
+    @Column(name = "quote_total", nullable = false, precision = 10, scale = 2)
+    private BigDecimal quoteTotal;
 
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
-    private Collection<InvoiceItem> invoiceItems;
+    @OneToMany(mappedBy = "quote", cascade = CascadeType.ALL)
+    private Collection<QuoteItem> quoteItems;
 
-    public Invoice(Client client, Business business, Collection<InvoiceItem> invoiceItems,
-                   LocalDate issuedDate, LocalDate dueDate, String status,
-                   BigDecimal totalGst, BigDecimal invoiceTotal) {
+    public Quote(Client client, Business business, Collection<QuoteItem> quoteItems,
+                 LocalDate issuedDate, LocalDate expiryDate, String status,
+                 BigDecimal totalGst, BigDecimal quoteTotal) {
         this.client = client;
         this.business = business;
-        this.invoiceItems = invoiceItems;
+        this.quoteItems = quoteItems;
         this.issuedDate = issuedDate;
-        this.dueDate = dueDate;
+        this.expiryDate = expiryDate;
         this.status = status;
         this.totalGst = totalGst;
-        this.invoiceTotal = invoiceTotal;
+        this.quoteTotal = quoteTotal;
         this.creationDate = LocalDate.now();
     }
 
-    public Invoice() {
-        // Default constructor
+    public Quote() {
         this.creationDate = LocalDate.now();
     }
 
     public BigDecimal getTotalGst() {
         BigDecimal gstRate = new BigDecimal("0.15");
-        return invoiceItems.stream()
+        return quoteItems.stream()
                 .map(item -> item.getSubtotal().multiply(gstRate))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public BigDecimal getInvoiceTotal() {
-        BigDecimal total = invoiceItems.stream()
-                .map(InvoiceItem::getSubtotal)
+    public BigDecimal getQuoteTotal() {
+        BigDecimal total = quoteItems.stream()
+                .map(QuoteItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return total.add(getTotalGst());
     }
 
-    public void addItem(InvoiceItem item) {
-        this.invoiceItems.add(item);
-        item.setInvoice(this);
+    public void addItem(QuoteItem item) {
+        this.quoteItems.add(item);
+        item.setQuote(this);
     }
 
-    public Long getInvoiceId() {
-        return invoiceId;
+    public Long getQuoteId() {
+        return quoteId;
     }
 
     public LocalDate getCreationDate() {
@@ -127,12 +112,12 @@ public class Invoice {
         this.issuedDate = issuedDate;
     }
 
-    public LocalDate getDueDate() {
-        return dueDate;
+    public LocalDate getExpiryDate() {
+        return expiryDate;
     }
 
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
+    public void setExpiryDate(LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     public String getStatus() {
@@ -143,40 +128,40 @@ public class Invoice {
         this.status = status;
     }
 
-    public Collection<InvoiceItem> getInvoiceItems() {
-        return invoiceItems;
+    public Collection<QuoteItem> getQuoteItems() {
+        return quoteItems;
     }
 
-    public void setInvoiceItems(Collection<InvoiceItem> invoiceItems) {
-        this.invoiceItems = invoiceItems;
+    public void setQuoteItems(Collection<QuoteItem> quoteItems) {
+        this.quoteItems = quoteItems;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Invoice invoice = (Invoice) o;
-        return Objects.equals(invoiceId, invoice.invoiceId);
+        if (!(o instanceof Quote)) return false;
+        Quote quote = (Quote) o;
+        return Objects.equals(quoteId, quote.quoteId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(invoiceId);
+        return Objects.hash(quoteId);
     }
 
     @Override
     public String toString() {
-        return "Invoice{" +
-                "invoiceId=" + invoiceId +
+        return "Quote{" +
+                "quoteId=" + quoteId +
                 ", client=" + client +
                 ", business=" + business +
                 ", issuedDate=" + issuedDate +
                 ", creationDate=" + creationDate +
-                ", dueDate=" + dueDate +
+                ", expiryDate=" + expiryDate +
                 ", status='" + status + '\'' +
                 ", totalGst=" + totalGst +
-                ", invoiceTotal=" + invoiceTotal +
-                ", invoiceItems=" + invoiceItems +
+                ", quoteTotal=" + quoteTotal +
+                ", quoteItems=" + quoteItems +
                 '}';
     }
 

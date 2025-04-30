@@ -69,6 +69,35 @@ CREATE TABLE invoice
     CONSTRAINT invoice_fk_business FOREIGN KEY (business_id) REFERENCES business (business_id)
 );
 
+CREATE TABLE quote
+(
+    quote_id    SERIAL,
+    business_id   INT            NOT NULL,
+    client_id     INT,                     --not all quotes must have a client.
+    creation_date DATE           NOT NULL, --quotes must have a date of creation
+    issued_date   DATE,                    --quote can be created but not issued
+    expiry_date      DATE           NOT NULL,
+    status        VARCHAR(20)    NOT NULL,
+    total_gst     DECIMAL(10, 2) NOT NULL,
+    quote_total DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT quote_pk PRIMARY KEY (quote_id),
+    CONSTRAINT quote_fk_client FOREIGN KEY (client_id) REFERENCES client (client_id),
+    CONSTRAINT quote_fk_business FOREIGN KEY (business_id) REFERENCES business (business_id)
+);
+
+CREATE TABLE quote_item (
+                            quote_id BIGINT NOT NULL,
+                            product_id BIGINT NOT NULL,
+                            quantity INTEGER NOT NULL,
+                            discount NUMERIC(5, 2) NOT NULL DEFAULT 0,
+                            unit_price NUMERIC(10, 2) NOT NULL,
+                            subtotal NUMERIC(10, 2) NOT NULL,
+
+                            PRIMARY KEY (quote_id, product_id),
+                            CONSTRAINT fk_quoteitem_quote FOREIGN KEY (quote_id) REFERENCES quote(quote_id) ON DELETE CASCADE,
+                            CONSTRAINT fk_quoteitem_product FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+
 CREATE TABLE invoice_item
 (
     invoice_id          INT            NOT NULL,

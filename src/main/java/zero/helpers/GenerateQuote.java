@@ -1,28 +1,34 @@
 package zero.helpers;
 
-import zero.domain.*;
-import org.apache.pdfbox.pdmodel.*;
-import org.apache.pdfbox.pdmodel.font.*;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import zero.domain.Business;
+import zero.domain.Client;
+import zero.domain.Quote;
+import zero.domain.QuoteItem;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
 
-public class GenerateInvoice {
+public class GenerateQuote {
 
-    public static byte[] generateInvoice(Invoice invoice) {
+    public static byte[] generateQuote(Quote quote) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        createInvoice(invoice.getBusiness(), invoice.getClient(), invoice.getInvoiceItems(), invoice, byteArrayOutputStream);
+        createQuote(quote.getBusiness(), quote.getClient(), quote.getQuoteItems(), quote, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
 
-    public static void createInvoice(Business user, Client client, Collection<InvoiceItem> descriptions, Invoice invoice, ByteArrayOutputStream byteArrayOutputStream) {
+    public static void createQuote(Business user, Client client, Collection<QuoteItem> quoteItems, Quote quote, ByteArrayOutputStream byteArrayOutputStream) {
         final String BANK_ACC = user.getBankAccountNumber();
-        String dueDate = invoice.getDueDate().toString();
-        String footer = user.getInvoiceFooter();
+        String dueDate = quote.getExpiryDate().toString();
+        String footer = user.getQuoteFooter();
 
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage(PDRectangle.A4);
@@ -56,16 +62,16 @@ public class GenerateInvoice {
             cs.showText("IRD Number: " + user.getBusinessId());
             cs.endText();
 
-            // === INVOICE Info (Top Right) ===
+            // === QUOTE Info (Top Right) ===
             cs.setFont(font, 18);
             cs.beginText();
             cs.newLineAtOffset(pageWidth - margin - 200, y);
-            cs.showText("INVOICE");
+            cs.showText("QUOTE");
             cs.setFont(font, 12);
             cs.newLineAtOffset(0, -20);
-            cs.showText("Invoice #: INV-" + invoice.getInvoiceId());
+            cs.showText("Quote #: QUO-" + quote.getQuoteId());
             cs.newLineAtOffset(0, -15);
-            cs.showText("Date: " + invoice.getIssuedDate());
+            cs.showText("Date: " + quote.getIssuedDate());
             cs.newLineAtOffset(0, -15);
             cs.showText("Due Date: " + dueDate);
             cs.endText();
@@ -121,7 +127,7 @@ public class GenerateInvoice {
 
             // Rows
             currentY -= rowHeight;
-            for (InvoiceItem item : descriptions) {
+            for (QuoteItem item : quoteItems) {
                 String description = item.getProduct().getProductDescription();
                 double quantity = item.getQuantity();
                 BigDecimal unitPrice = item.getUnitPrice();
@@ -159,15 +165,13 @@ public class GenerateInvoice {
             cs.stroke();
 
             // Totals
-            BigDecimal tax = invoice.getTotalGst();
-            BigDecimal total = invoice.getInvoiceTotal();
-            //BigDecimal subtotal = invoice.get      subtotal needed?
+            BigDecimal tax = quote.getTotalGst();
+            BigDecimal total = quote.getQuoteTotal();
 
             currentY -= 30;
             cs.beginText();
             cs.setFont(font, 12);
             cs.newLineAtOffset(pageWidth - margin - 150, currentY);
-            //cs.showText("Subtotal: " + String.format("$%.2f", subtotal));     as above
             cs.newLineAtOffset(0, -15);
             cs.showText("GST (15%): " + String.format("$%.2f", tax));
             cs.newLineAtOffset(0, -15);
@@ -186,9 +190,9 @@ public class GenerateInvoice {
 
             cs.close();
             document.save(byteArrayOutputStream);
-            System.out.println("Invoice saved to byte stream.");
+            System.out.println("Quote saved to byte stream.");
         } catch (IOException e) {
-            System.err.println("Error generating invoice: " + e.getMessage());
+            System.err.println("Error generating quote: " + e.getMessage());
         }
     }
 }
