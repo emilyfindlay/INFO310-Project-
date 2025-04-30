@@ -1,13 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function InvoiceList({ invoices }) {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [sortField, setSortField] = useState('invoiceId');
+    const [sortDirection, setSortDirection] = useState('asc');
+    const invoicesPerPage = 10;
+
+    const totalPages = Math.ceil(invoices.length / invoicesPerPage);
+
+    // Sort logic
+    const sortedInvoices = [...invoices].sort((a, b) => {
+        const aValue = a[sortField];
+        const bValue = b[sortField];
+
+        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+    const startIndex = (currentPage - 1) * invoicesPerPage;
+    const currentInvoices = sortedInvoices.slice(startIndex, startIndex + invoicesPerPage);
+
     const handleDownload = async (invoiceId) => {
         try {
             const response = await fetch(`/api/invoices/${invoiceId}/pdf`);
             if (!response.ok) {
                 throw new Error('Failed to fetch PDF');
             }
-
             const blob = await response.blob();
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -16,16 +35,45 @@ export default function InvoiceList({ invoices }) {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            URL.revokeObjectURL(url); // Clean up the object URL
+            URL.revokeObjectURL(url);
         } catch (err) {
             console.error('Error downloading PDF:', err);
             alert('Failed to download PDF');
         }
     };
 
+    const goToPage = (pageNumber) => {
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
+            setCurrentPage(pageNumber);
+        }
+    };
+
     return (
         <div>
             <h2 className="text-xl font-bold mb-4">Invoice List</h2>
+
+            {/* Sorting controls */}
+            <div className="flex items-center gap-4 mb-4">
+                <label>
+                    Sort by:{' '}
+                    <select value={sortField} onChange={(e) => setSortField(e.target.value)} className="border p-1">
+                        <option value="invoiceId">Invoice ID</option>
+                        <option value="issuedDate">Issued Date</option>
+                        <option value="dueDate">Due Date</option>
+                        <option value="invoiceTotal">Total Amount</option>
+                        <option value="status">Status</option>
+                    </select>
+                </label>
+                <label>
+                    Order:{' '}
+                    <select value={sortDirection} onChange={(e) => setSortDirection(e.target.value)} className="border p-1">
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+                </label>
+            </div>
+
+            {/* Table */}
             <table className="w-full border-collapse">
                 <thead>
                 <tr>
@@ -40,7 +88,7 @@ export default function InvoiceList({ invoices }) {
                 </tr>
                 </thead>
                 <tbody>
-                {invoices.map((invoice) => (
+                {currentInvoices.map((invoice) => (
                     <tr key={invoice.invoiceId}>
                         <td className="border px-2 py-1">{invoice.invoiceId}</td>
                         <td className="border px-2 py-1">{invoice.client.name}</td>
@@ -61,6 +109,35 @@ export default function InvoiceList({ invoices }) {
                 ))}
                 </tbody>
             </table>
+
+            {/* Pagination */}
+            <div className="flex justify-center mt-4 space-x-2">
+                <button
+                    onClick={() => goToPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                >
+                    Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                        key={index + 1}
+                        onClick={() => goToPage(index + 1)}
+                        className={`px-3 py-1 border rounded ${
+                            currentPage === index + 1 ? 'bg-blue-500 text-white' : ''
+                        }`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+                <button
+                    onClick={() => goToPage(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                >
+                    Next
+                </button>
+            </div>
         </div>
     );
 }
