@@ -10,11 +10,25 @@ import ProductList from "./components/ProductList";
 import ProductEditor from "./components/ProductEditor";
 import BusinessEditor from "./components/BusinessEditor";
 import BusinessList from "./components/BusinessList";
+import Dropdown from "./components/Dropdown/Dropdown";
 
 // import './styles/main.css';
 import './zeroCSS.css';
 
-export default function App() {
+//const App = () => {
+//    const items = [1, 2, 3, 4, 5, 6, 7, 8];
+//            return (
+////                    <div> className="App">
+////    <div className="content">
+//        <Dropdown />
+//    </div>//
+//    <div/>
+//    );
+//    };
+
+export default function App()
+
+{
     const [page, setPage] = useState("home");
 
     const [clients, setClients] = useState([]);
@@ -26,148 +40,174 @@ export default function App() {
     // Fetch all data from backend
     useEffect(() => {
         fetch("http://localhost:8080/api/clients")
-            .then((res) => res.json())
-            .then(setClients)
-            .catch((err) => console.error("Failed to load clients", err));
+                .then((res) => res.json())
+                .then(setClients)
+                .catch((err) => console.error("Failed to load clients", err));
 
         fetch("http://localhost:8080/api/products")
-            .then((res) => res.json())
-            .then(setProducts)
-            .catch((err) => console.error("Failed to load products", err));
+                .then((res) => res.json())
+                .then(setProducts)
+                .catch((err) => console.error("Failed to load products", err));
 
         fetch("http://localhost:8080/api/invoices")
-            .then((res) => res.json())
-            .then(setInvoices)
-            .catch((err) => console.error("Failed to load invoices", err));
+                .then((res) => res.json())
+                .then(setInvoices)
+                .catch((err) => console.error("Failed to load invoices", err));
 
         fetch("http://localhost:8080/api/quotes")
-            .then((res) => res.json())
-            .then(setQuotes)
-            .catch((err) => console.error("Failed to load quotes", err));
+                .then((res) => res.json())
+                .then(setQuotes)
+                .catch((err) => console.error("Failed to load quotes", err));
 
         fetch("http://localhost:8080/api/businesses")
-            .then((res) => res.json())
-            .then(setBusinesses)
-            .catch((err) => console.error("Failed to load businesses", err));
+                .then((res) => res.json())
+                .then(setBusinesses)
+                .catch((err) => console.error("Failed to load businesses", err));
 
         document.title = "Zero";
     }, []);
 
     return (
-        <div className="flex h-screen">
-            {/* Sidebar */}
-            <aside className="w-64 bg-blue-800 text-white p-4 space-y-4">
-                <h1 className="text-2xl font-bold mb-6">Zero</h1>
-                <nav className="flex flex-col space-y-2">
-                    <div className="button-row">
-                        {/* Invoice buttons */}
-                        <button
-                            onClick={() => setPage("invoice-list")}
-                            className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded"
-                        >
-                            <FaFileInvoice /> View Invoices
-                        </button>
-                        <button
-                            onClick={() => setPage("invoice-editor")}
-                            className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded"
-                        >
-                            <FaPlus /> Add Invoice
-                        </button>
+            <div className="flex flex-col h-screen">
+                {/* Top Navigation Bar */}
+                <header className="bg-blue-800 text-white p-4">
+                    <nav className="flex flex-row flex-wrap items-center gap-6">
+                        <h1 className="text-xl font-bold mr-4">Zero</h1>
+            
+                        <Dropdown label="Main Menu">
+                            <button
+                                onClick={() => setPage("main-menu")}
+                                className="hover:bg-blue-700 p-2 rounded"
+                                >
+                                Dashboard
+                            </button>
+                        </Dropdown>
+            
+                        <Dropdown label="Invoices">
+                            <button
+                                onClick={() => setPage("invoice-list")}
+                                className="hover:bg-blue-700 p-2 rounded"
+                                >
+                                Invoice List
+                            </button>
+                            <button
+                                onClick={() => setPage("invoice-editor")}
+                                className="hover:bg-blue-700 p-2 rounded"
+                                >
+                                Create Invoice
+                            </button>
+                        </Dropdown>
+            
+                        <Dropdown label="Quotes">
+                            <button
+                                onClick={() => setPage("quote-list")}
+                                className="hover:bg-blue-700 p-2 rounded"
+                                >
+                                Quote List
+                            </button>
+                            <button
+                                onClick={() => setPage("quote-editor")}
+                                className="hover:bg-blue-700 p-2 rounded"
+                                >
+                                Create Quote
+                            </button>
+                        </Dropdown>
+            
+                        <Dropdown label="Clients">
+                            <button
+                                onClick={() => setPage("client-list")}
+                                className="hover:bg-blue-700 p-2 rounded"
+                                >
+                                Client List
+                            </button>
+                            <button
+                                onClick={() => setPage("client-editor")}
+                                className="hover:bg-blue-700 p-2 rounded"
+                                >
+                                Add Client
+                            </button>
+                        </Dropdown>
+            
+                        <Dropdown label="Products">
+                            <button
+                                onClick={() => setPage("product-list")}
+                                className="hover:bg-blue-700 p-2 rounded"
+                                >
+                                Product List
+                            </button>
+                            <button
+                                onClick={() => setPage("product-editor")}
+                                className="hover:bg-blue-700 p-2 rounded"
+                                >
+                                Add Product
+                            </button>
+                        </Dropdown>
+            
+                        <Dropdown label="Business">
+                            <button
+                                onClick={() => setPage("business-list")}
+                                className="hover:bg-blue-700 p-2 rounded"
+                                >
+                                Business List
+                            </button>
+                            <button
+                                onClick={() => setPage("business-editor")}
+                                className="hover:bg-blue-700 p-2 rounded"
+                                >
+                                Add Business
+                            </button>
+                        </Dropdown>
+                    </nav>
+                </header>
+            
+            
+            
+                {/* Main Content */}
+                <main className="flex-1 bg-gray-100 p-8 overflow-y-auto">
+                    {page === "invoice-list" && <InvoiceList invoices={invoices} />}
+                    {page === "invoice-editor" && (
+                            <InvoiceEditor
+                                clients={clients}
+                                products={products}
+                                setInvoices={setInvoices}
+                                />
+                                )}
+            
+                    {page === "quote-list" && <QuoteList quotes={quotes} />}
+                    {page === "quote-editor" && (
+                            <QuoteEditor
+                                clients={clients}
+                                products={products}
+                                setQuotes={setQuotes}
+                                />
+                                )}
+            
+                    {page === "client-list" && (
+                            <ClientList clients={clients} setClients={setClients} />
+                                )}
+                    {page === "client-editor" && <ClientEditor setClients={setClients} />}
+            
+                    {page === "product-list" && (
+                            <ProductList products={products} setProducts={setProducts} />
+                                )}
+                    {page === "product-editor" && (
+                            <ProductEditor
+                                products={products}
+                                setProducts={setProducts}
+                                />
+                                )}
+            
+                    {page === "business-editor" && (
+                            <BusinessEditor setBusinesses={setBusinesses} />
+                                )}
+                    {page === "business-list" && (
+                            <BusinessList businesses={businesses} setBusinesses={setBusinesses} />
+                                )}
+                </main>
+            </div>
+            );
 
-                        {/* Quote buttons */}
-                        <button
-                            onClick={() => setPage("quote-list")}
-                            className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded"
-                        >
-                            <FaFileInvoice /> View Quotes
-                        </button>
-                        <button
-                            onClick={() => setPage("quote-editor")}
-                            className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded"
-                        >
-                            <FaPlus /> Add Quote
-                        </button>
 
-                        {/* Client buttons */}
-                        <button
-                            onClick={() => setPage("client-list")}
-                            className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded"
-                        >
-                            <FaUser /> View Clients
-                        </button>
-                        <button
-                            onClick={() => setPage("client-editor")}
-                            className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded"
-                        >
-                            <FaPlus /> Add Client
-                        </button>
-
-                        {/* Product buttons */}
-                        <button
-                            onClick={() => setPage("product-editor")}
-                            className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded"
-                        >
-                            <FaBoxOpen /> Add Product
-                        </button>
-                        <button
-                            onClick={() => setPage("product-list")}
-                            className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded"
-                        >
-                            <FaBoxOpen /> View Products
-                        </button>
-
-                        {/* Business buttons */}
-                        <button
-                            onClick={() => setPage("business-list")}
-                            className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded"
-                        >
-                            <FaUser /> View Businesses
-                        </button>
-                        <button
-                            onClick={() => setPage("business-editor")}
-                            className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded"
-                        >
-                            <FaPlus /> Add Business
-                        </button>
-                    </div>
-                </nav>
-            </aside>
-
-            {/* Main Content */}
-            <main className="flex-1 bg-gray-100 p-8 overflow-y-auto">
-                {page === "invoice-list" && <InvoiceList invoices={invoices} />}
-                {page === "invoice-editor" && (
-                    <InvoiceEditor
-                        clients={clients}
-                        products={products}
-                        setInvoices={setInvoices}
-                    />
-                )}
-
-                {/* Quote Pages */}
-                {page === "quote-list" && <QuoteList quotes={quotes} />}
-                {page === "quote-editor" && (
-                    <QuoteEditor
-                        clients={clients}
-                        products={products}
-                        setQuotes={setQuotes}
-                    />
-                )}
-
-                {/* Client Pages */}
-                {page === "client-list" && <ClientList clients={clients} setClients={setClients} />}
-                {page === "client-editor" && <ClientEditor setClients={setClients} />}
-
-                {/* Product Pages */}
-                {page === "product-list" && <ProductList products={products} setProducts={setProducts} />}
-                {page === "product-editor" && (
-                    <ProductEditor products={products} setProducts={setProducts} />
-                )}
-
-                {/* Business Pages */}
-                {page === "business-editor" && <BusinessEditor setBusinesses={setBusinesses} />}
-                {page === "business-list" && <BusinessList businesses={businesses} setBusinesses={setBusinesses} />}
-            </main>
-        </div>
-    );
 }
+
+
