@@ -81,6 +81,7 @@ export default function InvoiceEditor({ setInvoices, invoiceId }) {
                 productName: item.product.productName,
                 productDescription: item.product.productDescription,
                 productPrice: item.product.productPrice,
+                productType: item.product.productType || "true"
             }));
 
             const productResponse = await fetch("http://localhost:8080/api/products", {
