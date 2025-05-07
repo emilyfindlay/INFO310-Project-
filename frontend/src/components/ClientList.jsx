@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+ import { useState, useEffect } from "react";
 
-export default function ClientList({ clients, setClients }) {
+export default function ClientList({ clients, setClients, setSelectedClient, setPage }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -30,7 +30,7 @@ export default function ClientList({ clients, setClients }) {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this client?")) {
       try {
-        const response = await fetch(`http://localhost:8080/api/clients/${id}`, {
+          const response = await fetch(`http://localhost:8080/api/clients/${id}`, {
           method: "DELETE",
         });
 
@@ -45,6 +45,22 @@ export default function ClientList({ clients, setClients }) {
       }
     }
   };
+  
+  // Handle client edits
+  const handleEdit = async (id) => {
+      if (window.confirm("Are you sure you want to edit this client?")) {
+        try {
+           const selected = clients.find(c => c.clientId === id);
+            if (selected) {
+                console.log("Editing client with id:", id);
+                setSelectedClient(selected);
+                setPage("client-editor");
+            }
+        } catch (err) {
+            setError(err.message || "Something went wrong while editing.");
+        }
+    }
+  }
 
   return (
       <div>
@@ -64,18 +80,19 @@ export default function ClientList({ clients, setClients }) {
             <th>Actions</th>
           </tr>
           </thead>
-          <tbody>
-          {clients.map((client) => (
-              <tr key={client.clientId}>
-                <td>{client.name}</td>
-                <td>{client.email}</td>
-                <td>{client.phone}</td>
-                <td>
-                  <button onClick={() => handleDelete(client.clientId)}>Delete</button>
-                </td>
-              </tr>
-          ))}
-          </tbody>
+            <tbody>
+              {clients.map((client) => (
+                <tr key={client.clientId}>
+                  <td>{client.name}</td>
+                  <td>{client.email}</td>
+                  <td>{client.phone}</td>
+                  <td>
+                    <button onClick={() => handleEdit(client.clientId)}>Edit</button>
+                    <button onClick={() => handleDelete(client.clientId)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
         </table>
       </div>
   );

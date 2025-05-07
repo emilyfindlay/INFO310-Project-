@@ -36,6 +36,9 @@ export default function App()
     const [invoices, setInvoices] = useState([]);
     const [quotes, setQuotes] = useState([]);
     const [businesses, setBusinesses] = useState([]);
+    
+    const [client, setSelectedClient] = useState(null);
+    const [business, setSelectedBusiness] = useState(null);
 
     // Fetch all data from backend
     useEffect(() => {
@@ -121,7 +124,11 @@ export default function App()
                                 Client List
                             </button>
                             <button
-                                onClick={() => setPage("client-editor")}
+                                onClick={() => {
+                                        setSelectedClient(null);
+                                        setPage("client-editor"); 
+                                    }
+                                }
                                 className="hover:bg-blue-700 p-2 rounded"
                                 >
                                 Add Client
@@ -151,7 +158,11 @@ export default function App()
                                 Business List
                             </button>
                             <button
-                                onClick={() => setPage("business-editor")}
+                                onClick={() => {
+                                        setSelectedBusiness(null);
+                                        setPage("business-editor"); 
+                                    }
+                                }
                                 className="hover:bg-blue-700 p-2 rounded"
                                 >
                                 Add Business
@@ -183,26 +194,42 @@ export default function App()
                                 )}
             
                     {page === "client-list" && (
-                            <ClientList clients={clients} setClients={setClients} />
-                                )}
-                    {page === "client-editor" && <ClientEditor setClients={setClients} />}
-            
+                        <ClientList
+                          clients={clients}
+                          setClients={setClients}
+                          setSelectedClient={setSelectedClient}
+                          setPage={setPage}
+                        />
+                      )}
+
+                      {page === "client-editor" && (
+                        <ClientEditor
+                          client={client}
+                          setClients={setClients}
+                          setPage={setPage}
+                        />
+                      )}          
                     {page === "product-list" && (
-                            <ProductList products={products} setProducts={setProducts} />
-                                )}
+                        <ProductList products={products} setProducts={setProducts} />
+                    )}
                     {page === "product-editor" && (
-                            <ProductEditor
-                                products={products}
-                                setProducts={setProducts}
-                                />
-                                )}
-            
+                        <ProductEditor products={products} setProducts={setProducts} /> 
+                    )}
                     {page === "business-editor" && (
-                            <BusinessEditor setBusinesses={setBusinesses} />
-                                )}
+                        <BusinessEditor
+                            business={business}
+                            setBusinesses={setBusinesses}
+                            setPage={setPage}
+                        />
+                    )}
                     {page === "business-list" && (
-                            <BusinessList businesses={businesses} setBusinesses={setBusinesses} />
-                                )}
+                        <BusinessList
+                            businesses={businesses}
+                            setBusinesses={setBusinesses}
+                            setSelectedBusiness={setSelectedBusiness}
+                            setPage={setPage}
+                        />
+                    )}
                 </main>
             </div>
             );
