@@ -77,7 +77,9 @@ export default function ClientList({ clients, setClients, setSelectedClient, set
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Actions</th>
+            <th></th>
+            <th></th>
+
           </tr>
           </thead>
             <tbody>
@@ -87,8 +89,14 @@ export default function ClientList({ clients, setClients, setSelectedClient, set
                   <td>{client.email}</td>
                   <td>{client.phone}</td>
                   <td>
-                    <button onClick={() => handleEdit(client.clientId)}>Edit</button>
-                    <button onClick={() => handleDelete(client.clientId)}>Delete</button>
+                    <button onClick={() => handleEdit(client.clientId)} title="Edit" aria-label="Edit" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                        <img alt="Edit" src="/icons/edits.png" style={{ width: '50px', height: '50px' }} />
+                    </button>
+                  </td>
+                  <td>
+                    <button onClick={() => handleDelete(client.clientId)} title="Delete" aria-label="Delete" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                        <img alt="Delete" src="/icons/deletes.png" style={{ width: '50px', height: '50px' }} />
+                    </button>
                   </td>
                 </tr>
               ))}
