@@ -177,7 +177,7 @@ export default function InvoiceEditor( { setInvoices, invoiceId }) {
                         <option value="">(Optional) Select a client</option>
                         {clients.map((client) => (
                                 <option key={client.clientId} value={client.clientId}>{client.name}</option>
-                            ))}
+                                        ))}
                     </select>
                 </label>
             
@@ -187,7 +187,7 @@ export default function InvoiceEditor( { setInvoices, invoiceId }) {
                         <option value="">Select a business</option>
                         {businesses.map((business) => (
                                 <option key={business.businessId} value={business.businessId}>{business.businessName}</option>
-                            ))}
+                                        ))}
                     </select>
                 </label>
             
@@ -224,25 +224,31 @@ export default function InvoiceEditor( { setInvoices, invoiceId }) {
                                 <tr key={index}>
                                     <td>
                                         <select
-                                            value={item.product.productName}
+                                            value={item.product.productId || ""}
                                             onChange={(e) => {
-                                                                const selectedProduct = products.find(p => p.productName === e.target.value);
-                                        handleInvoiceItemChange(index, "product.productName", selectedProduct.productName);
-                                        handleInvoiceItemChange(index, "product.productPrice", selectedProduct.productPrice);
-                                        handleInvoiceItemChange(index, "product.productDescription", selectedProduct.productDescription);
-                                    }}                                
+                                                                const selectedProduct = products.find(p => p.productId === Number(e.target.value));
+                                                                if (selectedProduct) {
+                                                                handleInvoiceItemChange(index, "product.productId", selectedProduct.productId);
+                                                                handleInvoiceItemChange(index, "product.productName", selectedProduct.productName);
+                                                                handleInvoiceItemChange(index, "product.productPrice", selectedProduct.productPrice);
+                                                                handleInvoiceItemChange(index, "product.productDescription", selectedProduct.productDescription);
+                                                            } else {
+                                                                handleInvoiceItemChange(index, "product.productId", null);
+                                                            }
+                                                        }}                                
                                             >
                                             <option value="">Select</option>
                                             {products.map((product) => (
-                                                            <option key={product.productId} value={product.productName}>
+                                                            <option key={product.productId} value={product.productId}>
                                                                 {product.productName}
                                                             </option>
-                                                ))}
+                                                                        ))}
                                         </select>
                                     </td>
                                     <td>
                                         <input
                                             value={item.product.productDescription}
+                                            readOnly={!!item.product.productId}
                                             onChange={(e) => handleInvoiceItemChange(index, "product.productDescription", e.target.value)}
                                             />
                                     </td>
@@ -250,6 +256,7 @@ export default function InvoiceEditor( { setInvoices, invoiceId }) {
                                         <input
                                             type="number"
                                             value={item.product.productPrice}
+                                            readOnly={!!item.product.productId}
                                             onChange={(e) => handleInvoiceItemChange(index, "product.productPrice", e.target.value)}
                                             />
                                     </td>
@@ -274,7 +281,7 @@ export default function InvoiceEditor( { setInvoices, invoiceId }) {
                                         <button type="button" onClick={() => removeInvoiceItem(index)}>Remove</button>
                                     </td>
                                 </tr>
-                            ))}
+                                        ))}
                     </tbody>
                 </table>
             
