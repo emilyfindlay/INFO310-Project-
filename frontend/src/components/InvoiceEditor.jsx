@@ -174,7 +174,7 @@ export default function InvoiceEditor( { setInvoices, invoiceId }) {
                 <label>
                     Client:
                     <select value={clientId} onChange={(e) => setClientId(e.target.value)}>
-                        <option value="">(Optional) Select a client</option>
+                        <option value="">Select a client</option>
                         {clients.map((client) => (
                                 <option key={client.clientId} value={client.clientId}>{client.name}</option>
                                         ))}
