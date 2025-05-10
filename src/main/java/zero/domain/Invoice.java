@@ -73,6 +73,9 @@ public class Invoice {
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
     private Collection<InvoiceItem> invoiceItems;
 
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
+
     public Invoice(Client client, Business business, Collection<InvoiceItem> invoiceItems,
                    LocalDate issuedDate, LocalDate dueDate, String status,
                    BigDecimal totalGst, BigDecimal invoiceTotal) {
@@ -149,6 +152,14 @@ public class Invoice {
 
     public void setInvoiceItems(Collection<InvoiceItem> invoiceItems) {
         this.invoiceItems = invoiceItems;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
     @Override

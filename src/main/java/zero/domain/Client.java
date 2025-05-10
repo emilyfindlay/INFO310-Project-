@@ -51,6 +51,9 @@ public class Client {
     @Column(name = "phone", length = 10)
     private String phone;
 
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
+
     public Client() {}
 
     public Client(Integer clientId, Address address, String name, String email, String phone) {
@@ -99,6 +102,14 @@ public class Client {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
     
     @Override

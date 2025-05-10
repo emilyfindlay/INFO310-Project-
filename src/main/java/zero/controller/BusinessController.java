@@ -18,8 +18,9 @@ public class BusinessController {
 
     @GetMapping
     public List<Business> getAllBusinesses() {
-        return businessRepo.findAll();
+        return businessRepo.findByDeletedFalse(); // or findAllNotDeleted()
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Business> getBusinessById(@PathVariable Long id) {
@@ -51,10 +52,14 @@ public class BusinessController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBusiness(@PathVariable Long id) {
-        if (businessRepo.existsById(id)) {
-            businessRepo.deleteById(id);
+        Optional<Business> optionalBusiness = businessRepo.findById(id);
+        if (optionalBusiness.isPresent()) {
+            Business business = optionalBusiness.get();
+            business.setDeleted(true);
+            businessRepo.save(business);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
+
 }

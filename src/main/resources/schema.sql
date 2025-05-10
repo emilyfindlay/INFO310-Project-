@@ -29,6 +29,7 @@ CREATE TABLE business
     email               VARCHAR(50) NOT NULL,
     phone               VARCHAR(10),          -- optional
     website_link        VARCHAR(255),
+    deleted     BOOLEAN NOT NULL,
 --     logo                BYTEA,
     CONSTRAINT business_pk PRIMARY KEY (business_id),
     CONSTRAINT business_fk_address FOREIGN KEY (address_id) REFERENCES address (address_id)
@@ -41,6 +42,7 @@ CREATE TABLE client
     name       VARCHAR(50) NOT NULL,
     email      VARCHAR(50) NOT NULL,
     phone      VARCHAR(10),
+    deleted     BOOLEAN NOT NULL,
     CONSTRAINT client_pk PRIMARY KEY (client_id),
     CONSTRAINT client_fk_address FOREIGN KEY (address_id) REFERENCES address (address_id)
 );
@@ -66,6 +68,7 @@ CREATE TABLE invoice
     status        VARCHAR(20)    NOT NULL,
     total_gst     DECIMAL(10, 2) NOT NULL,
     invoice_total DECIMAL(10, 2) NOT NULL,
+    deleted     BOOLEAN NOT NULL,
     CONSTRAINT invoice_pk PRIMARY KEY (invoice_id),
     CONSTRAINT invoice_fk_client FOREIGN KEY (client_id) REFERENCES client (client_id),
     CONSTRAINT invoice_fk_business FOREIGN KEY (business_id) REFERENCES business (business_id)
@@ -82,6 +85,7 @@ CREATE TABLE quote
     status        VARCHAR(20)    NOT NULL,
     total_gst     DECIMAL(10, 2) NOT NULL,
     quote_total DECIMAL(10, 2) NOT NULL,
+    deleted     BOOLEAN NOT NULL,
     CONSTRAINT quote_pk PRIMARY KEY (quote_id),
     CONSTRAINT quote_fk_client FOREIGN KEY (client_id) REFERENCES client (client_id),
     CONSTRAINT quote_fk_business FOREIGN KEY (business_id) REFERENCES business (business_id)

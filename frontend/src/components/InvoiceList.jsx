@@ -42,6 +42,25 @@ export default function InvoiceList({ invoices }) {
         }
     };
 
+    const handleDelete = async (invoiceId) => {
+        if (!window.confirm('Are you sure you want to delete this invoice?')) return;
+
+        try {
+            const response = await fetch(`/api/invoices/${invoiceId}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to delete invoice');
+            }
+            alert('Invoice deleted successfully');
+            window.location.reload();
+        } catch (err) {
+            console.error('Error deleting invoice:', err);
+            alert('Failed to delete invoice');
+        }
+    };
+
+
     const goToPage = (pageNumber) => {
         if (pageNumber >= 1 && pageNumber <= totalPages) {
             setCurrentPage(pageNumber);
@@ -85,6 +104,8 @@ export default function InvoiceList({ invoices }) {
                     <th className="border px-2 py-1">Total Amount</th>
                     <th className="border px-2 py-1">Status</th>
                     <th className="border px-2 py-1">Download PDF</th>
+                    <th className="border px-2 py-1">Delete</th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -105,6 +126,15 @@ export default function InvoiceList({ invoices }) {
                                 Download
                             </button>
                         </td>
+                        <td className="border px-2 py-1">
+                            <button
+                                onClick={() => handleDelete(invoice.invoiceId)}
+                                className="text-red-500 hover:text-red-700"
+                            >
+                                Delete
+                            </button>
+                        </td>
+
                     </tr>
                 ))}
                 </tbody>

@@ -64,6 +64,9 @@ public class Business {
 
     @Column(name = "quote_footer", length = 255)
     private String quoteFooter;
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
 //
 //    @Lob
 //    @Column(name = "logo")
@@ -147,6 +150,7 @@ public class Business {
         this.websiteLink = websiteLink;
     }
 
+
     public String getInvoiceFooter() {
         return invoiceFooter;
     }
@@ -161,6 +165,14 @@ public class Business {
 
     public void setQuoteFooter(String quoteFooter) {
         this.quoteFooter = quoteFooter;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
     //TODO add logo things

@@ -39,6 +39,25 @@ export default function QuoteList({ quotes }) {
         }
     };
 
+    const handleDelete = async (quoteId) => {
+        if (!window.confirm('Are you sure you want to delete this quote?')) return;
+
+        try {
+            const response = await fetch(`/api/quotes/${quoteId}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to delete quote');
+            }
+            alert('Quote deleted successfully');
+            window.location.reload();
+        } catch (err) {
+            console.error('Error deleting quote:', err);
+            alert('Failed to delete quote');
+        }
+    };
+
+
     const goToPage = (pageNumber) => {
         if (pageNumber >= 1 && pageNumber <= totalPages) {
             setCurrentPage(pageNumber);
@@ -82,6 +101,8 @@ export default function QuoteList({ quotes }) {
                     <th className="border px-2 py-1">Total Amount</th>
                     <th className="border px-2 py-1">Status</th>
                     <th className="border px-2 py-1">Download PDF</th>
+                    <th className="border px-2 py-1">Delete</th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -102,6 +123,15 @@ export default function QuoteList({ quotes }) {
                                 Download
                             </button>
                         </td>
+                        <td className="border px-2 py-1">
+                            <button
+                                onClick={() => handleDelete(quote.quoteId)}
+                                className="text-red-500 hover:text-red-700"
+                            >
+                                Delete
+                            </button>
+                        </td>
+
                     </tr>
                 ))}
                 </tbody>

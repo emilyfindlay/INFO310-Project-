@@ -16,6 +16,7 @@ import zero.helpers.GenerateInvoice;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/invoices")
@@ -35,8 +36,9 @@ public class InvoiceController {
 
     @GetMapping
     public List<Invoice> getAllInvoices() {
-        return invoiceRepository.findAll();
+        return invoiceRepository.findByDeletedFalse();
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Invoice> getInvoice(@PathVariable Long id) {
@@ -83,12 +85,16 @@ public class InvoiceController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteInvoice(@PathVariable Long id) {
-        if (!invoiceRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+        Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
+        if (optionalInvoice.isPresent()) {
+            Invoice invoice = optionalInvoice.get();
+            invoice.setDeleted(true);
+            invoiceRepository.save(invoice);
+            return ResponseEntity.noContent().build();
         }
-        invoiceRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
+
 
     // New endpoint to generate and download the PDF for a specific invoice
     @GetMapping("/{id}/pdf")

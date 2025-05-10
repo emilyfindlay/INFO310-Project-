@@ -14,6 +14,7 @@ import zero.repository.QuoteRepository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/quotes")
@@ -33,8 +34,9 @@ public class QuoteController {
 
     @GetMapping
     public List<Quote> getAllQuotes() {
-        return quoteRepository.findAll();
+        return quoteRepository.findByDeletedFalse();
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Quote> getQuote(@PathVariable Long id) {
@@ -80,12 +82,16 @@ public class QuoteController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteQuote(@PathVariable Long id) {
-        if (!quoteRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+        Optional<Quote> optionalQuote = quoteRepository.findById(id);
+        if (optionalQuote.isPresent()) {
+            Quote quote = optionalQuote.get();
+            quote.setDeleted(true);
+            quoteRepository.save(quote);
+            return ResponseEntity.noContent().build();
         }
-        quoteRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
+
 
     @GetMapping("/{id}/pdf")
     public ResponseEntity<byte[]> generateQuotePDF(@PathVariable Long id) {

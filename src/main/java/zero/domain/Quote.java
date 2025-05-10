@@ -59,6 +59,9 @@ public class Quote {
     @OneToMany(mappedBy = "quote", cascade = CascadeType.ALL)
     private Collection<QuoteItem> quoteItems;
 
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
+
     public Quote(Client client, Business business, Collection<QuoteItem> quoteItems,
                  LocalDate issuedDate, LocalDate expiryDate, String status,
                  BigDecimal totalGst, BigDecimal quoteTotal) {
@@ -134,6 +137,14 @@ public class Quote {
 
     public void setQuoteItems(Collection<QuoteItem> quoteItems) {
         this.quoteItems = quoteItems;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
     @Override

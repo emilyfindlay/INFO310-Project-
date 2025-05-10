@@ -20,8 +20,9 @@ public class ClientController {
 
     @GetMapping
     public List<Client> getAllClients() {
-        return clientRepo.findAll();
+        return clientRepo.findByDeletedFalse();
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Client> getClientById(@PathVariable Long id) {
@@ -49,10 +50,14 @@ public class ClientController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
-        if (clientRepo.existsById(id)) {
-            clientRepo.deleteById(id);
+        Optional<Client> optionalClient = clientRepo.findById(id);
+        if (optionalClient.isPresent()) {
+            Client client = optionalClient.get();
+            client.setDeleted(true);
+            clientRepo.save(client);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
+
 }
