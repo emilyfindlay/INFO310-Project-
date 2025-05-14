@@ -26,6 +26,7 @@ export default function App() {
     const [businesses, setBusinesses] = useState([]);
     const [client, setSelectedClient] = useState(null);
     const [business, setSelectedBusiness] = useState(null);
+    const [product, setSelectedProduct] = useState(null);
 
     useEffect(() => {
         fetch("http://localhost:8080/api/clients")
@@ -147,7 +148,12 @@ export default function App() {
                     <ProductList products={products} setProducts={setProducts} />
                 )}
                 {page === "product-editor" && (
-                    <ProductEditor products={products} setProducts={setProducts} />
+                    <ProductEditor 
+                        products={products} 
+                        setProducts={setProducts} 
+                        setPage={setPage}
+                        setSelectedProduct={setSelectedProduct}
+                        />
                 )}
                 {page === "business-list" && (
                     <BusinessList

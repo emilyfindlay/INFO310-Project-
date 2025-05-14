@@ -50,13 +50,16 @@ export default function ProductEditor( { product, setProducts, setSelectedProduc
                 response = await fetch("http://localhost:8080/api/products", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(newProduct),
+                    body: JSON.stringify([newProduct]),
                 });
                 if (!response.ok)
                     throw new Error("Failed to add product");
 
-                updatedProduct = await response.json();
+                const savedProducts = await response.json();
+                const updatedProduct = savedProducts[0]; // ✅ Get the first product
+
                 setProducts((prev) => [...prev, updatedProduct]);
+                console.log("setPage is:", typeof setPage);
                 alert("Product added!");
             }
 
@@ -108,8 +111,8 @@ export default function ProductEditor( { product, setProducts, setSelectedProduc
                     Type:
                     <select value={productType} onChange={(e) => setProductType(e.target.value)} required>
                         <option value="">-- Select Type --</option>
-                        <option value="Good">Good</option>
-                        <option value="Service">Service</option>
+                        <option value="true">Good</option>
+                        <option value="false">Service</option>
                     </select>
                 </label>
             
