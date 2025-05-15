@@ -198,4 +198,12 @@ public class Invoice {
     public Client getClient() {
         return client;
     }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public void setBusiness(Business business) {
+        this.business = business;
+    }
 }
