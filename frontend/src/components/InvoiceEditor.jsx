@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function InvoiceEditor( { setInvoices, invoiceId }) {
+export default function InvoiceEditor( { setInvoices, invoiceId, setSelectedInvoiceId, setPage }) {
     const [clientId, setClientId] = useState("");
     const [businessId, setBusinessId] = useState("");
     const [issuedDate, setIssuedDate] = useState("");
@@ -15,35 +15,50 @@ export default function InvoiceEditor( { setInvoices, invoiceId }) {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/clients").then(res => res.json()).then(setClients);
-        fetch("http://localhost:8080/api/businesses").then(res => res.json()).then(setBusinesses);
-        fetch("http://localhost:8080/api/products").then(res => res.json()).then(setProducts);
+        async function loadAllData() {
+            // Step 1: Load supporting data first
+            const [clientsRes, businessesRes, productsRes] = await Promise.all([
+                fetch("http://localhost:8080/api/clients"),
+                fetch("http://localhost:8080/api/businesses"),
+                fetch("http://localhost:8080/api/products")
+            ]);
+            const [clientsData, businessesData, productsData] = await Promise.all([
+                clientsRes.json(),
+                businessesRes.json(),
+                productsRes.json()
+            ]);
 
-        if (invoiceId) {
-            fetch(`http://localhost:8080/api/invoices/${invoiceId}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        setClientId(data.clientId);
-                        setBusinessId(data.businessId);
-                        setIssuedDate(data.issuedDate);
-                        setDueDate(data.dueDate);
-                        setStatus(data.status);
+            setClients(clientsData);
+            setBusinesses(businessesData);
+            setProducts(productsData);
 
-                        const resolvedItems = data.invoiceItems.map(item => {
-                            const fullProduct = products.find(p => p.id === item.productId) || {
-                                productName: "",
-                                productDescription: "",
-                                productPrice: 0,
-                            };
-                            return {
-                                product: fullProduct,
-                                quantity: item.quantity,
-                                discount: item.discount,
-                            };
+            if (invoiceId) {
+                fetch(`http://localhost:8080/api/invoices/${invoiceId}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            setClientId(data.client.clientId);
+                            setBusinessId(data.business.businessId);
+                            setIssuedDate(data.issuedDate);
+                            setDueDate(data.dueDate);
+                            setStatus(data.status);
+
+                            const resolvedItems = data.invoiceItems.map(item => {
+                                const fullProduct = productsData.find(p => p.productId === item.product.productId) || {
+                                    productName: "",
+                                    productDescription: "",
+                                    productPrice: 0,
+                                };
+                                return {
+                                    product: fullProduct,
+                                    quantity: item.quantity,
+                                    discount: item.discount,
+                                };
+                            });
+                            setInvoiceItems(resolvedItems);
                         });
-                        setInvoiceItems(resolvedItems);
-                    });
+            }
         }
+        loadAllData();
     }, [invoiceId]);
 
     const handleInvoiceItemChange = (index, field, value) => {
@@ -94,75 +109,112 @@ export default function InvoiceEditor( { setInvoices, invoiceId }) {
                 throw new Error("Failed to save products");
             const savedProducts = await productResponse.json();
 
-            const baseInvoice = {
-                clientId: Number(clientId) || null,
-                businessId: Number(businessId),
-                issuedDate,
-                dueDate,
-                status,
-                invoiceItems: []
-            };
-
-            const invoiceResponse = await fetch("http://localhost:8080/api/invoices", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(baseInvoice),
-            });
-
-            if (!invoiceResponse.ok)
-                throw new Error("Failed to create invoice");
-
-            const createdInvoice = await invoiceResponse.json();
-            const newInvoiceId = createdInvoice.invoiceId;
-
-            const invoiceItemsToSave = invoiceItems.map((item, idx) => ({
+            // Map product IDs into invoice items
+            const items = invoiceItems.map((item, idx) => ({
                     productId: savedProducts[idx].productId,
-                    invoiceId: newInvoiceId,
                     quantity: item.quantity,
                     unitPrice: item.product.productPrice,
                     discount: item.discount,
                     productType: true
                 }));
 
-            const itemsResponse = await fetch("http://localhost:8080/api/invoice-items", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(invoiceItemsToSave),
-            });
+            if (invoiceId) {
+                // 🔁 Edit Mode
+                const updatedInvoice = {
+                    clientId: Number(clientId),
+                    businessId: Number(businessId),
+                    issuedDate,
+                    dueDate,
+                    status,
+                    invoiceItems: items,
+                };
 
-            if (!itemsResponse.ok)
-                throw new Error("Failed to save invoice items");
+                const response = await fetch(`http://localhost:8080/api/invoices/${invoiceId}`, {
+                    method: "PUT",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(updatedInvoice),
+                });
 
-            const savedInvoiceItems = await itemsResponse.json();
+                if (!response.ok)
+                    throw new Error("Failed to update invoice");
 
-            const finalInvoiceUpdate = {
-                ...createdInvoice,
-                invoiceItems: savedInvoiceItems.map(item => ({
-                        id: {
-                            invoiceId: item.invoiceId,
-                            productId: item.productId
-                        },
-                        quantity: item.quantity,
-                        unitPrice: item.unitPrice,
-                        discount: item.discount
-                    }))
-            };
+                const result = await response.json();
 
-            const patchResponse = await fetch(`http://localhost:8080/api/invoices/${newInvoiceId}`, {
-                method: "PUT",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(finalInvoiceUpdate),
-            });
+                setInvoices(prev =>
+                    prev.map(inv => inv.invoiceId === invoiceId ? result : inv)
+                );
+                setSelectedInvoiceId(null);
+                setPage("invoice-list");
+                alert("Invoice updated successfully!");
+            } else {
+                // 🆕 Create Mode
+                const baseInvoice = {
+                    clientId: Number(clientId) || null,
+                    businessId: Number(businessId),
+                    issuedDate,
+                    dueDate,
+                    status,
+                    invoiceItems: []
+                };
 
-            if (!patchResponse.ok)
-                throw new Error("Failed to update invoice");
+                const invoiceResponse = await fetch("http://localhost:8080/api/invoices", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(baseInvoice),
+                });
 
-            const updatedInvoice = await patchResponse.json();
-            setInvoices(prev => [...prev, updatedInvoice]);
+                if (!invoiceResponse.ok)
+                    throw new Error("Failed to create invoice");
 
-            alert("Invoice created successfully!");
+                const createdInvoice = await invoiceResponse.json();
+                const newInvoiceId = createdInvoice.invoiceId;
+
+                const invoiceItemsToSave = items.map(item => ({
+                        ...item,
+                        invoiceId: newInvoiceId,
+                    }));
+
+                const itemsResponse = await fetch("http://localhost:8080/api/invoice-items", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(invoiceItemsToSave),
+                });
+
+                if (!itemsResponse.ok)
+                    throw new Error("Failed to save invoice items");
+
+                const savedInvoiceItems = await itemsResponse.json();
+
+                const finalInvoiceUpdate = {
+                    ...createdInvoice,
+                    invoiceItems: savedInvoiceItems.map(item => ({
+                            id: {
+                                invoiceId: item.invoiceId,
+                                productId: item.productId
+                            },
+                            quantity: item.quantity,
+                            unitPrice: item.unitPrice,
+                            discount: item.discount
+                        }))
+                };
+
+                const patchResponse = await fetch(`http://localhost:8080/api/invoices/${newInvoiceId}`, {
+                    method: "PUT",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(finalInvoiceUpdate),
+                });
+
+                if (!patchResponse.ok)
+                    throw new Error("Failed to update invoice");
+
+                const updatedInvoice = await patchResponse.json();
+
+                setInvoices(prev => [...prev, updatedInvoice]);
+                setPage("invoice-list");
+                alert("Invoice created successfully!");
+            }
         } catch (err) {
-            console.error("Error creating invoice:", err);
+            console.error("Error saving invoice:", err);
             alert("Error saving invoice: " + err.message);
         }
     };
@@ -177,7 +229,7 @@ export default function InvoiceEditor( { setInvoices, invoiceId }) {
                         <option value="">Select a client</option>
                         {clients.map((client) => (
                                 <option key={client.clientId} value={client.clientId}>{client.name}</option>
-                                        ))}
+                            ))}
                     </select>
                 </label>
             
@@ -187,7 +239,7 @@ export default function InvoiceEditor( { setInvoices, invoiceId }) {
                         <option value="">Select a business</option>
                         {businesses.map((business) => (
                                 <option key={business.businessId} value={business.businessId}>{business.businessName}</option>
-                                        ))}
+                            ))}
                     </select>
                 </label>
             
@@ -228,21 +280,21 @@ export default function InvoiceEditor( { setInvoices, invoiceId }) {
                                             onChange={(e) => {
                                                                 const selectedProduct = products.find(p => p.productId === Number(e.target.value));
                                                                 if (selectedProduct) {
-                                                                handleInvoiceItemChange(index, "product.productId", selectedProduct.productId);
-                                                                handleInvoiceItemChange(index, "product.productName", selectedProduct.productName);
-                                                                handleInvoiceItemChange(index, "product.productPrice", selectedProduct.productPrice);
-                                                                handleInvoiceItemChange(index, "product.productDescription", selectedProduct.productDescription);
-                                                            } else {
-                                                                handleInvoiceItemChange(index, "product.productId", null);
-                                                            }
-                                                        }}                                
+                                                                    handleInvoiceItemChange(index, "product.productId", selectedProduct.productId);
+                                                                    handleInvoiceItemChange(index, "product.productName", selectedProduct.productName);
+                                                                    handleInvoiceItemChange(index, "product.productPrice", selectedProduct.productPrice);
+                                                                    handleInvoiceItemChange(index, "product.productDescription", selectedProduct.productDescription);
+                                                                } else {
+                                                                    handleInvoiceItemChange(index, "product.productId", null);
+                                        }
+                                    }}                                
                                             >
                                             <option value="">Select</option>
                                             {products.map((product) => (
                                                             <option key={product.productId} value={product.productId}>
                                                                 {product.productName}
                                                             </option>
-                                                                        ))}
+                                                ))}
                                         </select>
                                     </td>
                                     <td>
@@ -281,7 +333,7 @@ export default function InvoiceEditor( { setInvoices, invoiceId }) {
                                         <button type="button" onClick={() => removeInvoiceItem(index)}>Remove</button>
                                     </td>
                                 </tr>
-                                        ))}
+                            ))}
                     </tbody>
                 </table>
             

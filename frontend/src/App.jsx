@@ -27,6 +27,7 @@ export default function App() {
     const [client, setSelectedClient] = useState(null);
     const [business, setSelectedBusiness] = useState(null);
     const [product, setSelectedProduct] = useState(null);
+    const [invoice, setSelectedInvoiceId] = useState(null);
 
     useEffect(() => {
         fetch("http://localhost:8080/api/clients")
@@ -113,12 +114,17 @@ export default function App() {
 
             {/* Main Content */}
             <main className="flex-1 bg-gray-100 p-8 overflow-y-auto">
-                {page === "invoice-list" && <InvoiceList invoices={invoices} />}
+                {page === "invoice-list" && <InvoiceList 
+                        invoices={invoices}
+                        setSelectedInvoiceId={setSelectedInvoiceId}
+                        setPage={setPage}/>}
                 {page === "invoice-editor" && (
                     <InvoiceEditor
                         clients={clients}
                         products={products}
                         setInvoices={setInvoices}
+                        invoiceId={invoice}
+                        setSelectedInvoiceId={setSelectedInvoiceId}
                     />
                 )}
                 {page === "quote-list" && <QuoteList quotes={quotes} />}

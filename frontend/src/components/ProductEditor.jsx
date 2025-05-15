@@ -56,10 +56,10 @@ export default function ProductEditor( { product, setProducts, setSelectedProduc
                     throw new Error("Failed to add product");
 
                 const savedProducts = await response.json();
-                const updatedProduct = savedProducts[0]; // ✅ Get the first product
+                const updatedProduct = savedProducts[0]; 
 
                 setProducts((prev) => [...prev, updatedProduct]);
-                console.log("setPage is:", typeof setPage);
+          
                 alert("Product added!");
             }
 

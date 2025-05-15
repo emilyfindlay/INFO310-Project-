@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function InvoiceList({ invoices }) {
+export default function InvoiceList({ invoices, setSelectedInvoiceId, setPage }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [sortField, setSortField] = useState('invoiceId');
     const [sortDirection, setSortDirection] = useState('asc');
@@ -126,6 +126,17 @@ export default function InvoiceList({ invoices }) {
                                 Download
                             </button>
                         </td>
+                        <td className="border px-2 py-1">
+                            <button
+                              onClick={() => {
+                                setSelectedInvoiceId(invoice.invoiceId);
+                                setPage("invoice-editor");
+                              }}
+                              className="text-green-500 hover:text-green-700"
+                            >
+                              Edit
+                            </button>
+                          </td>
                         <td className="border px-2 py-1">
                             <button
                                 onClick={() => handleDelete(invoice.invoiceId)}
