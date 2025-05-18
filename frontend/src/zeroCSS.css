@@ -31,18 +31,20 @@ body, html {
     padding: 1rem;
     letter-spacing: 1.5px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 
 /* Navbar styles */
 .navbar {
     display: flex;
-    background-color: #005fa3; /* Slightly darker blue */
+    background-color: #005fa3;
     padding: 0 1rem;
     height: 56px;
     align-items: center;
     gap: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 /* Dropdown button */
@@ -99,7 +101,7 @@ body, html {
 /* Main content area */
 main {
     flex: 1;
-    background-color: #e6f2f8; /* pale blue background */
+    background: linear-gradient(to bottom, #e6f2f8, #f0f4f8);
     padding: 2rem;
     overflow-y: auto;
 }
@@ -212,5 +214,32 @@ h1, h2 {
     flex-wrap: wrap;
     gap: 16px;         /* spacing between buttons */
     padding: 1rem;     /* spacing around the button row */
+}
+
+/* New dashboard card styles */
+.dashboard-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    margin-bottom: 24px;
+    transition: transform 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+}
+
+.dashboard-card h2 {
+    color: #0079be;
+    margin-bottom: 16px;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.dashboard-card p {
+    color: #4a4a4a;
+    line-height: 1.5;
 }
 
