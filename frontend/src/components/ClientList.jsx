@@ -64,70 +64,60 @@ export default function ClientList({ clients, setClients, setSelectedClient, set
     };
 
     return (
-        <div>
+        <div className="dashboard-card">
             <h2>Client List</h2>
+            <p>Manage and view all your clients in one place.</p>
 
-            {loading && <p>Loading clients...</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {loading && <p className="loading-text">Loading clients...</p>}
+            {error && <p className="error-text">{error}</p>}
+            {!loading && !clients.length && <p className="empty-state">No clients found.</p>}
 
-            {!loading && !clients.length && <p>No clients found.</p>}
+            <div className="summary-bar">
+                <div className="summary-item">
+                    <div className="summary-number">{clients.length}</div>
+                    <div className="summary-label">Total Clients</div>
+                </div>
+                <div className="summary-item">
+                    <div className="summary-number">{clients.filter(c => c.email).length}</div>
+                    <div className="summary-label">Clients with Email</div>
+                </div>
+                <div className="summary-item">
+                    <div className="summary-number">{clients.filter(c => c.phone).length}</div>
+                    <div className="summary-label">Clients with Phone</div>
+                </div>
+            </div>
 
-            <table>
+            <table className="data-table">
                 <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {clients.map((client) => (
-                    <tr key={client.clientId}>
-                        <td>{client.name}</td>
-                        <td>{client.email}</td>
-                        <td>{client.phone}</td>
-                        <td>
-                            <button
-                                onClick={() => handleEdit(client.clientId)}
-                                title="Edit"
-                                aria-label="Edit"
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    padding: 0,
-                                }}
-                            >
-                                <img
-                                    alt="Edit"
-                                    src="/icons/edits.png"
-                                    style={{ width: '50px', height: '50px' }}
-                                />
-                            </button>
-                        </td>
-                        <td>
-                            <button
-                                onClick={() => handleDelete(client.clientId)}
-                                title="Delete"
-                                aria-label="Delete"
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    padding: 0,
-                                }}
-                            >
-                                <img
-                                    alt="Delete"
-                                    src="/icons/deletes.png"
-                                    style={{ width: '50px', height: '50px' }}
-                                />
-                            </button>
-                        </td>
-                    </tr>
-                ))}
+                    {clients.map((client) => (
+                        <tr key={client.clientId}>
+                            <td>{client.name}</td>
+                            <td>{client.email}</td>
+                            <td>{client.phone}</td>
+                            <td className="action-buttons">
+                                <button
+                                    onClick={() => handleEdit(client.clientId)}
+                                    className="btn btn-primary"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(client.clientId)}
+                                    className="btn btn-danger"
+                                >
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>

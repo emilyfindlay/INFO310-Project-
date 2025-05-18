@@ -65,14 +65,37 @@ export default function QuoteList({ quotes }) {
     };
 
     return (
-        <div>
-            <h2 className="text-xl font-bold mb-4">Quote List</h2>
+        <div className="dashboard-card" style={{ maxWidth: 1200, margin: '0 auto', boxShadow: '0 8px 32px rgba(0,123,190,0.10)' }}>
+            <h2 style={{ fontSize: '2rem', color: '#0079be', marginBottom: 8 }}>Quote List</h2>
+            <p style={{ fontSize: '1.1rem', color: '#4a4a4a', marginBottom: 24 }}>
+                Manage and view all your quotes in one place.
+            </p>
+
+            {/* Summary Bar */}
+            <div style={{ display: 'flex', gap: 24, marginBottom: 24, flexWrap: 'wrap' }}>
+                <div style={{ flex: 1, minWidth: 180, background: '#e6f2f8', borderRadius: 8, padding: 16, textAlign: 'center' }}>
+                    <div style={{ fontSize: 32, color: '#0079be', fontWeight: 700 }}>{quotes.length}</div>
+                    <div style={{ color: '#0079be', fontWeight: 500 }}>Total Quotes</div>
+                </div>
+                <div style={{ flex: 1, minWidth: 180, background: '#e6f2f8', borderRadius: 8, padding: 16, textAlign: 'center' }}>
+                    <div style={{ fontSize: 32, color: '#0079be', fontWeight: 700 }}>{quotes.filter(q => q.status === 'Accepted').length}</div>
+                    <div style={{ color: '#0079be', fontWeight: 500 }}>Accepted Quotes</div>
+                </div>
+                <div style={{ flex: 1, minWidth: 180, background: '#e6f2f8', borderRadius: 8, padding: 16, textAlign: 'center' }}>
+                    <div style={{ fontSize: 32, color: '#0079be', fontWeight: 700 }}>{quotes.filter(q => q.status === 'Pending').length}</div>
+                    <div style={{ color: '#0079be', fontWeight: 500 }}>Pending Quotes</div>
+                </div>
+            </div>
 
             {/* Sort controls */}
-            <div className="flex items-center gap-4 mb-4">
-                <label>
+            <div style={{ display: 'flex', gap: 16, marginBottom: 24 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     Sort by:{' '}
-                    <select value={sortField} onChange={(e) => setSortField(e.target.value)} className="border p-1">
+                    <select 
+                        value={sortField} 
+                        onChange={(e) => setSortField(e.target.value)} 
+                        style={{ padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
+                    >
                         <option value="quoteId">Quote ID</option>
                         <option value="issuedDate">Issued Date</option>
                         <option value="dueDate">Due Date</option>
@@ -80,9 +103,13 @@ export default function QuoteList({ quotes }) {
                         <option value="status">Status</option>
                     </select>
                 </label>
-                <label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     Order:{' '}
-                    <select value={sortDirection} onChange={(e) => setSortDirection(e.target.value)} className="border p-1">
+                    <select 
+                        value={sortDirection} 
+                        onChange={(e) => setSortDirection(e.target.value)} 
+                        style={{ padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
+                    >
                         <option value="asc">Ascending</option>
                         <option value="desc">Descending</option>
                     </select>
@@ -90,59 +117,75 @@ export default function QuoteList({ quotes }) {
             </div>
 
             {/* Table */}
-            <table className="w-full border-collapse">
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 24 }}>
                 <thead>
-                <tr>
-                    <th className="border px-2 py-1">Quote ID</th>
-                    <th className="border px-2 py-1">Client Name</th>
-                    <th className="border px-2 py-1">Business Name</th>
-                    <th className="border px-2 py-1">Issued Date</th>
-                    <th className="border px-2 py-1">Due Date</th>
-                    <th className="border px-2 py-1">Total Amount</th>
-                    <th className="border px-2 py-1">Status</th>
-                    <th className="border px-2 py-1">Download PDF</th>
-                    <th className="border px-2 py-1">Delete</th>
-
-                </tr>
+                    <tr>
+                        <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Quote ID</th>
+                        <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Client Name</th>
+                        <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Business Name</th>
+                        <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Issued Date</th>
+                        <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Due Date</th>
+                        <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Total Amount</th>
+                        <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Status</th>
+                        <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {currentQuotes.map((quote) => (
-                    <tr key={quote.quoteId}>
-                        <td className="border px-2 py-1">{quote.quoteId}</td>
-                        <td className="border px-2 py-1">{quote.client.name}</td>
-                        <td className="border px-2 py-1">{quote.business.businessName}</td>
-                        <td className="border px-2 py-1">{quote.issuedDate}</td>
-                        <td className="border px-2 py-1">{quote.dueDate}</td>
-                        <td className="border px-2 py-1">{quote.quoteTotal}</td>
-                        <td className="border px-2 py-1">{quote.status}</td>
-                        <td className="border px-2 py-1">
-                            <button
-                                onClick={() => handleDownload(quote.quoteId)}
-                                className="text-blue-500 hover:text-blue-700"
-                            >
-                                Download
-                            </button>
-                        </td>
-                        <td className="border px-2 py-1">
-                            <button
-                                onClick={() => handleDelete(quote.quoteId)}
-                                className="text-red-500 hover:text-red-700"
-                            >
-                                Delete
-                            </button>
-                        </td>
-
-                    </tr>
-                ))}
+                    {currentQuotes.map((quote) => (
+                        <tr key={quote.quoteId} style={{ borderBottom: '1px solid #e0e0e0' }}>
+                            <td style={{ padding: 12 }}>{quote.quoteId}</td>
+                            <td style={{ padding: 12 }}>{quote.client.name}</td>
+                            <td style={{ padding: 12 }}>{quote.business.businessName}</td>
+                            <td style={{ padding: 12 }}>{quote.issuedDate}</td>
+                            <td style={{ padding: 12 }}>{quote.dueDate}</td>
+                            <td style={{ padding: 12 }}>{quote.quoteTotal}</td>
+                            <td style={{ padding: 12 }}>{quote.status}</td>
+                            <td style={{ padding: 12 }}>
+                                <button
+                                    onClick={() => handleDownload(quote.quoteId)}
+                                    style={{ 
+                                        background: 'linear-gradient(90deg, #00b4d8 0%, #0077c8 100%)', 
+                                        color: 'white', 
+                                        padding: '8px 16px', 
+                                        borderRadius: 4, 
+                                        border: 'none', 
+                                        cursor: 'pointer',
+                                        marginRight: 8
+                                    }}
+                                >
+                                    Download
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(quote.quoteId)}
+                                    style={{ 
+                                        background: 'linear-gradient(90deg, #ff6b6b 0%, #ff4757 100%)', 
+                                        color: 'white', 
+                                        padding: '8px 16px', 
+                                        borderRadius: 4, 
+                                        border: 'none', 
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
 
             {/* Pagination */}
-            <div className="flex justify-center mt-4 space-x-2">
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
                 <button
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="px-3 py-1 border rounded disabled:opacity-50"
+                    style={{ 
+                        padding: '8px 16px', 
+                        borderRadius: 4, 
+                        border: '1px solid #ccc', 
+                        background: currentPage === 1 ? '#f0f0f0' : 'white',
+                        cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
+                    }}
                 >
                     Previous
                 </button>
@@ -150,9 +193,14 @@ export default function QuoteList({ quotes }) {
                     <button
                         key={index + 1}
                         onClick={() => goToPage(index + 1)}
-                        className={`px-3 py-1 border rounded ${
-                            currentPage === index + 1 ? 'bg-blue-500 text-white' : ''
-                        }`}
+                        style={{ 
+                            padding: '8px 16px', 
+                            borderRadius: 4, 
+                            border: '1px solid #ccc', 
+                            background: currentPage === index + 1 ? '#0079be' : 'white',
+                            color: currentPage === index + 1 ? 'white' : 'black',
+                            cursor: 'pointer'
+                        }}
                     >
                         {index + 1}
                     </button>
@@ -160,7 +208,13 @@ export default function QuoteList({ quotes }) {
                 <button
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-1 border rounded disabled:opacity-50"
+                    style={{ 
+                        padding: '8px 16px', 
+                        borderRadius: 4, 
+                        border: '1px solid #ccc', 
+                        background: currentPage === totalPages ? '#f0f0f0' : 'white',
+                        cursor: currentPage === totalPages ? 'not-allowed' : 'pointer'
+                    }}
                 >
                     Next
                 </button>
