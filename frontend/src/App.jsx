@@ -110,6 +110,11 @@ export default function App() {
                         }}>Add Business</button>
                     </div>
                 </div>
+
+                <div className="dropdown">
+                    <button onClick={() => setPage("contact-us")}>Contact Us</button>
+                </div>
+
             </header>
 
             {/* Main Content */}
@@ -176,6 +181,15 @@ export default function App() {
                         setPage={setPage}
                     />
                 )}
+                {page === "contact-us" && (
+                    <div className="contact-us">
+                        <h2>Contact Us</h2>
+                        <p>Email: support@zeroapp.com</p>
+                        <p>Phone: +1 234 567 8900</p>
+                        <p>We typically respond within 1–2 business days.</p>
+                    </div>
+                )}
+
             </main>
         </div>
     );
