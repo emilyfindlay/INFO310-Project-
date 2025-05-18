@@ -15,6 +15,8 @@ import ProductList from "./components/ProductList";
 import ProductEditor from "./components/ProductEditor";
 import BusinessEditor from "./components/BusinessEditor";
 import BusinessList from "./components/BusinessList";
+import ContactUs from "./components/contactus";
+
 import "./zeroCSS.css";
 
 export default function App() {
@@ -181,15 +183,7 @@ export default function App() {
                         setPage={setPage}
                     />
                 )}
-                {page === "contact-us" && (
-                    <div className="contact-us">
-                        <h2>Contact Us</h2>
-                        <p>Email: support@zeroapp.com</p>
-                        <p>Phone: +1 234 567 8900</p>
-                        <p>We typically respond within 1–2 business days.</p>
-                    </div>
-                )}
-
+                {page === "contact-us" && <ContactUs />}
             </main>
         </div>
     );
