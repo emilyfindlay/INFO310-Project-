@@ -18,6 +18,7 @@ import BusinessList from "./components/BusinessList";
 import ContactUs from "./components/contactus";
 
 import "./zeroCSS.css";
+import "./styles/components.css";
 
 export default function App() {
     const [page, setPage] = useState("main-menu");
@@ -122,37 +123,37 @@ export default function App() {
             {/* Main Content */}
             <main className="flex-1 bg-gray-100 p-8 overflow-y-auto">
                 {page === "main-menu" && (
-                    <div className="dashboard-card" style={{ maxWidth: 900, margin: '0 auto', boxShadow: '0 8px 32px rgba(0,123,190,0.10)' }}>
+                    <div className="dashboard-card" style={{ maxWidth: 900 }}>
                         <img 
                             src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=900&q=80" 
                             alt="Accounting Dashboard" 
-                            style={{ width: '100%', borderRadius: '8px', marginBottom: '24px', objectFit: 'cover', maxHeight: 220 }} 
+                            className="dashboard-image"
                         />
-                        <h2 style={{ fontSize: '2rem', marginBottom: 8 }}>Welcome to Zero</h2>
-                        <p style={{ fontSize: '1.1rem', color: '#4a4a4a', marginBottom: 24 }}>
+                        <h2>Welcome to Zero</h2>
+                        <p>
                             Your all-in-one accounting dashboard. Effortlessly manage invoices, quotes, clients, products, and business insights with a modern, intuitive interface inspired by Xero.
                         </p>
-                        <div style={{ display: 'flex', gap: 24, marginBottom: 24, flexWrap: 'wrap' }}>
-                            <div style={{ flex: 1, minWidth: 180, background: '#e6f2f8', borderRadius: 8, padding: 16, textAlign: 'center' }}>
-                                <div style={{ fontSize: 32, color: '#0079be', fontWeight: 700 }}>{invoices.length}</div>
-                                <div style={{ color: '#0079be', fontWeight: 500 }}>Invoices</div>
+                        <div className="summary-bar">
+                            <div className="summary-item">
+                                <div className="summary-number">{invoices.length}</div>
+                                <div className="summary-label">Invoices</div>
                             </div>
-                            <div style={{ flex: 1, minWidth: 180, background: '#e6f2f8', borderRadius: 8, padding: 16, textAlign: 'center' }}>
-                                <div style={{ fontSize: 32, color: '#0079be', fontWeight: 700 }}>{quotes.length}</div>
-                                <div style={{ color: '#0079be', fontWeight: 500 }}>Quotes</div>
+                            <div className="summary-item">
+                                <div className="summary-number">{quotes.length}</div>
+                                <div className="summary-label">Quotes</div>
                             </div>
-                            <div style={{ flex: 1, minWidth: 180, background: '#e6f2f8', borderRadius: 8, padding: 16, textAlign: 'center' }}>
-                                <div style={{ fontSize: 32, color: '#0079be', fontWeight: 700 }}>{clients.length}</div>
-                                <div style={{ color: '#0079be', fontWeight: 500 }}>Clients</div>
+                            <div className="summary-item">
+                                <div className="summary-number">{clients.length}</div>
+                                <div className="summary-label">Clients</div>
                             </div>
-                            <div style={{ flex: 1, minWidth: 180, background: '#e6f2f8', borderRadius: 8, padding: 16, textAlign: 'center' }}>
-                                <div style={{ fontSize: 32, color: '#0079be', fontWeight: 700 }}>{products.length}</div>
-                                <div style={{ color: '#0079be', fontWeight: 500 }}>Products</div>
+                            <div className="summary-item">
+                                <div className="summary-number">{products.length}</div>
+                                <div className="summary-label">Products</div>
                             </div>
                         </div>
-                        <div style={{ marginBottom: 24 }}>
-                            <h3 style={{ color: '#0079be', marginBottom: 8 }}>Why Zero?</h3>
-                            <ul style={{ color: '#4a4a4a', fontSize: '1rem', paddingLeft: 20 }}>
+                        <div className="feature-list">
+                            <h3 className="feature-title">Why Zero?</h3>
+                            <ul className="feature-items">
                                 <li>Modern, clean, and responsive design</li>
                                 <li>Instant access to all your business data</li>
                                 <li>Easy invoice and quote management</li>
@@ -164,18 +165,7 @@ export default function App() {
                             href="https://github.com/emilyfindlay/INFO310-Project-" 
                             target="_blank" 
                             rel="noopener noreferrer" 
-                            style={{ 
-                                display: 'inline-block', 
-                                background: 'linear-gradient(90deg, #00b4d8 0%, #0077c8 100%)', 
-                                color: 'white', 
-                                padding: '14px 32px', 
-                                borderRadius: 8, 
-                                fontWeight: 700, 
-                                fontSize: '1.1rem', 
-                                textDecoration: 'none', 
-                                boxShadow: '0 2px 8px rgba(0,123,190,0.10)',
-                                transition: 'background 0.2s',
-                            }}
+                            className="btn btn-primary btn-large"
                         >
                             Download from GitHub
                         </a>

@@ -64,53 +64,68 @@ export default function BusinessList({ businesses, setBusinesses, setSelectedBus
     };
 
     return (
-        <div>
-            <h2 className="text-xl font-bold mb-4">Business List</h2>
+        <div className="dashboard-card">
+            <h2>Business List</h2>
+            <p>Manage and view all your business profiles in one place.</p>
 
-            {loading && <p>Loading businesses...</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {loading && <p className="loading-text">Loading businesses...</p>}
+            {error && <p className="error-text">{error}</p>}
+            {!loading && !businesses.length && <p className="empty-state">No businesses found.</p>}
 
-            {!loading && !businesses.length && <p>No businesses found.</p>}
+            <div className="summary-bar">
+                <div className="summary-item">
+                    <div className="summary-number">{businesses.length}</div>
+                    <div className="summary-label">Total Businesses</div>
+                </div>
+                <div className="summary-item">
+                    <div className="summary-number">{businesses.filter(b => b.websiteLink).length}</div>
+                    <div className="summary-label">Businesses with Website</div>
+                </div>
+                <div className="summary-item">
+                    <div className="summary-number">{businesses.filter(b => b.gstNumber).length}</div>
+                    <div className="summary-label">GST Registered</div>
+                </div>
+            </div>
 
-            <table className="w-full border-collapse">
+            <table className="data-table">
                 <thead>
-                <tr>
-                    <th className="border px-2 py-1">ID</th>
-                    <th className="border px-2 py-1">Name</th>
-                    <th className="border px-2 py-1">Email</th>
-                    <th className="border px-2 py-1">Phone</th>
-                    <th className="border px-2 py-1">GST</th>
-                    <th className="border px-2 py-1">Bank Account</th>
-                    <th className="border px-2 py-1">Website</th>
-                    <th className="border px-2 py-1">Actions</th>
-                </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>GST</th>
+                        <th>Bank Account</th>
+                        <th>Website</th>
+                        <th>Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {businesses.map((business) => (
-                    <tr key={business.businessId}>
-                        <td className="border px-2 py-1">{business.businessId}</td>
-                        <td className="border px-2 py-1">{business.businessName}</td>
-                        <td className="border px-2 py-1">{business.email}</td>
-                        <td className="border px-2 py-1">{business.phone}</td>
-                        <td className="border px-2 py-1">{business.gstNumber}</td>
-                        <td className="border px-2 py-1">{business.bankAccountNumber}</td>
-                        <td className="border px-2 py-1">{business.websiteLink}</td>
-                        <td>
-                            <button
-                                onClick={() => handleEdit(business.businessId)}
-                                className="mr-2 text-blue-500 hover:text-blue-700"
-                            >
-                                Edit
-                            </button>
-                            <button
-                                onClick={() => handleDelete(business.businessId)}
-                                className="text-red-500 hover:text-red-700"
-                            >
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                ))}
+                    {businesses.map((business) => (
+                        <tr key={business.businessId}>
+                            <td>{business.businessId}</td>
+                            <td>{business.businessName}</td>
+                            <td>{business.email}</td>
+                            <td>{business.phone}</td>
+                            <td>{business.gstNumber}</td>
+                            <td>{business.bankAccountNumber}</td>
+                            <td>{business.websiteLink}</td>
+                            <td className="action-buttons">
+                                <button
+                                    onClick={() => handleEdit(business.businessId)}
+                                    className="btn btn-primary"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(business.businessId)}
+                                    className="btn btn-danger"
+                                >
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>
