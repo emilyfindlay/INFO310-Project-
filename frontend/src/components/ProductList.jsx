@@ -90,12 +90,12 @@ export default function ProductList({ products, setProducts, setSelectedProduct,
                     <div style={{ color: '#0079be', fontWeight: 500 }}>Total Products</div>
                 </div>
                 <div style={{ flex: 1, minWidth: 180, background: '#e6f2f8', borderRadius: 8, padding: 16, textAlign: 'center' }}>
-                    <div style={{ fontSize: 32, color: '#0079be', fontWeight: 700 }}>{products.filter(p => p.productPrice > 100).length}</div>
-                    <div style={{ color: '#0079be', fontWeight: 500 }}>Premium Products</div>
+                    <div style={{ fontSize: 32, color: '#0079be', fontWeight: 700 }}>{products.filter(p => p.productType === true).length}</div>
+                    <div style={{ color: '#0079be', fontWeight: 500 }}>Goods</div>
                 </div>
                 <div style={{ flex: 1, minWidth: 180, background: '#e6f2f8', borderRadius: 8, padding: 16, textAlign: 'center' }}>
-                    <div style={{ fontSize: 32, color: '#0079be', fontWeight: 700 }}>{products.filter(p => p.productPrice <= 100).length}</div>
-                    <div style={{ color: '#0079be', fontWeight: 500 }}>Standard Products</div>
+                    <div style={{ fontSize: 32, color: '#0079be', fontWeight: 700 }}>{products.filter(p => p.productType === false).length}</div>
+                    <div style={{ color: '#0079be', fontWeight: 500 }}>Services</div>
                 </div>
             </div>
 
