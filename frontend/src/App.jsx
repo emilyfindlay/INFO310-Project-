@@ -124,9 +124,9 @@ export default function App() {
             <main className="flex-1 bg-gray-100 p-8 overflow-y-auto">
                 {page === "main-menu" && (
                     <div className="dashboard-card" style={{ maxWidth: 900 }}>
-                        <img 
-                            src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=900&q=80" 
-                            alt="Accounting Dashboard" 
+                        <img
+                            src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=900&q=80"
+                            alt="Accounting Dashboard"
                             className="dashboard-image"
                         />
                         <h2>Welcome to Zero</h2>
@@ -161,17 +161,17 @@ export default function App() {
                                 <li>Inspired by the best: Xero</li>
                             </ul>
                         </div>
-                        <a 
-                            href="https://github.com/emilyfindlay/INFO310-Project-" 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
+                        <a
+                            href="https://github.com/emilyfindlay/INFO310-Project-"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="btn btn-primary btn-large"
                         >
                             Download from GitHub
                         </a>
                     </div>
                 )}
-                {page === "invoice-list" && <InvoiceList 
+                {page === "invoice-list" && <InvoiceList
                         invoices={invoices}
                         setSelectedInvoiceId={setSelectedInvoiceId}
                         setPage={setPage}/>}
@@ -211,9 +211,9 @@ export default function App() {
                     <ProductList products={products} setProducts={setProducts} />
                 )}
                 {page === "product-editor" && (
-                    <ProductEditor 
-                        products={products} 
-                        setProducts={setProducts} 
+                    <ProductEditor
+                        products={products}
+                        setProducts={setProducts}
                         setPage={setPage}
                         setSelectedProduct={setSelectedProduct}
                         />

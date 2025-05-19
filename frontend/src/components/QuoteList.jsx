@@ -6,6 +6,7 @@ export default function QuoteList({ quotes }) {
     const [sortDirection, setSortDirection] = useState('asc');
     const quotesPerPage = 10;
 
+
     const totalPages = Math.ceil(quotes.length / quotesPerPage);
 
     const sortedQuotes = [...quotes].sort((a, b) => {
@@ -38,6 +39,41 @@ export default function QuoteList({ quotes }) {
             alert('Failed to download PDF');
         }
     };
+
+    const handleView = async (quoteId) => {
+        try {
+            const response = await fetch(`/api/quotes/${quoteId}/pdf`);
+            if (!response.ok) throw new Error('Failed to fetch PDF');
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            // Open a new popup window
+            const popup = window.open('', '_blank', 'width=800,height=600');
+            if (!popup) {
+                alert('Popup blocked! Please allow popups for this site.');
+                return;
+            }
+
+            // Write HTML to embed the PDF in the popup
+            popup.document.write(`
+      <html>
+        <head><title>Quote PDF - ${quoteId}</title></head>
+        <body style="margin:0">
+          <embed width="100%" height="100%" src="${url}" type="application/pdf" />
+        </body>
+      </html>
+    `);
+            popup.document.close();
+
+            // Revoke object URL when the popup is closed
+            popup.onunload = () => URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error viewing PDF:', error);
+            alert('Failed to load PDF');
+        }
+    };
+
+
 
     const handleDelete = async (quoteId) => {
         if (!window.confirm('Are you sure you want to delete this quote?')) return;
@@ -140,15 +176,15 @@ export default function QuoteList({ quotes }) {
                             <td style={{ padding: 12 }}>{quote.dueDate}</td>
                             <td style={{ padding: 12 }}>{quote.quoteTotal}</td>
                             <td style={{ padding: 12 }}>{quote.status}</td>
-                            <td style={{ padding: 12 }}>
+                            <td style={{padding: 12}}>
                                 <button
                                     onClick={() => handleDownload(quote.quoteId)}
-                                    style={{ 
-                                        background: 'linear-gradient(90deg, #00b4d8 0%, #0077c8 100%)', 
-                                        color: 'white', 
-                                        padding: '8px 16px', 
-                                        borderRadius: 4, 
-                                        border: 'none', 
+                                    style={{
+                                        background: 'linear-gradient(90deg, #00b4d8 0%, #0077c8 100%)',
+                                        color: 'white',
+                                        padding: '8px 16px',
+                                        borderRadius: 4,
+                                        border: 'none',
                                         cursor: 'pointer',
                                         marginRight: 8
                                     }}
@@ -156,13 +192,28 @@ export default function QuoteList({ quotes }) {
                                     Download
                                 </button>
                                 <button
+                                    onClick={() => handleView(quote.quoteId)}
+                                    style={{
+                                        background: 'linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)',
+                                        color: 'white',
+                                        padding: '8px 16px',
+                                        borderRadius: 4,
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        marginRight: '8px'
+                                    }}
+                                >
+                                    View
+                                </button>
+
+                                <button
                                     onClick={() => handleDelete(quote.quoteId)}
-                                    style={{ 
-                                        background: 'linear-gradient(90deg, #ff6b6b 0%, #ff4757 100%)', 
-                                        color: 'white', 
-                                        padding: '8px 16px', 
-                                        borderRadius: 4, 
-                                        border: 'none', 
+                                    style={{
+                                        background: 'linear-gradient(90deg, #ff6b6b 0%, #ff4757 100%)',
+                                        color: 'white',
+                                        padding: '8px 16px',
+                                        borderRadius: 4,
+                                        border: 'none',
                                         cursor: 'pointer'
                                     }}
                                 >
@@ -175,14 +226,14 @@ export default function QuoteList({ quotes }) {
             </table>
 
             {/* Pagination */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
+            <div style={{display: 'flex', justifyContent: 'center', gap: 8}}>
                 <button
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    style={{ 
-                        padding: '8px 16px', 
-                        borderRadius: 4, 
-                        border: '1px solid #ccc', 
+                    style={{
+                        padding: '8px 16px',
+                        borderRadius: 4,
+                        border: '1px solid #ccc',
                         background: currentPage === 1 ? '#f0f0f0' : 'white',
                         cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
                     }}

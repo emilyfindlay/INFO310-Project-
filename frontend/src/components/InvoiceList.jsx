@@ -42,6 +42,37 @@ export default function InvoiceList({ invoices, setSelectedInvoiceId, setPage })
         }
     };
 
+    const handleView = async (invoiceId) => {
+        try {
+            const response = await fetch(`/api/invoices/${invoiceId}/pdf`);
+            if (!response.ok) throw new Error('Failed to fetch PDF');
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            const popup = window.open('', '_blank', 'width=800,height=600');
+            if (!popup) {
+                alert('Popup blocked! Please allow popups for this site.');
+                return;
+            }
+
+            popup.document.write(`
+      <html>
+        <head><title>Invoice PDF - ${invoiceId}</title></head>
+        <body style="margin:0">
+          <embed width="100%" height="100%" src="${url}" type="application/pdf" />
+        </body>
+      </html>
+    `);
+            popup.document.close();
+
+            popup.onunload = () => URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error viewing PDF:', error);
+            alert('Failed to load PDF');
+        }
+    };
+
+
     const handleDelete = async (invoiceId) => {
         if (!window.confirm('Are you sure you want to delete this invoice?')) return;
 
@@ -157,6 +188,20 @@ export default function InvoiceList({ invoices, setSelectedInvoiceId, setPage })
                                     }}
                                 >
                                     Download
+                                </button>
+                                <button
+                                    onClick={() => handleView(invoice.invoiceId)}
+                                    style={{
+                                        background: 'linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)',
+                                        color: 'white',
+                                        padding: '8px 16px',
+                                        borderRadius: 4,
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        marginRight: '8px'
+                                    }}
+                                >
+                                    View
                                 </button>
                                 <button
                                     onClick={() => {
