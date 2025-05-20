@@ -56,29 +56,28 @@ public class InvoiceController {
     }
 
     @PostMapping
-    public ResponseEntity<Invoice> createInvoice(@RequestBody InvoiceDTO invoiceDTO) {
-        System.out.println("Received invoice DTO: " + invoiceDTO);
-        Client client = clientRepository.findById(invoiceDTO.clientId)
-                .orElseThrow(() -> new IllegalArgumentException("Client not found"));
+public ResponseEntity<Invoice> createInvoice(@RequestBody InvoiceDTO invoiceDTO) {
+    Client client = clientRepository.findById(invoiceDTO.clientId)
+            .orElseThrow(() -> new IllegalArgumentException("Client not found"));
 
-        Business business = businessRepository.findById(invoiceDTO.businessId)
-                .orElseThrow(() -> new IllegalArgumentException("Business not found"));
+    Business business = businessRepository.findById(invoiceDTO.businessId)
+            .orElseThrow(() -> new IllegalArgumentException("Business not found"));
 
-        // Create invoice with no items and zero total initially
-        Invoice invoice = new Invoice(
-                client,
-                business,
-                new ArrayList<>(), // empty invoice items
-                invoiceDTO.issuedDate,
-                invoiceDTO.dueDate,
-                invoiceDTO.status,
-                BigDecimal.ZERO,
-                BigDecimal.ZERO
-        );
+    Invoice invoice = new Invoice(
+            client,
+            business,
+            new ArrayList<>(),  // 🟢 Leave invoiceItems empty!
+            invoiceDTO.issuedDate,
+            invoiceDTO.dueDate,
+            invoiceDTO.status,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO
+    );
 
-        Invoice saved = invoiceRepository.save(invoice);
-        return ResponseEntity.ok(saved);
-    }
+    Invoice saved = invoiceRepository.save(invoice);
+    return ResponseEntity.ok(saved);  // 🟢 Send this back to frontend to get `invoiceId`
+}
+
 
     @Transactional
 @PutMapping("/{id}")

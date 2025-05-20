@@ -40,12 +40,12 @@ public ResponseEntity<List<InvoiceItem>> createInvoiceItems(@RequestBody List<In
                 .orElseThrow(() -> new RuntimeException("Product not found with ID " + dto.getProductId()));
 
         InvoiceItem item = new InvoiceItem();
-        item.setInvoice(invoice);
-        item.setProduct(product);
-        item.setId(new InvoiceItemPK(invoice.getInvoiceId(), product.getProductId()));
-        item.setQuantity(dto.getQuantity());       // ✅ set updated quantity
-        item.setUnitPrice(dto.getUnitPrice());
-        item.setDiscount(dto.getDiscount());       // ✅ set updated discount
+item.setId(new InvoiceItemPK(invoice.getInvoiceId(), product.getProductId()));
+item.setInvoice(invoice);  // Only needed to fill foreign key
+item.setProduct(product);
+item.setQuantity(dto.getQuantity());
+item.setUnitPrice(dto.getUnitPrice());
+item.setDiscount(dto.getDiscount());       // ✅ set updated discount
         return item;
     }).toList();
 

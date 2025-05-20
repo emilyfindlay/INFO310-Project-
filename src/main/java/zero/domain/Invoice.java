@@ -80,7 +80,7 @@ public class Invoice {
     @Column(name = "invoice_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal invoiceTotal;
 
-   @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+   @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 private List<InvoiceItem> invoiceItems;
 
     @Column(name = "deleted", nullable = false)

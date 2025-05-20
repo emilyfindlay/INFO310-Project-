@@ -204,9 +204,13 @@ export default function InvoiceEditor( { setInvoices, invoiceId, setSelectedInvo
 
       if (!itemsResponse.ok)
         throw new Error("Failed to save invoice items");
-
+    
+    // 🧾 Step 7: Fetch updated invoice with correct totals
+    const refreshedResponse = await fetch(`http://localhost:8080/api/invoices/${newInvoiceId}`);
+    const updatedInvoice = await refreshedResponse.json();
+    
       // ✅ This line fixed — use createdInvoice not updatedInvoice
-      setInvoices(prev => [...prev, createdInvoice]);
+      setInvoices(prev => [...prev, updatedInvoice]);
       setPage("invoice-list");
       alert("Invoice created successfully!");
     }
