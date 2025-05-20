@@ -354,12 +354,13 @@ export default function InvoiceEditor( { setInvoices, invoiceId, setSelectedInvo
                             ))}
                     </tbody>
                 </table>
-            
+                <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
                 <button type="button" onClick={addInvoiceItem}>Add Item</button>
             
                 <button type="submit" disabled={!businessId || !dueDate || !status}>
                     {invoiceId ? "Update Invoice" : "Create Invoice"}
                 </button>
+                </div>
             </form>
             );
 }

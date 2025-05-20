@@ -297,14 +297,13 @@ export default function QuoteEditor({ setQuotes, quoteId, setPage }) {
                 </tbody>
             </table>
 
-            <button type="button" onClick={addQuoteItem}>Add Item</button>
+            <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
+  <button type="button" onClick={addQuoteItem}>Add Item</button>
 
-            <button
-                type="submit"
-                disabled={!businessId || !expiryDate || !status}
-            >
-                {quoteId ? "Update Quote" : "Create Quote"}
-            </button>
+  <button type="submit" disabled={!businessId || !expiryDate || !status}>
+    {quoteId ? "Update Quote" : "Create Quote"}
+  </button>
+</div>
         </form>
     );
 }
