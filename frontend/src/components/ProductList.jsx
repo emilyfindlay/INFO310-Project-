@@ -186,7 +186,7 @@ export default function ProductList({ products, setProducts, setSelectedProduct,
 
             {/* Pagination Controls */}
             <div style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
-                <button
+                <button className= "pageNextPrev"
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
                     style={{ 
@@ -215,7 +215,7 @@ export default function ProductList({ products, setProducts, setSelectedProduct,
                         {idx + 1}
                     </button>
                 ))}
-                <button
+                <button className= "pageNextPrev"
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
                     style={{ 

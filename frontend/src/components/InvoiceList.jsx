@@ -241,7 +241,7 @@ export default function InvoiceList({ invoices, setSelectedInvoiceId, setPage })
 
             {/* Pagination */}
             <div style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
-                <button
+                <button className= "pageNextPrev"
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
                     style={{ 
@@ -270,7 +270,7 @@ export default function InvoiceList({ invoices, setSelectedInvoiceId, setPage })
                         {index + 1}
                     </button>
                 ))}
-                <button
+                <button className= "pageNextPrev"
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
                     style={{ 

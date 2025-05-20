@@ -151,6 +151,17 @@ button {
     transition: background-color 0.2s ease;
 }
 
+.pageNextPrev {
+    background-color: var(--xero-blue);
+    color: #0079be; /*color: var(--xero-white);*/
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--xero-radius);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
 button:hover {
     background-color: #005f99;
 }
