@@ -20,7 +20,7 @@ public class ProductController {
     // Read all products
     @GetMapping
     public List<Product> getAllProducts() {
-        System.out.println("Fetching all products");
+        //System.out.println("Fetching all products");
         return productRepository.findAll();
     }
 

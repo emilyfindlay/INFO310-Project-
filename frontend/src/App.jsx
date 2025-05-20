@@ -209,15 +209,22 @@ export default function App() {
                         setPage={setPage}
                     />
                 )}
+
                 {page === "product-list" && (
-                    <ProductList products={products} setProducts={setProducts} />
-                )}
-                {page === "product-editor" && (
-                    <ProductEditor
+                    <ProductList
                         products={products}
                         setProducts={setProducts}
-                        setPage={setPage}
                         setSelectedProduct={setSelectedProduct}
+                        setPage={setPage}
+                    />
+                )}
+
+                {page === "product-editor" && (
+                    <ProductEditor
+                        product={product}
+                        setProducts={setProducts}
+                        setSelectedProduct={setSelectedProduct}
+                        setPage={setPage}
                         />
                 )}
                 {page === "business-list" && (

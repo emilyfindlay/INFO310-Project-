@@ -46,11 +46,19 @@ export default function ProductList({ products, setProducts, setSelectedProduct,
     };
 
     const handleEdit = (id) => {
-        const selected = products.find((p) => p.productId === id);
-        if (selected) {
-            setSelectedProduct(selected);
-            setPage("product-editor");
+        if (!products || !Array.isArray(products)) {
+            console.error('Products array is not available');
+            return;
         }
+        console.log(id);
+        const product = products.find((p) => p?.productId === id);
+        if (!product) {
+            console.error(`Product with id ${id} not found`);
+            return;
+        }
+        setSelectedProduct(product);
+        console.log("productlist", product);
+        setPage("product-editor");
     };
 
     const sortedProducts = [...products].sort((a, b) => {

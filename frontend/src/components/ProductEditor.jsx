@@ -1,18 +1,23 @@
 import { useState, useEffect } from "react";
 
-export default function ProductEditor( { product, setProducts, setSelectedProduct, setPage }) {
-    const [productName, setProductName] = useState(product ? product.productName : "");
-    const [productDescription, setProductDescription] = useState(product ? product.productDescription : "");
-    const [productPrice, setProductPrice] = useState(product ? product.productPrice : "");
-    const [productType, setProductType] = useState(product ? product.productType : "");
+export default function ProductEditor({ product, setProducts, setSelectedProduct, setPage }) {
+    const [productName, setProductName] = useState("");
+    const [productDescription, setProductDescription] = useState("");
+    const [productPrice, setProductPrice] = useState("");
+    const [productType, setProductType] = useState("");
 
+    console.log(product);
     useEffect(() => {
-        // If a product is provided (for editing), populate the form
         if (product) {
-            setProductName(product.productName);
-            setProductDescription(product.productDescription);
-            setProductPrice(product.productPrice);
-            setProductType(product.productType);
+            setProductName(product.productName || "");
+            setProductDescription(product.productDescription || "");
+            setProductPrice(product.productPrice?.toString() || "");
+            setProductType(product.productType?.toString() || "");
+        } else {
+            setProductName("");
+            setProductDescription("");
+            setProductPrice("");
+            setProductType("");
         }
     }, [product]);
 
@@ -30,8 +35,12 @@ export default function ProductEditor( { product, setProducts, setSelectedProduc
             let response;
             let updatedProduct;
 
+            console.log(product);
+
             if (product) {
                 // Editing
+
+                console.log("editing product", product);
                 response = await fetch(`http://localhost:8080/api/products/${product.productId}`, {
                     method: "PUT",
                     headers: {"Content-Type": "application/json"},
