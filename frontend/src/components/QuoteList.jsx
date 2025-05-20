@@ -134,7 +134,7 @@ export default function QuoteList({ quotes }) {
                     >
                         <option value="quoteId">Quote ID</option>
                         <option value="issuedDate">Issued Date</option>
-                        <option value="dueDate">Due Date</option>
+                        <option value="dueDate">Expiry Date</option>
                         <option value="quoteTotal">Total Amount</option>
                         <option value="status">Status</option>
                     </select>
@@ -160,7 +160,7 @@ export default function QuoteList({ quotes }) {
                         <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Client Name</th>
                         <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Business Name</th>
                         <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Issued Date</th>
-                        <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Due Date</th>
+                        <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Expiry Date</th>
                         <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Total Amount</th>
                         <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Status</th>
                         <th style={{ padding: 12, textAlign: 'left', borderBottom: '2px solid #e0e0e0', color: '#0079be' }}>Actions</th>
@@ -173,7 +173,7 @@ export default function QuoteList({ quotes }) {
                             <td style={{ padding: 12 }}>{quote.client.name}</td>
                             <td style={{ padding: 12 }}>{quote.business.businessName}</td>
                             <td style={{ padding: 12 }}>{quote.issuedDate}</td>
-                            <td style={{ padding: 12 }}>{quote.dueDate}</td>
+                            <td style={{ padding: 12 }}>{quote.expiryDate}</td>
                             <td style={{ padding: 12 }}>{quote.quoteTotal}</td>
                             <td style={{ padding: 12 }}>{quote.status}</td>
                             <td style={{padding: 12}}>
