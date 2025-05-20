@@ -49,11 +49,21 @@ public class InvoiceController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Invoice> getInvoice(@PathVariable Long id) {
-        return invoiceRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+public ResponseEntity<Invoice> getInvoice(@PathVariable Long id) {
+    Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
+
+    if (optionalInvoice.isEmpty()) {
+        return ResponseEntity.notFound().build();
     }
+
+    Invoice invoice = optionalInvoice.get();
+
+    // 🔁 Force reload of invoiceItems from the database
+    invoice.setInvoiceItems(invoiceItemRepository.findById_InvoiceId(id));
+
+    return ResponseEntity.ok(invoice);
+}
+
 
     @PostMapping
 public ResponseEntity<Invoice> createInvoice(@RequestBody InvoiceDTO invoiceDTO) {
@@ -98,10 +108,8 @@ public ResponseEntity<Invoice> updateInvoice(@PathVariable Long id, @RequestBody
     existingInvoice.setDueDate(dto.dueDate);
     existingInvoice.setStatus(dto.status);
 
-    // ✅ Remove old items via orphanRemoval
-    existingInvoice.getInvoiceItems().clear();
-
-    // ✅ Rebuild new items
+   
+       // ✅ Rebuild new items
     List<InvoiceItem> newItems = dto.invoiceItems.stream().map(itemDto -> {
         Product product = productRepository.findById(itemDto.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -116,6 +124,7 @@ public ResponseEntity<Invoice> updateInvoice(@PathVariable Long id, @RequestBody
         return item;
     }).toList();
 
+    existingInvoice.getInvoiceItems().clear();
     existingInvoice.getInvoiceItems().addAll(newItems);
     existingInvoice.setTotalGst(existingInvoice.getTotalGst());
     existingInvoice.setInvoiceTotal(existingInvoice.getInvoiceTotal());

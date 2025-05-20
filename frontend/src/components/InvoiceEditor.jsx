@@ -160,10 +160,14 @@ export default function InvoiceEditor( { setInvoices, invoiceId, setSelectedInvo
         throw new Error("Failed to update invoice");
 
       const result = await response.json();
+      const refreshed = await fetch(`http://localhost:8080/api/invoices/${invoiceId}`);
+        const freshInvoice = await refreshed.json();
 
-      setInvoices(prev =>
-        prev.map(inv => inv.invoiceId === invoiceId ? result : inv)
-      );
+        setInvoices(prev => {
+          const others = prev.filter(inv => inv.invoiceId !== freshInvoice.invoiceId);
+          return [...others, freshInvoice];
+        });
+
       setSelectedInvoiceId(null);
       setPage("invoice-list");
       alert("Invoice updated successfully!");
