@@ -4,10 +4,12 @@
  */
 package zero.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import net.sf.oval.constraint.Future;
 import net.sf.oval.constraint.Length;
@@ -30,6 +32,14 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "invoice_id")
     private Long invoiceId;
+
+    public void setTotalGst(BigDecimal totalGst) {
+        this.totalGst = totalGst;
+    }
+
+    public void setInvoiceTotal(BigDecimal invoiceTotal) {
+        this.invoiceTotal = invoiceTotal;
+    }
 
     @NotNull(message = "client ID is not provided")
     @Length(min = 2, message = "client ID must be greater than 2 characters")
@@ -70,13 +80,13 @@ public class Invoice {
     @Column(name = "invoice_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal invoiceTotal;
 
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
-    private Collection<InvoiceItem> invoiceItems;
+   @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+private List<InvoiceItem> invoiceItems;
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
 
-    public Invoice(Client client, Business business, Collection<InvoiceItem> invoiceItems,
+    public Invoice(Client client, Business business, List<InvoiceItem> invoiceItems,
                    LocalDate issuedDate, LocalDate dueDate, String status,
                    BigDecimal totalGst, BigDecimal invoiceTotal) {
         this.client = client;
@@ -150,7 +160,7 @@ public class Invoice {
         return invoiceItems;
     }
 
-    public void setInvoiceItems(Collection<InvoiceItem> invoiceItems) {
+    public void setInvoiceItems(List<InvoiceItem> invoiceItems) {
         this.invoiceItems = invoiceItems;
     }
 

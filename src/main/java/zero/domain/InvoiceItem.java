@@ -1,5 +1,6 @@
 package zero.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -24,15 +25,18 @@ public class InvoiceItem {
     private BigDecimal subtotal;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
-    private Product product;
+@JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
+private Product product;
 
     @NotNull(message = "Unit price is required")
     @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    @JoinColumn(name = "invoice_id", nullable = false, insertable = false, updatable = false)
-    private Long invoice;
+    @ManyToOne
+@JoinColumn(name = "invoice_id", nullable = false, insertable = false, updatable = false)
+    @JsonBackReference
+private Invoice invoice;
+
 
     // Default constructor
     public InvoiceItem() {
@@ -109,14 +113,14 @@ public class InvoiceItem {
         return Objects.hash(id);
     }
 
-    public void setInvoice(Invoice invoice) {
-        this.invoice = invoice.getInvoiceId();
-    }
-
-    public Long getInvoice() {
+    public Invoice getInvoice() {
         return invoice;
     }
 
+    public void setInvoice(Invoice invoice) {
+        this.invoice = invoice;
+    }
+    
     @Override
     public String toString() {
         return "InvoiceItem{" +

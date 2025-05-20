@@ -182,6 +182,7 @@ export default function App() {
                         setInvoices={setInvoices}
                         invoiceId={invoice}
                         setSelectedInvoiceId={setSelectedInvoiceId}
+                        setPage={setPage}
                     />
                 )}
                 {page === "quote-list" && <QuoteList quotes={quotes} />}

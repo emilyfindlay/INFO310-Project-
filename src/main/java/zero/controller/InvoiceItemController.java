@@ -32,32 +32,47 @@ public class InvoiceItemController {
     }
 
     @PostMapping
-    public ResponseEntity<List<InvoiceItem>> createInvoiceItems(@RequestBody List<InvoiceItemDTO> dtos) {
-        System.out.println("Received DTOs: " + dtos);
-        System.out.println("dto info: " + dtos.get(0).getInvoiceId() + " " + dtos.get(0).getProductId() + " " + dtos.get(0).getQuantity() + " " + dtos.get(0).getUnitPrice() + " " + dtos.get(0).getDiscount());
+public ResponseEntity<List<InvoiceItem>> createInvoiceItems(@RequestBody List<InvoiceItemDTO> dtos) {
+    List<InvoiceItem> items = dtos.stream().map(dto -> {
+        Invoice invoice = invoiceRepository.findById(dto.getInvoiceId())
+                .orElseThrow(() -> new RuntimeException("Invoice not found with ID " + dto.getInvoiceId()));
+        Product product = productRepository.findById(dto.getProductId())
+                .orElseThrow(() -> new RuntimeException("Product not found with ID " + dto.getProductId()));
 
-        List<InvoiceItem> items = dtos.stream().map(dto -> {
-            Invoice invoice = invoiceRepository.findById(dto.getInvoiceId())
-                    .orElseThrow(() -> new RuntimeException("Invoice not found with ID " + dto.getInvoiceId()));
-            Product product = productRepository.findById(dto.getProductId())
-                    .orElseThrow(() -> new RuntimeException("Product not found with ID " + dto.getProductId()));
+        InvoiceItem item = new InvoiceItem();
+        item.setInvoice(invoice);
+        item.setProduct(product);
+        item.setId(new InvoiceItemPK(invoice.getInvoiceId(), product.getProductId()));
+        item.setQuantity(dto.getQuantity());       // ✅ set updated quantity
+        item.setUnitPrice(dto.getUnitPrice());
+        item.setDiscount(dto.getDiscount());       // ✅ set updated discount
+        return item;
+    }).toList();
 
-            InvoiceItem item = new InvoiceItem();
-            item.setInvoice(invoice);
-            item.setProduct(product);
-            item.setId(new InvoiceItemPK(invoice.getInvoiceId(), product.getProductId()));
-            item.setQuantity(dto.getQuantity());
-            item.setUnitPrice(dto.getUnitPrice());
-            item.setDiscount(dto.getDiscount());
-            return item;
-        }).collect(Collectors.toList());
+    List<InvoiceItem> savedItems = invoiceItemRepository.saveAll(items);
 
-        List<InvoiceItem> savedItems = invoiceItemRepository.saveAll(items);
-        return ResponseEntity.ok(savedItems);
-    }
+    // (Optional) Recalculate totals
+    Invoice invoice = savedItems.get(0).getInvoice();
+    invoice.setInvoiceItems(savedItems);
+    invoice.setTotalGst(invoice.getTotalGst());
+    invoice.setInvoiceTotal(invoice.getInvoiceTotal());
+    invoiceRepository.save(invoice);
+
+    return ResponseEntity.ok(savedItems);
+}
+
 
     @GetMapping("/invoice/{invoiceId}")
     public List<InvoiceItem> getItemsByInvoice(@PathVariable Long invoiceId) {
         return invoiceItemRepository.findById_InvoiceId(invoiceId);
     }
+    
+    @DeleteMapping("/invoice/{invoiceId}")
+    public ResponseEntity<Void> deleteByInvoice(@PathVariable Long invoiceId) {
+    Invoice invoice = invoiceRepository.findById(invoiceId)
+            .orElseThrow(() -> new RuntimeException("Invoice not found"));
+    invoiceItemRepository.deleteById_InvoiceId(invoiceId);
+    return ResponseEntity.noContent().build();
+    }
+
 }
