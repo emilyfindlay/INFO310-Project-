@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function QuoteEditor({ setQuotes, quoteId }) {
+export default function QuoteEditor({ setQuotes, quoteId, setPage }) {
     const [clientId, setClientId] = useState("");
     const [businessId, setBusinessId] = useState("");
     const [issuedDate, setIssuedDate] = useState("");
@@ -15,44 +15,52 @@ export default function QuoteEditor({ setQuotes, quoteId }) {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/clients")
-            .then(res => res.json())
-            .then(setClients);
+    async function loadAllData() {
+      const [clientsRes, businessesRes, productsRes] = await Promise.all([
+        fetch("http://localhost:8080/api/clients"),
+        fetch("http://localhost:8080/api/businesses"),
+        fetch("http://localhost:8080/api/products"),
+      ]);
 
-        fetch("http://localhost:8080/api/businesses")
-            .then(res => res.json())
-            .then(setBusinesses);
+      const [clientsData, businessesData, productsData] = await Promise.all([
+        clientsRes.json(),
+        businessesRes.json(),
+        productsRes.json(),
+      ]);
 
-        fetch("http://localhost:8080/api/products")
-            .then(res => res.json())
-            .then(setProducts);
+      setClients(clientsData);
+      setBusinesses(businessesData);
+      setProducts(productsData);
 
-        if (quoteId) {
-            fetch(`http://localhost:8080/api/quotes/${quoteId}`)
-                .then(res => res.json())
-                .then(data => {
-                    setClientId(data.clientId);
-                    setBusinessId(data.businessId);
-                    setIssuedDate(data.issuedDate);
-                    setExpiryDate(data.expiryDate);
-                    setStatus(data.status);
+      if (quoteId) {
+        const quoteRes = await fetch(`http://localhost:8080/api/quotes/${quoteId}`);
+        const quoteData = await quoteRes.json();
 
-                    const resolvedItems = data.quoteItems.map(item => {
-                        const fullProduct = products.find(p => p.id === item.productId) || {
-                            productName: "",
-                            productDescription: "",
-                            productPrice: 0,
-                        };
-                        return {
-                            product: fullProduct,
-                            quantity: item.quantity,
-                            discount: item.discount,
-                        };
-                    });
-                    setQuoteItems(resolvedItems);
-                });
-        }
-    }, [quoteId]);
+        setClientId(quoteData.clientId);
+        setBusinessId(quoteData.businessId);
+        setIssuedDate(quoteData.issuedDate);
+        setExpiryDate(quoteData.expiryDate);
+        setStatus(quoteData.status);
+
+        const resolvedItems = quoteData.quoteItems.map(item => {
+          const fullProduct = productsData.find(p => p.productId === item.productId) || {
+            productName: "",
+            productDescription: "",
+            productPrice: 0,
+          };
+          return {
+            product: fullProduct,
+            quantity: item.quantity,
+            discount: item.discount,
+          };
+        });
+        setQuoteItems(resolvedItems);
+      }
+    }
+
+    loadAllData();
+  }, [quoteId]);
+
 
     const handleQuoteItemChange = (index, field, value) => {
         const updatedItems = [...quoteItems];
@@ -85,21 +93,27 @@ export default function QuoteEditor({ setQuotes, quoteId }) {
         e.preventDefault();
 
         try {
-            const productsToSave = quoteItems.map(item => ({
-                productName: item.product.productName,
-                productType: true,
-                productDescription: item.product.productDescription,
-                productPrice: item.product.productPrice,
+            const newProducts = quoteItems
+            .filter(item => !item.product.productId)
+            .map(item => ({
+              productName: item.product.productName,
+              productDescription: item.product.productDescription,
+              productPrice: item.product.productPrice,
+              productType: "true"
             }));
 
+          let savedNewProducts = [];
+          if (newProducts.length > 0) {
             const productResponse = await fetch("http://localhost:8080/api/products", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(productsToSave),
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(newProducts),
             });
 
-            if (!productResponse.ok) throw new Error("Failed to save products");
-            const savedProducts = await productResponse.json();
+            if (!productResponse.ok) throw new Error("Failed to save new products");
+            savedNewProducts = await productResponse.json();
+          }
+
 
             const baseQuote = {
                 clientId: Number(clientId) || null,
@@ -121,14 +135,27 @@ export default function QuoteEditor({ setQuotes, quoteId }) {
             const createdQuote = await quoteResponse.json();
             const newQuoteId = createdQuote.quoteId;
 
-            const quoteItemsToSave = quoteItems.map((item, idx) => ({
-                productId: savedProducts[idx].productId,
+            const quoteItemsToSave = quoteItems.map((item) => {
+            if (item.product.productId) {
+              return {
+                productId: item.product.productId,
                 quoteId: newQuoteId,
                 quantity: item.quantity,
                 unitPrice: item.product.productPrice,
                 discount: item.discount,
-            }));
-
+              };
+            } else {
+              const newProduct = savedNewProducts.shift();
+              return {
+                productId: newProduct.productId,
+                quoteId: newQuoteId,
+                quantity: item.quantity,
+                unitPrice: newProduct.productPrice,
+                discount: item.discount,
+              };
+            }
+          });
+            
             const itemsResponse = await fetch("http://localhost:8080/api/quote-items", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -139,30 +166,12 @@ export default function QuoteEditor({ setQuotes, quoteId }) {
 
             const savedQuoteItems = await itemsResponse.json();
 
-            const finalQuoteUpdate = {
-                ...createdQuote,
-                quoteItems: savedQuoteItems.map(item => ({
-                    id: {
-                        quoteId: item.quoteId,
-                        productId: item.productId
-                    },
-                    quantity: item.quantity,
-                    unitPrice: item.unitPrice,
-                    discount: item.discount
-                }))
-            };
+            const refreshedResponse = await fetch(`http://localhost:8080/api/quotes/${newQuoteId}`);
+            if (!refreshedResponse.ok) throw new Error("Failed to fetch updated quote");
 
-            const patchResponse = await fetch(`http://localhost:8080/api/quotes/${newQuoteId}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(finalQuoteUpdate),
-            });
-
-            if (!patchResponse.ok) throw new Error("Failed to update quote");
-
-            const updatedQuote = await patchResponse.json();
+            const updatedQuote = await refreshedResponse.json();
             setQuotes(prev => [...prev, updatedQuote]);
-
+            setPage("quote-list");
             alert("Quote created successfully!");
         } catch (err) {
             console.error("Error creating quote:", err);
@@ -226,14 +235,32 @@ export default function QuoteEditor({ setQuotes, quoteId }) {
                 {quoteItems.map((item, index) => (
                     <tr key={index}>
                         <td>
-                            <input
-                                value={item.product.productName}
-                                onChange={(e) => handleQuoteItemChange(index, "product.productName", e.target.value)}
-                            />
+                            <select
+                                value={item.product.productId || ""}
+                                onChange={(e) => {
+                                  const selectedProduct = products.find(p => p.productId === Number(e.target.value));
+                                  if (selectedProduct) {
+                                    handleQuoteItemChange(index, "product.productId", selectedProduct.productId);
+                                    handleQuoteItemChange(index, "product.productName", selectedProduct.productName);
+                                    handleQuoteItemChange(index, "product.productPrice", selectedProduct.productPrice);
+                                    handleQuoteItemChange(index, "product.productDescription", selectedProduct.productDescription);
+                                  } else {
+                                    handleQuoteItemChange(index, "product.productId", null);
+                                  }
+                                }}
+                              >
+                                <option value="">Select</option>
+                                {products.map(product => (
+                                  <option key={product.productId} value={product.productId}>
+                                    {product.productName}
+                                  </option>
+                                ))}
+                              </select>
                         </td>
                         <td>
                             <input
                                 value={item.product.productDescription}
+                                readOnly={!!item.product.productId}
                                 onChange={(e) => handleQuoteItemChange(index, "product.productDescription", e.target.value)}
                             />
                         </td>
@@ -241,6 +268,7 @@ export default function QuoteEditor({ setQuotes, quoteId }) {
                             <input
                                 type="number"
                                 value={item.product.productPrice}
+                                readOnly={!!item.product.productId}
                                 onChange={(e) => handleQuoteItemChange(index, "product.productPrice", e.target.value)}
                             />
                         </td>

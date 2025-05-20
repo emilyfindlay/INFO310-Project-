@@ -191,6 +191,7 @@ export default function App() {
                         clients={clients}
                         products={products}
                         setQuotes={setQuotes}
+                        setPage={setPage}
                     />
                 )}
                 {page === "client-list" && (
