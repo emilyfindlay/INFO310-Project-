@@ -215,7 +215,23 @@ export default function QuoteEditor({ setQuotes, quoteId, setPage }) {
 
             <label>
                 Status:
-                <input type="text" value={status} onChange={(e) => setStatus(e.target.value)} required />
+                <select 
+                        value={status} 
+                        onChange={(e) => setStatus(e.target.value)} 
+                        required
+                        style={{
+                            width: '100%',
+                            padding: '0.75rem',
+                            borderRadius: '6px',
+                            border: '1px solid #e2e8f0',
+                            backgroundColor: 'white',
+                            fontSize: '1rem'
+                        }}
+                    >
+                        <option value="">Select Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Accepted">Accepted</option>
+                    </select>
             </label>
 
             <h3>Quote Items</h3>
