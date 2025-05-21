@@ -6,7 +6,9 @@ import org.apache.pdfbox.pdmodel.font.*;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.file.*;
 import java.util.Collection;
@@ -28,7 +30,12 @@ public class GenerateInvoice {
             PDPage page = new PDPage(PDRectangle.A4);
             document.addPage(page);
 
-            PDType0Font font = PDType0Font.load(document, Files.newInputStream(Paths.get("ARIAL.ttf")));
+            InputStream fontStream = GenerateInvoice.class.getClassLoader().getResourceAsStream("fonts/ARIAL.TTF");
+            if (fontStream == null) {
+                throw new FileNotFoundException("Font file not found in resources/fonts/ARIAL.TTF");
+            }
+            PDType0Font font = PDType0Font.load(document, fontStream);
+
             PDPageContentStream cs = new PDPageContentStream(document, page);
 
             float margin = 50;
