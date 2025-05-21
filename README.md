@@ -2,11 +2,13 @@
 
 This is a Spring Boot application packaged as a single executable JAR file.
 
+See folder Zero Deploy for the JAR file and another copy of README which is the same.
+
 ---
 
 ## Requirements
 
-- **Java 21 or higher** installed on your machine  
+- **Java 21 or higher** installed on your machine
 - **PostgreSQL** database server running and accessible
 
 ---
@@ -14,7 +16,7 @@ This is a Spring Boot application packaged as a single executable JAR file.
 ## Running instructions
 
 - Ensure PostgreSQL database server running and accessible (see below)
-- Run in command line: java -jar zero.jar 
+- Run in command line: java -jar zero.jar
 - Visit http://localhost:8080/ in web browser
 - Press `Ctrl + C` in terminal to shut down the program
 
@@ -44,10 +46,9 @@ psql -c "GRANT ALL PRIVILEGES ON DATABASE zero TO postgres;"
 ```
 
 Instructions for first launch:
- - Run schema creation script in `src/main/resources/schema.sql` to create the necessary tables and indexes.
- - Make a copy of `Zero Deploy/Zero.jar` and place where desired.
- - Run the JAR file with `java -jar Zero.jar` command.
-
+- Run schema creation script in `src/main/resources/schema.sql` to create the necessary tables and indexes.
+- Make a copy of `Zero Deploy/Zero.jar` and place where desired.
+- Run the JAR file with `java -jar Zero.jar` command.
 
 
 
