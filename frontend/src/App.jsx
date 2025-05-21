@@ -72,7 +72,15 @@ export default function App() {
                     <button>Invoices</button>
                     <div className="dropdown-content">
                         <button onClick={() => setPage("invoice-list")}>Invoice List</button>
-                        <button onClick={() => setPage("invoice-editor")}>Create Invoice</button>
+                        <button
+                            onClick={() => {
+                                setSelectedInvoiceId(null);
+                                setPage("invoice-editor");
+                            }}
+                        >
+                            Create Invoice
+                        </button>
+
                     </div>
                 </div>
 

@@ -81,9 +81,9 @@ public class Invoice {
     @Column(name = "invoice_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal invoiceTotal;
 
-   @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
-@JsonManagedReference
-private List<InvoiceItem> invoiceItems = new ArrayList<>();
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<InvoiceItem> invoiceItems = new ArrayList<>();
 
 
     @Column(name = "deleted", nullable = false)
@@ -159,12 +159,15 @@ private List<InvoiceItem> invoiceItems = new ArrayList<>();
         this.status = status;
     }
 
-    public Collection<InvoiceItem> getInvoiceItems() {
+    public List<InvoiceItem> getInvoiceItems() {
         return invoiceItems;
     }
 
     public void setInvoiceItems(List<InvoiceItem> invoiceItems) {
         this.invoiceItems = invoiceItems;
+        if (invoiceItems != null) {
+            invoiceItems.forEach(item -> item.setInvoice(this));
+        }
     }
 
     public void setDeleted(boolean deleted) {

@@ -32,34 +32,44 @@ public class InvoiceItemController {
     }
 
     @PostMapping
-public ResponseEntity<List<InvoiceItem>> createInvoiceItems(@RequestBody List<InvoiceItemDTO> dtos) {
-    List<InvoiceItem> items = dtos.stream().map(dto -> {
-        Invoice invoice = invoiceRepository.findById(dto.getInvoiceId())
-                .orElseThrow(() -> new RuntimeException("Invoice not found with ID " + dto.getInvoiceId()));
-        Product product = productRepository.findById(dto.getProductId())
-                .orElseThrow(() -> new RuntimeException("Product not found with ID " + dto.getProductId()));
+    public ResponseEntity<List<InvoiceItem>> createInvoiceItems(@RequestBody List<InvoiceItemDTO> dtos) {
+        // Retrieve and associate the parent Invoice
+        if (dtos.isEmpty()) {
+            throw new RuntimeException("No InvoiceItems to process");
+        }
 
-        InvoiceItem item = new InvoiceItem();
-item.setId(new InvoiceItemPK(invoice.getInvoiceId(), product.getProductId()));
-item.setInvoice(invoice);  // Only needed to fill foreign key
-item.setProduct(product);
-item.setQuantity(dto.getQuantity());
-item.setUnitPrice(dto.getUnitPrice());
-item.setDiscount(dto.getDiscount());       // ✅ set updated discount
-        return item;
-    }).toList();
+        Long invoiceId = dtos.get(0).getInvoiceId();
+        Invoice invoice = invoiceRepository.findById(invoiceId)
+                .orElseThrow(() -> new RuntimeException("Invoice not found with ID " + invoiceId));
 
-    List<InvoiceItem> savedItems = invoiceItemRepository.saveAll(items);
+        // Synchronize invoiceItems collection
+        // Clear existing relationships (important for Hibernate)
+        List<InvoiceItem> existingItems = invoice.getInvoiceItems();
+        if (existingItems != null) {
+            existingItems.clear();
+        }
 
-    // (Optional) Recalculate totals
-    Invoice invoice = savedItems.get(0).getInvoice();
-    invoice.setInvoiceItems(savedItems);
-    invoice.setTotalGst(invoice.getTotalGst());
-    invoice.setInvoiceTotal(invoice.getInvoiceTotal());
-    invoiceRepository.save(invoice);
+        // Map DTOs to InvoiceItems
+        List<InvoiceItem> invoiceItems = dtos.stream().map(dto -> {
+            Product product = productRepository.findById(dto.getProductId())
+                    .orElseThrow(() -> new RuntimeException("Product not found with ID " + dto.getProductId()));
 
-    return ResponseEntity.ok(savedItems);
-}
+            InvoiceItem item = new InvoiceItem();
+            item.setId(new InvoiceItemPK(invoice.getInvoiceId(), product.getProductId()));
+            item.setInvoice(invoice);  // Set parent reference
+            item.setProduct(product);  // Set associated product
+            item.setQuantity(dto.getQuantity());
+            item.setUnitPrice(dto.getUnitPrice());
+            item.setDiscount(dto.getDiscount());
+            return item;
+        }).toList();
+
+        invoice.setInvoiceItems(invoiceItems);
+
+
+        return ResponseEntity.ok(invoiceItems);
+    }
+
 
 
     @GetMapping("/invoice/{invoiceId}")
