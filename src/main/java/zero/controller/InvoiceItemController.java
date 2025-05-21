@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import zero.domain.*;
 import zero.dto.InvoiceItemDTO;
 import zero.repository.*;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +31,8 @@ public class InvoiceItemController {
     public List<InvoiceItem> getAllInvoiceItems() {
         return invoiceItemRepository.findAll();
     }
-
+    
+    @Transactional
     @PostMapping
     public ResponseEntity<List<InvoiceItem>> createInvoiceItems(@RequestBody List<InvoiceItemDTO> dtos) {
         // Retrieve and associate the parent Invoice
@@ -64,7 +66,7 @@ public class InvoiceItemController {
             return item;
         }).toList();
 
-        invoice.setInvoiceItems(invoiceItems);
+        invoiceItemRepository.saveAll(invoiceItems);
 
 
         return ResponseEntity.ok(invoiceItems);
