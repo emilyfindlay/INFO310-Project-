@@ -33,9 +33,9 @@ export default function InvoiceEditor( { setInvoices, invoiceId, setSelectedInvo
             setProducts(productsData);
 
             if (invoiceId) {
-                fetch(`http://localhost:8080/api/invoices/${invoiceId}`)
-                        .then(res => res.json())
-                        .then(data => {
+                const res = await fetch(`http://localhost:8080/api/invoices/${invoiceId}`);
+                const data = await res.json();
+                
                             setClientId(data.client.clientId);
                             setBusinessId(data.business.businessId);
                             setIssuedDate(data.issuedDate);
@@ -44,9 +44,10 @@ export default function InvoiceEditor( { setInvoices, invoiceId, setSelectedInvo
 
                             const resolvedItems = data.invoiceItems.map(item => {
                                 const fullProduct = productsData.find(p => p.productId === item.product.productId) || {
-                                    productName: "",
-                                    productDescription: "",
-                                    productPrice: 0,
+                                    productId: null,
+                                    productName: item.product.productName,
+                                    productDescription: item.product.productDescription,
+                                    productPrice: item.product.productPrice,
                                 };
                                 return {
                                     product: fullProduct,
@@ -55,7 +56,15 @@ export default function InvoiceEditor( { setInvoices, invoiceId, setSelectedInvo
                                 };
                             });
                             setInvoiceItems(resolvedItems);
-                        });
+                } else {
+                setClientId("");
+                setBusinessId("");
+                setIssuedDate("");
+                setDueDate("");
+                setStatus("");
+                setInvoiceItems([
+                    { product: { productName: "", productDescription: "", productPrice: 0}, quantity: 1, discount: 0}
+                ]);
             }
             if (!invoiceId) {
                 setClientId("");
