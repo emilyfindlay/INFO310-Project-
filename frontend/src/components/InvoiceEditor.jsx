@@ -57,6 +57,17 @@ export default function InvoiceEditor( { setInvoices, invoiceId, setSelectedInvo
                             setInvoiceItems(resolvedItems);
                         });
             }
+            if (!invoiceId) {
+                setClientId("");
+                setBusinessId("");
+                setIssuedDate("");
+                setDueDate("");
+                setStatus("");
+                setInvoiceItems([
+                    { product: { productName: "", productDescription: "", productPrice: 0 }, quantity: 1, discount: 0 },
+                ]);
+            }
+
         }
         loadAllData();
     }, [invoiceId]);
