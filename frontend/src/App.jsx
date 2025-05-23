@@ -31,6 +31,7 @@ export default function App() {
     const [business, setSelectedBusiness] = useState(null);
     const [product, setSelectedProduct] = useState(null);
     const [invoice, setSelectedInvoiceId] = useState(null);
+    const [selectedQuoteId, setSelectedQuoteId] = useState(null);
 
     useEffect(() => {
         fetch("http://localhost:8080/api/clients")
@@ -193,12 +194,20 @@ export default function App() {
                         setPage={setPage}
                     />
                 )}
-                {page === "quote-list" && <QuoteList quotes={quotes} />}
+                {page === "quote-list" && 
+                  <QuoteList 
+                        quotes={quotes}
+                        setSelectedQuoteId={setSelectedQuoteId}
+                        setPage={setPage}
+                  />
+                  }
                 {page === "quote-editor" && (
                     <QuoteEditor
                         clients={clients}
                         products={products}
                         setQuotes={setQuotes}
+                        quoteId={selectedQuoteId}
+                        setSelectedQuoteId ={setSelectedQuoteId}
                         setPage={setPage}
                     />
                 )}

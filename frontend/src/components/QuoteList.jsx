@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function QuoteList({ quotes }) {
+export default function QuoteList({ quotes, setSelectedQuoteId, setPage }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [sortField, setSortField] = useState('quoteId');
     const [sortDirection, setSortDirection] = useState('asc');
@@ -205,7 +205,25 @@ export default function QuoteList({ quotes }) {
                                 >
                                     View
                                 </button>
-
+                                
+                                <button
+                                    onClick={() => {
+                                      setSelectedQuoteId(quote.quoteId);
+                                      setPage("quote-editor");
+                                    }}
+                                    style={{ 
+                                      background: 'linear-gradient(90deg, #00b4d8 0%, #0077c8 100%)', 
+                                      color: 'white', 
+                                      padding: '8px 16px', 
+                                      borderRadius: 4, 
+                                      border: 'none', 
+                                      cursor: 'pointer',
+                                      marginRight: 8
+                                    }}
+                                  >
+                                    Edit
+                                  </button>
+   
                                 <button
                                     onClick={() => handleDelete(quote.quoteId)}
                                     style={{

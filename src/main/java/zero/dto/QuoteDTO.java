@@ -1,6 +1,7 @@
 package zero.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class QuoteDTO {
     public Long clientId;
@@ -8,5 +9,5 @@ public class QuoteDTO {
     public LocalDate issuedDate;
     public LocalDate expiryDate;
     public String status;
-
+    public List<QuoteItemDTO> quoteItems;
 }

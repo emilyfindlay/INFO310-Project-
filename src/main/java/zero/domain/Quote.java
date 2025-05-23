@@ -1,5 +1,6 @@
 package zero.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import net.sf.oval.constraint.*;
 
@@ -56,8 +57,10 @@ public class Quote {
     @Column(name = "quote_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal quoteTotal;
 
-    @OneToMany(mappedBy = "quote", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "quote", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Collection<QuoteItem> quoteItems;
+
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
@@ -146,7 +149,9 @@ public class Quote {
     public boolean isDeleted() {
         return deleted;
     }
-
+    
+    
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -183,4 +188,13 @@ public class Quote {
     public Client getClient() {
         return client;
     }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public void setBusiness(Business business) {
+        this.business = business;
+    }
+    
 }

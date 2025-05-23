@@ -11,5 +11,5 @@ import java.util.List;
 public interface QuoteItemRepository extends JpaRepository<QuoteItem, QuoteItemPK> {
     List<QuoteItem> findById_QuoteId(Long quoteId);
 
-
+void deleteById_QuoteId(Long quoteId);
 }

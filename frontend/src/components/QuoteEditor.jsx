@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function QuoteEditor({ setQuotes, quoteId, setPage }) {
+export default function QuoteEditor({ setQuotes, quoteId, setSelectedQuoteId, setPage }) {
     const [clientId, setClientId] = useState("");
     const [businessId, setBusinessId] = useState("");
     const [issuedDate, setIssuedDate] = useState("");
@@ -15,6 +15,7 @@ export default function QuoteEditor({ setQuotes, quoteId, setPage }) {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
+        console.log("quoteId passed to editor:", quoteId); // ✅ Add this
     async function loadAllData() {
       const [clientsRes, businessesRes, productsRes] = await Promise.all([
         fetch("http://localhost:8080/api/clients"),
@@ -36,17 +37,18 @@ export default function QuoteEditor({ setQuotes, quoteId, setPage }) {
         const quoteRes = await fetch(`http://localhost:8080/api/quotes/${quoteId}`);
         const quoteData = await quoteRes.json();
 
-        setClientId(quoteData.clientId);
-        setBusinessId(quoteData.businessId);
+        setClientId(quoteData.client.clientId);
+        setBusinessId(quoteData.business.businessId);
         setIssuedDate(quoteData.issuedDate);
         setExpiryDate(quoteData.expiryDate);
         setStatus(quoteData.status);
 
         const resolvedItems = quoteData.quoteItems.map(item => {
-          const fullProduct = productsData.find(p => p.productId === item.productId) || {
-            productName: "",
-            productDescription: "",
-            productPrice: 0,
+          const fullProduct = productsData.find(p => p.productId === item.product.productId) || {
+            productid: null,
+            productName: item.product.productName,
+            productDescription:item.product.productDescription,
+            productPrice: item.product.productPrice,
           };
           return {
             product: fullProduct,
@@ -55,9 +57,17 @@ export default function QuoteEditor({ setQuotes, quoteId, setPage }) {
           };
         });
         setQuoteItems(resolvedItems);
-      }
+      } else {
+                setClientId("");
+                setBusinessId("");
+                setIssuedDate("");
+                setExpiryDate("");
+                setStatus("");
+                setQuoteItems([
+                    { product: { productName: "", productDescription: "", productPrice: 0}, quantity: 1, discount: 0}
+                ]);
+        }
     }
-
     loadAllData();
   }, [quoteId]);
 
@@ -91,91 +101,120 @@ export default function QuoteEditor({ setQuotes, quoteId, setPage }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        try {
-            const newProducts = quoteItems
-            .filter(item => !item.product.productId)
-            .map(item => ({
-              productName: item.product.productName,
-              productDescription: item.product.productDescription,
-              productPrice: item.product.productPrice,
-              productType: "true"
+        
+        try{
+            const newProducts = quoteItems.filter(item=>!item.product.productId).map(item => ({
+                productName: item.product.productName,
+                productDescription: item.product.productDescription,
+                productPrice: item.product.productPrice,
+                productType: item.product.productType || "true"
             }));
-
-          let savedNewProducts = [];
-          if (newProducts.length > 0) {
-            const productResponse = await fetch("http://localhost:8080/api/products", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(newProducts),
+            
+            let savedNewProducts =[];
+            if(newProducts.length > 0){
+                const productResponse = await fetch("http://localhost:8080/api/products",
+                        {
+                            method: "POST",
+                            headers: {"Content-Type":"application/json"},
+                            body: JSON.stringify(newProducts),
+                        });
+                        if(!productResponse.ok) throw new Error ("Failed to save new products");
+                        savedNewProducts = await productResponse.json();
+            }
+            
+            const items = quoteItems.map((item) => {
+                if(item.product.productId){
+                    return{
+                        productId: item.product.productId,
+                        quantity: item.quantity,
+                        unitPrice: item.product.productPrice,
+                        discount: item.discount,
+                        productType: true,
+                    };
+                } else {
+                    const newProduct = savedNewProducts.shift();
+                    return{
+                        productId: newProduct.productId,
+                        quantity: item.quantity,
+                        unitPrice: newProduct.productPrice,
+                        discount: item.discount,
+                    };
+                }
             });
-
-            if (!productResponse.ok) throw new Error("Failed to save new products");
-            savedNewProducts = await productResponse.json();
-          }
-
-
-            const baseQuote = {
-                clientId: Number(clientId) || null,
-                businessId: Number(businessId),
-                issuedDate,
-                expiryDate,
-                status,
-                quoteItems: []
-            };
-
-            const quoteResponse = await fetch("http://localhost:8080/api/quotes", {
+            
+            if(quoteId){
+                const updatedQuote = {
+                    clientId: Number(clientId),
+                    businessId: Number(businessId),
+                    issuedDate,
+                    expiryDate,
+                    status,
+                    quoteItems: items,
+                };
+                
+            const res = await fetch(`http://localhost:8080/api/quotes/${quoteId}`,{
+                method: "PUT",
+                headers: {"Content-Type":"application/json"},
+                body:JSON.stringify(updatedQuote),
+            });
+            if(!res.ok) throw new Error("Failed to update quote");
+            
+            const result = await res.json();           
+            const refreshed = await fetch(`http://localhost:8080/api/quotes/${quoteId}`);
+            const freshQuote = await refreshed.json();
+            
+            setQuotes(prev => {
+                const others = prev.filter(q => q.quoteId !== freshQuote.quoteId);
+                return [...others, freshQuote];
+            });
+            setSelectedQuoteId(null);
+            setPage("quote-list");
+            alert("Quote updated successfully?");
+           }
+           else //no quoteid so creating mode
+           {
+               const baseQuote = {
+                   clientId : Number(clientId),
+                   businessId : Number(businessId),
+                   issuedDate,
+                   expiryDate,
+                   status,
+                   quoteItems: []
+               };
+               
+            const res = await fetch("http://localhost:8080/api/quotes", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(baseQuote),
             });
-
-            if (!quoteResponse.ok) throw new Error("Failed to create quote");
-
-            const createdQuote = await quoteResponse.json();
-            const newQuoteId = createdQuote.quoteId;
-
-            const quoteItemsToSave = quoteItems.map((item) => {
-            if (item.product.productId) {
-              return {
-                productId: item.product.productId,
-                quoteId: newQuoteId,
-                quantity: item.quantity,
-                unitPrice: item.product.productPrice,
-                discount: item.discount,
-              };
-            } else {
-              const newProduct = savedNewProducts.shift();
-              return {
-                productId: newProduct.productId,
-                quoteId: newQuoteId,
-                quantity: item.quantity,
-                unitPrice: newProduct.productPrice,
-                discount: item.discount,
-              };
-            }
-          });
             
-            const itemsResponse = await fetch("http://localhost:8080/api/quote-items", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(quoteItemsToSave),
-            });
+            if(!res.ok) throw new Error("Failed to create quote"); 
+            
+            const createdQuote = await res.json();
+            const newQuoteId = createdQuote.quoteId;
+            
+            const quoteItemsToSave = items.map(item => ({
+                        ...item, quoteId: newQuoteId,
+            }));
+            
+            const itemsRes = await fetch("http://localhost:8080/api/quote-items", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(quoteItemsToSave),
+          });
 
-            if (!itemsResponse.ok) throw new Error("Failed to save quote items");
-
-            const savedQuoteItems = await itemsResponse.json();
-
-            const refreshedResponse = await fetch(`http://localhost:8080/api/quotes/${newQuoteId}`);
-            if (!refreshedResponse.ok) throw new Error("Failed to fetch updated quote");
-
-            const updatedQuote = await refreshedResponse.json();
-            setQuotes(prev => [...prev, updatedQuote]);
+          if (!itemsRes.ok) throw new Error("Failed to save quote items");
+            
+            const refreshed = await fetch(`http://localhost:8080/api/quotes/${newQuoteId}`);
+            const freshQuote = await refreshed.json();
+            setQuotes(prev=> [...prev, freshQuote]);
+            
             setPage("quote-list");
             alert("Quote created successfully!");
-        } catch (err) {
-            console.error("Error creating quote:", err);
-            alert("Error saving quote: " + err.message);
+           }
+        }catch (err){
+            console.error("Error saving quote",err);
+            alert("error saving quooe: "+err.message);
         }
     };
 

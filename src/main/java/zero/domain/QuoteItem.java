@@ -1,5 +1,6 @@
 package zero.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import net.sf.oval.constraint.NotNull;
 
@@ -32,9 +33,12 @@ public class QuoteItem {
     @NotNull(message = "Unit price is required")
     @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal unitPrice;
-
-    @JoinColumn(name = "quote_id", nullable = false, insertable = false, updatable = false)
-    private Long quote;
+    
+    @ManyToOne
+    @MapsId("quoteId")
+    @JoinColumn(name = "quote_id", nullable = false)
+    @JsonBackReference
+    private Quote quote;
 
     public QuoteItem() {
         this.discount = BigDecimal.ZERO;
@@ -94,14 +98,14 @@ public class QuoteItem {
         this.subtotal = calculateSubtotal();
     }
 
-    public Long getQuote() {
+    public Quote getQuote() {
         return quote;
     }
 
     public void setQuote(Quote quote) {
-        this.quote = quote.getQuoteId();
+        this.quote = quote;
     }
-
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
