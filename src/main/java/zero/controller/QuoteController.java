@@ -3,9 +3,7 @@ package zero.controller;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import zero.domain.Business;
-import zero.domain.Client;
-import zero.domain.Quote;
+import zero.domain.*;
 import zero.dto.QuoteDTO;
 import zero.helpers.GenerateQuote;
 import zero.repository.BusinessRepository;
@@ -17,9 +15,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import zero.domain.Product;
-import zero.domain.QuoteItem;
-import zero.domain.QuoteItemPK;
+
 import zero.repository.ProductRepository;
 
 @RestController
@@ -139,5 +135,17 @@ public ResponseEntity<Quote> updateQuote(@PathVariable Long id, @RequestBody Quo
                             .body(pdfContent);
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteQuote(@PathVariable Long id) {
+        Optional<Quote> optionalQuote = quoteRepository.findById(id);
+        if (optionalQuote.isPresent()) {
+            Quote quote = optionalQuote.get();
+            quote.setDeleted(true);
+            quoteRepository.save(quote);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
